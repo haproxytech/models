@@ -117,9 +117,33 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
+	// track sc0 key
+	// Pattern: ^[^\s]+$
+	TrackSc0Key string `json:"track-sc0-key,omitempty"`
+
+	// track sc0 table
+	// Pattern: ^[^\s]+$
+	TrackSc0Table string `json:"track-sc0-table,omitempty"`
+
+	// track sc1 key
+	// Pattern: ^[^\s]+$
+	TrackSc1Key string `json:"track-sc1-key,omitempty"`
+
+	// track sc1 table
+	// Pattern: ^[^\s]+$
+	TrackSc1Table string `json:"track-sc1-table,omitempty"`
+
+	// track sc2 key
+	// Pattern: ^[^\s]+$
+	TrackSc2Key string `json:"track-sc2-key,omitempty"`
+
+	// track sc2 table
+	// Pattern: ^[^\s]+$
+	TrackSc2Table string `json:"track-sc2-table,omitempty"`
+
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path set-query set-uri set-var send-spoe-group add-acl del-acl capture]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -198,6 +222,30 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSpoeGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackSc0Key(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackSc0Table(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackSc1Key(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackSc1Table(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackSc2Key(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackSc2Table(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -545,11 +593,89 @@ func (m *HTTPRequestRule) validateSpoeGroup(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateTrackSc0Key(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TrackSc0Key) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track-sc0-key", "body", string(m.TrackSc0Key), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateTrackSc0Table(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TrackSc0Table) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track-sc0-table", "body", string(m.TrackSc0Table), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateTrackSc1Key(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TrackSc1Key) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track-sc1-key", "body", string(m.TrackSc1Key), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateTrackSc1Table(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TrackSc1Table) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track-sc1-table", "body", string(m.TrackSc1Table), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateTrackSc2Key(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TrackSc2Key) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track-sc2-key", "body", string(m.TrackSc2Key), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateTrackSc2Table(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TrackSc2Table) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track-sc2-table", "body", string(m.TrackSc2Table), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -615,6 +741,15 @@ const (
 
 	// HTTPRequestRuleTypeCapture captures enum value "capture"
 	HTTPRequestRuleTypeCapture string = "capture"
+
+	// HTTPRequestRuleTypeTrackSc0 captures enum value "track-sc0"
+	HTTPRequestRuleTypeTrackSc0 string = "track-sc0"
+
+	// HTTPRequestRuleTypeTrackSc1 captures enum value "track-sc1"
+	HTTPRequestRuleTypeTrackSc1 string = "track-sc1"
+
+	// HTTPRequestRuleTypeTrackSc2 captures enum value "track-sc2"
+	HTTPRequestRuleTypeTrackSc2 string = "track-sc2"
 )
 
 // prop value enum
