@@ -36,15 +36,11 @@ type Frontend struct {
 	DefaultFarm string `json:"default_farm,omitempty"`
 
 	// http connection mode
-	// Enum: [tunel passive-close forced-close server-close keep-alive]
+	// Enum: [tunel passive-close forced-close server-close keep-alive pretend-keepalive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keepalive timeout
 	HTTPKeepaliveTimeout *int64 `json:"http_keepalive_timeout,omitempty"`
-
-	// http pretend keepalive
-	// Enum: [enabled disabled]
-	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
@@ -120,10 +116,6 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPConnectionMode(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -256,7 +248,7 @@ var frontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunel","passive-close","forced-close","server-close","keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tunel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -280,6 +272,9 @@ const (
 
 	// FrontendHTTPConnectionModeKeepAlive captures enum value "keep-alive"
 	FrontendHTTPConnectionModeKeepAlive string = "keep-alive"
+
+	// FrontendHTTPConnectionModePretendKeepalive captures enum value "pretend-keepalive"
+	FrontendHTTPConnectionModePretendKeepalive string = "pretend-keepalive"
 )
 
 // prop value enum
@@ -298,49 +293,6 @@ func (m *Frontend) validateHTTPConnectionMode(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPConnectionModeEnum("http_connection_mode", "body", m.HTTPConnectionMode); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var frontendTypeHTTPPretendKeepalivePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeHTTPPretendKeepalivePropEnum = append(frontendTypeHTTPPretendKeepalivePropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendHTTPPretendKeepaliveEnabled captures enum value "enabled"
-	FrontendHTTPPretendKeepaliveEnabled string = "enabled"
-
-	// FrontendHTTPPretendKeepaliveDisabled captures enum value "disabled"
-	FrontendHTTPPretendKeepaliveDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Frontend) validateHTTPPretendKeepaliveEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeHTTPPretendKeepalivePropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HTTPPretendKeepalive) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
 		return err
 	}
 

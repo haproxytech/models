@@ -90,7 +90,7 @@ type Backend struct {
 	HashTypeModifier string `json:"hash_type_modifier,omitempty"`
 
 	// http connection mode
-	// Enum: [tunel passive-close forced-close server-close keep-alive]
+	// Enum: [tunel passive-close forced-close server-close keep-alive pretend-keepalive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http cookie
@@ -110,10 +110,6 @@ type Backend struct {
 
 	// http keepalive timeout
 	HTTPKeepaliveTimeout *int64 `json:"http_keepalive_timeout,omitempty"`
-
-	// http pretend keepalive
-	// Enum: [enabled disabled]
-	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
@@ -259,10 +255,6 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPCookieNocache(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -763,7 +755,7 @@ var backendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunel","passive-close","forced-close","server-close","keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tunel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -787,6 +779,9 @@ const (
 
 	// BackendHTTPConnectionModeKeepAlive captures enum value "keep-alive"
 	BackendHTTPConnectionModeKeepAlive string = "keep-alive"
+
+	// BackendHTTPConnectionModePretendKeepalive captures enum value "pretend-keepalive"
+	BackendHTTPConnectionModePretendKeepalive string = "pretend-keepalive"
 )
 
 // prop value enum
@@ -952,49 +947,6 @@ func (m *Backend) validateHTTPCookieNocache(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPCookieNocacheEnum("http_cookie_nocache", "body", m.HTTPCookieNocache); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPPretendKeepalivePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPPretendKeepalivePropEnum = append(backendTypeHTTPPretendKeepalivePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPPretendKeepaliveEnabled captures enum value "enabled"
-	BackendHTTPPretendKeepaliveEnabled string = "enabled"
-
-	// BackendHTTPPretendKeepaliveDisabled captures enum value "disabled"
-	BackendHTTPPretendKeepaliveDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPPretendKeepaliveEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendTypeHTTPPretendKeepalivePropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HTTPPretendKeepalive) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
 		return err
 	}
 
