@@ -136,10 +136,6 @@ type Backend struct {
 	// Enum: [tcp http clf]
 	LogFormat string `json:"log_format,omitempty"`
 
-	// log ignore null
-	// Enum: [enabled disabled]
-	LogIgnoreNull string `json:"log_ignore_null,omitempty"`
-
 	// log tag
 	LogTag string `json:"log_tag,omitempty"`
 
@@ -271,10 +267,6 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogFormat(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLogIgnoreNull(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1113,49 +1105,6 @@ func (m *Backend) validateLogFormat(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateLogFormatEnum("log_format", "body", m.LogFormat); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeLogIgnoreNullPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeLogIgnoreNullPropEnum = append(backendTypeLogIgnoreNullPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendLogIgnoreNullEnabled captures enum value "enabled"
-	BackendLogIgnoreNullEnabled string = "enabled"
-
-	// BackendLogIgnoreNullDisabled captures enum value "disabled"
-	BackendLogIgnoreNullDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateLogIgnoreNullEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendTypeLogIgnoreNullPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateLogIgnoreNull(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.LogIgnoreNull) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLogIgnoreNullEnum("log_ignore_null", "body", m.LogIgnoreNull); err != nil {
 		return err
 	}
 
