@@ -89,9 +89,9 @@ type Backend struct {
 	// Enum: [avalanche]
 	HashTypeModifier string `json:"hash_type_modifier,omitempty"`
 
-	// http connection modegit
+	// http connection mode
 	// Enum: [tunnel passive-close forced-close server-close keep-alive pretend-keepalive]
-	HTTPConnectionModegit string `json:"http_connection_modegit,omitempty"`
+	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http cookie
 	// Enum: [enabled]
@@ -242,7 +242,7 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPConnectionModegit(formats); err != nil {
+	if err := m.validateHTTPConnectionMode(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -751,7 +751,7 @@ func (m *Backend) validateHashTypeModifier(formats strfmt.Registry) error {
 	return nil
 }
 
-var backendTypeHTTPConnectionModegitPropEnum []interface{}
+var backendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
@@ -759,47 +759,47 @@ func init() {
 		panic(err)
 	}
 	for _, v := range res {
-		backendTypeHTTPConnectionModegitPropEnum = append(backendTypeHTTPConnectionModegitPropEnum, v)
+		backendTypeHTTPConnectionModePropEnum = append(backendTypeHTTPConnectionModePropEnum, v)
 	}
 }
 
 const (
 
-	// BackendHTTPConnectionModegitTunnel captures enum value "tunnel"
-	BackendHTTPConnectionModegitTunnel string = "tunnel"
+	// BackendHTTPConnectionModeTunnel captures enum value "tunnel"
+	BackendHTTPConnectionModeTunnel string = "tunnel"
 
-	// BackendHTTPConnectionModegitPassiveClose captures enum value "passive-close"
-	BackendHTTPConnectionModegitPassiveClose string = "passive-close"
+	// BackendHTTPConnectionModePassiveClose captures enum value "passive-close"
+	BackendHTTPConnectionModePassiveClose string = "passive-close"
 
-	// BackendHTTPConnectionModegitForcedClose captures enum value "forced-close"
-	BackendHTTPConnectionModegitForcedClose string = "forced-close"
+	// BackendHTTPConnectionModeForcedClose captures enum value "forced-close"
+	BackendHTTPConnectionModeForcedClose string = "forced-close"
 
-	// BackendHTTPConnectionModegitServerClose captures enum value "server-close"
-	BackendHTTPConnectionModegitServerClose string = "server-close"
+	// BackendHTTPConnectionModeServerClose captures enum value "server-close"
+	BackendHTTPConnectionModeServerClose string = "server-close"
 
-	// BackendHTTPConnectionModegitKeepAlive captures enum value "keep-alive"
-	BackendHTTPConnectionModegitKeepAlive string = "keep-alive"
+	// BackendHTTPConnectionModeKeepAlive captures enum value "keep-alive"
+	BackendHTTPConnectionModeKeepAlive string = "keep-alive"
 
-	// BackendHTTPConnectionModegitPretendKeepalive captures enum value "pretend-keepalive"
-	BackendHTTPConnectionModegitPretendKeepalive string = "pretend-keepalive"
+	// BackendHTTPConnectionModePretendKeepalive captures enum value "pretend-keepalive"
+	BackendHTTPConnectionModePretendKeepalive string = "pretend-keepalive"
 )
 
 // prop value enum
-func (m *Backend) validateHTTPConnectionModegitEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendTypeHTTPConnectionModegitPropEnum); err != nil {
+func (m *Backend) validateHTTPConnectionModeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPConnectionModePropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Backend) validateHTTPConnectionModegit(formats strfmt.Registry) error {
+func (m *Backend) validateHTTPConnectionMode(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.HTTPConnectionModegit) { // not required
+	if swag.IsZero(m.HTTPConnectionMode) { // not required
 		return nil
 	}
 
 	// value enum
-	if err := m.validateHTTPConnectionModegitEnum("http_connection_modegit", "body", m.HTTPConnectionModegit); err != nil {
+	if err := m.validateHTTPConnectionModeEnum("http_connection_mode", "body", m.HTTPConnectionMode); err != nil {
 		return err
 	}
 
