@@ -48,7 +48,7 @@ type HTTPRequestRule struct {
 
 	// id
 	// Required: true
-	ID *int64 `json:"id"`
+	ID int64 `json:"id"`
 
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
@@ -71,7 +71,7 @@ type HTTPRequestRule struct {
 	// type
 	// Required: true
 	// Enum: [allow deny auth redirect tarpit add-header set-header set-log-level capture set-var set-src]
-	Type *string `json:"type"`
+	Type string `json:"type"`
 
 	// var expression
 	VarExpression string `json:"var_expression,omitempty"`
@@ -167,7 +167,7 @@ func (m *HTTPRequestRule) validateCond(formats strfmt.Registry) error {
 
 func (m *HTTPRequestRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
 		return err
 	}
 
@@ -376,12 +376,12 @@ func (m *HTTPRequestRule) validateTypeEnum(path, location string, value string) 
 
 func (m *HTTPRequestRule) validateType(formats strfmt.Registry) error {
 
-	if err := validate.Required("type", "body", m.Type); err != nil {
+	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
 		return err
 	}
 
 	// value enum
-	if err := m.validateTypeEnum("type", "body", *m.Type); err != nil {
+	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
 		return err
 	}
 

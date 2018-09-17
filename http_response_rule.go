@@ -36,12 +36,12 @@ type HTTPResponseRule struct {
 
 	// id
 	// Required: true
-	ID *int64 `json:"id"`
+	ID int64 `json:"id"`
 
 	// type
 	// Required: true
 	// Enum: [allow deny add-header set-header del-header]
-	Type *string `json:"type"`
+	Type string `json:"type"`
 }
 
 // Validate validates this http response rule
@@ -111,7 +111,7 @@ func (m *HTTPResponseRule) validateCond(formats strfmt.Registry) error {
 
 func (m *HTTPResponseRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
 		return err
 	}
 
@@ -158,12 +158,12 @@ func (m *HTTPResponseRule) validateTypeEnum(path, location string, value string)
 
 func (m *HTTPResponseRule) validateType(formats strfmt.Registry) error {
 
-	if err := validate.Required("type", "body", m.Type); err != nil {
+	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
 		return err
 	}
 
 	// value enum
-	if err := m.validateTypeEnum("type", "body", *m.Type); err != nil {
+	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
 		return err
 	}
 

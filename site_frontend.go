@@ -25,7 +25,7 @@ type SiteFrontend struct {
 	HTTPXffHeaderInsert string `json:"http-xff-header-insert,omitempty"`
 
 	// http connection mode
-	// Enum: [tunel passive-close forced-close server-close keep-alive pretend-keepalive]
+	// Enum: [tunnel passive-close forced-close server-close keep-alive pretend-keepalive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http xff header insert name
@@ -120,7 +120,7 @@ var siteFrontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -130,8 +130,8 @@ func init() {
 
 const (
 
-	// SiteFrontendHTTPConnectionModeTunel captures enum value "tunel"
-	SiteFrontendHTTPConnectionModeTunel string = "tunel"
+	// SiteFrontendHTTPConnectionModeTunnel captures enum value "tunnel"
+	SiteFrontendHTTPConnectionModeTunnel string = "tunnel"
 
 	// SiteFrontendHTTPConnectionModePassiveClose captures enum value "passive-close"
 	SiteFrontendHTTPConnectionModePassiveClose string = "passive-close"

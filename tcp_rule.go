@@ -30,12 +30,12 @@ type TCPRule struct {
 
 	// id
 	// Required: true
-	ID *int64 `json:"id"`
+	ID int64 `json:"id"`
 
 	// type
 	// Required: true
 	// Enum: [accept reject]
-	Type *string `json:"type"`
+	Type string `json:"type"`
 }
 
 // Validate validates this tcp rule
@@ -105,7 +105,7 @@ func (m *TCPRule) validateCond(formats strfmt.Registry) error {
 
 func (m *TCPRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
 		return err
 	}
 
@@ -143,12 +143,12 @@ func (m *TCPRule) validateTypeEnum(path, location string, value string) error {
 
 func (m *TCPRule) validateType(formats strfmt.Registry) error {
 
-	if err := validate.Required("type", "body", m.Type); err != nil {
+	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
 		return err
 	}
 
 	// value enum
-	if err := m.validateTypeEnum("type", "body", *m.Type); err != nil {
+	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
 		return err
 	}
 

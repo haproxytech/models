@@ -30,7 +30,7 @@ type Listener struct {
 
 	// name
 	// Required: true
-	Name *string `json:"name"`
+	Name string `json:"name"`
 
 	// port
 	// Maximum: 65535
@@ -140,7 +140,7 @@ func (m *Listener) validateDeferAccept(formats strfmt.Registry) error {
 
 func (m *Listener) validateName(formats strfmt.Registry) error {
 
-	if err := validate.Required("name", "body", m.Name); err != nil {
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
 		return err
 	}
 

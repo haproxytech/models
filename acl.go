@@ -21,15 +21,15 @@ type ACL struct {
 
 	// criterion
 	// Required: true
-	Criterion *string `json:"criterion"`
+	Criterion string `json:"criterion"`
 
 	// id
 	// Required: true
-	ID *int64 `json:"id"`
+	ID int64 `json:"id"`
 
 	// name
 	// Required: true
-	Name *string `json:"name"`
+	Name string `json:"name"`
 
 	// value
 	Value string `json:"value,omitempty"`
@@ -59,7 +59,7 @@ func (m *ACL) Validate(formats strfmt.Registry) error {
 
 func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 
-	if err := validate.Required("criterion", "body", m.Criterion); err != nil {
+	if err := validate.RequiredString("criterion", "body", string(m.Criterion)); err != nil {
 		return err
 	}
 
@@ -68,7 +68,7 @@ func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 
 func (m *ACL) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
 		return err
 	}
 
@@ -77,7 +77,7 @@ func (m *ACL) validateID(formats strfmt.Registry) error {
 
 func (m *ACL) validateName(formats strfmt.Registry) error {
 
-	if err := validate.Required("name", "body", m.Name); err != nil {
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
 		return err
 	}
 

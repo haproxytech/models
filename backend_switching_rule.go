@@ -30,11 +30,11 @@ type BackendSwitchingRule struct {
 
 	// id
 	// Required: true
-	ID *int64 `json:"id"`
+	ID int64 `json:"id"`
 
 	// target farm
 	// Required: true
-	TargetFarm *string `json:"target_farm"`
+	TargetFarm string `json:"target_farm"`
 }
 
 // Validate validates this backend switching rule
@@ -104,7 +104,7 @@ func (m *BackendSwitchingRule) validateCond(formats strfmt.Registry) error {
 
 func (m *BackendSwitchingRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
 		return err
 	}
 
@@ -113,7 +113,7 @@ func (m *BackendSwitchingRule) validateID(formats strfmt.Registry) error {
 
 func (m *BackendSwitchingRule) validateTargetFarm(formats strfmt.Registry) error {
 
-	if err := validate.Required("target_farm", "body", m.TargetFarm); err != nil {
+	if err := validate.RequiredString("target_farm", "body", string(m.TargetFarm)); err != nil {
 		return err
 	}
 

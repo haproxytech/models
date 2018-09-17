@@ -31,10 +31,10 @@ type Backend struct {
 
 	// adv check http method
 	// Enum: [HEAD PUT POST GET TRACE PATCH]
-	AdvCheckHTTPMethod *string `json:"adv_check_http_method,omitempty"`
+	AdvCheckHTTPMethod string `json:"adv_check_http_method,omitempty"`
 
 	// adv check http uri
-	AdvCheckHTTPURI *string `json:"adv_check_http_uri,omitempty"`
+	AdvCheckHTTPURI string `json:"adv_check_http_uri,omitempty"`
 
 	// adv check http version
 	AdvCheckHTTPVersion string `json:"adv_check_http_version,omitempty"`
@@ -43,8 +43,8 @@ type Backend struct {
 	// Enum: [roundrobin least-connections hash-uri hash-source]
 	Balance string `json:"balance,omitempty"`
 
-	// check fail
-	CheckFail *int64 `json:"check_fail,omitempty"`
+	// check fall
+	CheckFall *int64 `json:"check_fall,omitempty"`
 
 	// check interval
 	CheckInterval *int64 `json:"check_interval,omitempty"`
@@ -89,9 +89,9 @@ type Backend struct {
 	// Enum: [avalanche]
 	HashTypeModifier string `json:"hash_type_modifier,omitempty"`
 
-	// http connection mode
-	// Enum: [tunel passive-close forced-close server-close keep-alive pretend-keepalive]
-	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
+	// http connection modegit
+	// Enum: [tunnel passive-close forced-close server-close keep-alive pretend-keepalive]
+	HTTPConnectionModegit string `json:"http_connection_modegit,omitempty"`
 
 	// http cookie
 	// Enum: [enabled]
@@ -134,7 +134,7 @@ type Backend struct {
 
 	// log format
 	// Enum: [tcp http clf]
-	LogFormat *string `json:"log_format,omitempty"`
+	LogFormat string `json:"log_format,omitempty"`
 
 	// log ignore null
 	// Enum: [enabled disabled]
@@ -145,7 +145,7 @@ type Backend struct {
 
 	// name
 	// Required: true
-	Name *string `json:"name"`
+	Name string `json:"name"`
 
 	// protocol
 	// Enum: [http tcp]
@@ -242,7 +242,7 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPConnectionMode(formats); err != nil {
+	if err := m.validateHTTPConnectionModegit(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -457,7 +457,7 @@ func (m *Backend) validateAdvCheckHTTPMethod(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateAdvCheckHTTPMethodEnum("adv_check_http_method", "body", *m.AdvCheckHTTPMethod); err != nil {
+	if err := m.validateAdvCheckHTTPMethodEnum("adv_check_http_method", "body", m.AdvCheckHTTPMethod); err != nil {
 		return err
 	}
 
@@ -751,55 +751,55 @@ func (m *Backend) validateHashTypeModifier(formats strfmt.Registry) error {
 	return nil
 }
 
-var backendTypeHTTPConnectionModePropEnum []interface{}
+var backendTypeHTTPConnectionModegitPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
-		backendTypeHTTPConnectionModePropEnum = append(backendTypeHTTPConnectionModePropEnum, v)
+		backendTypeHTTPConnectionModegitPropEnum = append(backendTypeHTTPConnectionModegitPropEnum, v)
 	}
 }
 
 const (
 
-	// BackendHTTPConnectionModeTunel captures enum value "tunel"
-	BackendHTTPConnectionModeTunel string = "tunel"
+	// BackendHTTPConnectionModegitTunnel captures enum value "tunnel"
+	BackendHTTPConnectionModegitTunnel string = "tunnel"
 
-	// BackendHTTPConnectionModePassiveClose captures enum value "passive-close"
-	BackendHTTPConnectionModePassiveClose string = "passive-close"
+	// BackendHTTPConnectionModegitPassiveClose captures enum value "passive-close"
+	BackendHTTPConnectionModegitPassiveClose string = "passive-close"
 
-	// BackendHTTPConnectionModeForcedClose captures enum value "forced-close"
-	BackendHTTPConnectionModeForcedClose string = "forced-close"
+	// BackendHTTPConnectionModegitForcedClose captures enum value "forced-close"
+	BackendHTTPConnectionModegitForcedClose string = "forced-close"
 
-	// BackendHTTPConnectionModeServerClose captures enum value "server-close"
-	BackendHTTPConnectionModeServerClose string = "server-close"
+	// BackendHTTPConnectionModegitServerClose captures enum value "server-close"
+	BackendHTTPConnectionModegitServerClose string = "server-close"
 
-	// BackendHTTPConnectionModeKeepAlive captures enum value "keep-alive"
-	BackendHTTPConnectionModeKeepAlive string = "keep-alive"
+	// BackendHTTPConnectionModegitKeepAlive captures enum value "keep-alive"
+	BackendHTTPConnectionModegitKeepAlive string = "keep-alive"
 
-	// BackendHTTPConnectionModePretendKeepalive captures enum value "pretend-keepalive"
-	BackendHTTPConnectionModePretendKeepalive string = "pretend-keepalive"
+	// BackendHTTPConnectionModegitPretendKeepalive captures enum value "pretend-keepalive"
+	BackendHTTPConnectionModegitPretendKeepalive string = "pretend-keepalive"
 )
 
 // prop value enum
-func (m *Backend) validateHTTPConnectionModeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendTypeHTTPConnectionModePropEnum); err != nil {
+func (m *Backend) validateHTTPConnectionModegitEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPConnectionModegitPropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Backend) validateHTTPConnectionMode(formats strfmt.Registry) error {
+func (m *Backend) validateHTTPConnectionModegit(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.HTTPConnectionMode) { // not required
+	if swag.IsZero(m.HTTPConnectionModegit) { // not required
 		return nil
 	}
 
 	// value enum
-	if err := m.validateHTTPConnectionModeEnum("http_connection_mode", "body", m.HTTPConnectionMode); err != nil {
+	if err := m.validateHTTPConnectionModegitEnum("http_connection_modegit", "body", m.HTTPConnectionModegit); err != nil {
 		return err
 	}
 
@@ -1112,7 +1112,7 @@ func (m *Backend) validateLogFormat(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateLogFormatEnum("log_format", "body", *m.LogFormat); err != nil {
+	if err := m.validateLogFormatEnum("log_format", "body", m.LogFormat); err != nil {
 		return err
 	}
 
@@ -1164,7 +1164,7 @@ func (m *Backend) validateLogIgnoreNull(formats strfmt.Registry) error {
 
 func (m *Backend) validateName(formats strfmt.Registry) error {
 
-	if err := validate.Required("name", "body", m.Name); err != nil {
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
 		return err
 	}
 

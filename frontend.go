@@ -36,7 +36,7 @@ type Frontend struct {
 	DefaultFarm string `json:"default_farm,omitempty"`
 
 	// http connection mode
-	// Enum: [tunel passive-close forced-close server-close keep-alive pretend-keepalive]
+	// Enum: [tunnel passive-close forced-close server-close keep-alive pretend-keepalive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keepalive timeout
@@ -65,7 +65,7 @@ type Frontend struct {
 
 	// log format
 	// Enum: [tcp http clf custom]
-	LogFormat *string `json:"log_format,omitempty"`
+	LogFormat string `json:"log_format,omitempty"`
 
 	// log format custom
 	LogFormatCustom string `json:"log_format_custom,omitempty"`
@@ -89,7 +89,7 @@ type Frontend struct {
 
 	// name
 	// Required: true
-	Name *string `json:"name"`
+	Name string `json:"name"`
 
 	// protocol
 	// Enum: [http tcp]
@@ -248,7 +248,7 @@ var frontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -258,8 +258,8 @@ func init() {
 
 const (
 
-	// FrontendHTTPConnectionModeTunel captures enum value "tunel"
-	FrontendHTTPConnectionModeTunel string = "tunel"
+	// FrontendHTTPConnectionModeTunnel captures enum value "tunnel"
+	FrontendHTTPConnectionModeTunnel string = "tunnel"
 
 	// FrontendHTTPConnectionModePassiveClose captures enum value "passive-close"
 	FrontendHTTPConnectionModePassiveClose string = "passive-close"
@@ -461,7 +461,7 @@ func (m *Frontend) validateLogFormat(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateLogFormatEnum("log_format", "body", *m.LogFormat); err != nil {
+	if err := m.validateLogFormatEnum("log_format", "body", m.LogFormat); err != nil {
 		return err
 	}
 
@@ -556,7 +556,7 @@ func (m *Frontend) validateLogSeparateErrors(formats strfmt.Registry) error {
 
 func (m *Frontend) validateName(formats strfmt.Registry) error {
 
-	if err := validate.Required("name", "body", m.Name); err != nil {
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
 		return err
 	}
 

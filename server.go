@@ -52,7 +52,7 @@ type Server struct {
 
 	// name
 	// Required: true
-	Name *string `json:"name"`
+	Name string `json:"name"`
 
 	// port
 	// Maximum: 65535
@@ -195,7 +195,7 @@ func (m *Server) validateMaintenance(formats strfmt.Registry) error {
 
 func (m *Server) validateName(formats strfmt.Registry) error {
 
-	if err := validate.Required("name", "body", m.Name); err != nil {
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
 		return err
 	}
 
