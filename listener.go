@@ -24,10 +24,6 @@ type Listener struct {
 	// address
 	Address string `json:"address,omitempty"`
 
-	// defer accept
-	// Enum: [enabled]
-	DeferAccept string `json:"defer_accept,omitempty"`
-
 	// name
 	// Required: true
 	Name string `json:"name"`
@@ -36,9 +32,6 @@ type Listener struct {
 	// Maximum: 65535
 	// Minimum: 0
 	Port *int64 `json:"port,omitempty"`
-
-	// process
-	Process string `json:"process,omitempty"`
 
 	// ssl
 	// Enum: [enabled]
@@ -51,10 +44,6 @@ type Listener struct {
 	// tcp user timeout
 	TCPUserTimeout *int64 `json:"tcp_user_timeout,omitempty"`
 
-	// tfo
-	// Enum: [enabled]
-	Tfo string `json:"tfo,omitempty"`
-
 	// transparent
 	// Enum: [enabled]
 	Transparent string `json:"transparent,omitempty"`
@@ -63,10 +52,6 @@ type Listener struct {
 // Validate validates this listener
 func (m *Listener) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateDeferAccept(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
@@ -84,10 +69,6 @@ func (m *Listener) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateTfo(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateTransparent(formats); err != nil {
 		res = append(res, err)
 	}
@@ -95,46 +76,6 @@ func (m *Listener) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-var listenerTypeDeferAcceptPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		listenerTypeDeferAcceptPropEnum = append(listenerTypeDeferAcceptPropEnum, v)
-	}
-}
-
-const (
-
-	// ListenerDeferAcceptEnabled captures enum value "enabled"
-	ListenerDeferAcceptEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Listener) validateDeferAcceptEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, listenerTypeDeferAcceptPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Listener) validateDeferAccept(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.DeferAccept) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateDeferAcceptEnum("defer_accept", "body", m.DeferAccept); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -238,46 +179,6 @@ func (m *Listener) validateSslCertificate(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslCertificateEnum("ssl_certificate", "body", m.SslCertificate); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var listenerTypeTfoPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		listenerTypeTfoPropEnum = append(listenerTypeTfoPropEnum, v)
-	}
-}
-
-const (
-
-	// ListenerTfoEnabled captures enum value "enabled"
-	ListenerTfoEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Listener) validateTfoEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, listenerTypeTfoPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Listener) validateTfo(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Tfo) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTfoEnum("tfo", "body", m.Tfo); err != nil {
 		return err
 	}
 

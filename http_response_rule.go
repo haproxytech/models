@@ -28,6 +28,12 @@ type HTTPResponseRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// hdr format
+	HdrFormat string `json:"hdr_format,omitempty"`
+
+	// hdr match
+	HdrMatch string `json:"hdr_match,omitempty"`
+
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
 
@@ -38,10 +44,29 @@ type HTTPResponseRule struct {
 	// Required: true
 	ID int64 `json:"id"`
 
+	// log level
+	// Enum: [emerg alert crit err warning notice info debug silent]
+	LogLevel string `json:"log_level,omitempty"`
+
+	// spoe engine
+	SpoeEngine string `json:"spoe_engine,omitempty"`
+
+	// spoe group
+	SpoeGroup string `json:"spoe_group,omitempty"`
+
+	// status group
+	StatusGroup int64 `json:"status_group,omitempty"`
+
 	// type
 	// Required: true
-	// Enum: [allow deny add-header set-header del-header]
+	// Enum: [allow deny add-header set-header set-log-level set-var set-status send-spoe-group replace-header replace-value]
 	Type string `json:"type"`
+
+	// var name
+	VarName string `json:"var_name,omitempty"`
+
+	// var pattern
+	VarPattern string `json:"var_pattern,omitempty"`
 }
 
 // Validate validates this http response rule
@@ -53,6 +78,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLogLevel(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -118,11 +147,75 @@ func (m *HTTPResponseRule) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpResponseRuleTypeLogLevelPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["emerg","alert","crit","err","warning","notice","info","debug","silent"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpResponseRuleTypeLogLevelPropEnum = append(httpResponseRuleTypeLogLevelPropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPResponseRuleLogLevelEmerg captures enum value "emerg"
+	HTTPResponseRuleLogLevelEmerg string = "emerg"
+
+	// HTTPResponseRuleLogLevelAlert captures enum value "alert"
+	HTTPResponseRuleLogLevelAlert string = "alert"
+
+	// HTTPResponseRuleLogLevelCrit captures enum value "crit"
+	HTTPResponseRuleLogLevelCrit string = "crit"
+
+	// HTTPResponseRuleLogLevelErr captures enum value "err"
+	HTTPResponseRuleLogLevelErr string = "err"
+
+	// HTTPResponseRuleLogLevelWarning captures enum value "warning"
+	HTTPResponseRuleLogLevelWarning string = "warning"
+
+	// HTTPResponseRuleLogLevelNotice captures enum value "notice"
+	HTTPResponseRuleLogLevelNotice string = "notice"
+
+	// HTTPResponseRuleLogLevelInfo captures enum value "info"
+	HTTPResponseRuleLogLevelInfo string = "info"
+
+	// HTTPResponseRuleLogLevelDebug captures enum value "debug"
+	HTTPResponseRuleLogLevelDebug string = "debug"
+
+	// HTTPResponseRuleLogLevelSilent captures enum value "silent"
+	HTTPResponseRuleLogLevelSilent string = "silent"
+)
+
+// prop value enum
+func (m *HTTPResponseRule) validateLogLevelEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpResponseRuleTypeLogLevelPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPResponseRule) validateLogLevel(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LogLevel) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLogLevelEnum("log_level", "body", m.LogLevel); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","add-header","set-header","del-header"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","add-header","set-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -144,8 +237,23 @@ const (
 	// HTTPResponseRuleTypeSetHeader captures enum value "set-header"
 	HTTPResponseRuleTypeSetHeader string = "set-header"
 
-	// HTTPResponseRuleTypeDelHeader captures enum value "del-header"
-	HTTPResponseRuleTypeDelHeader string = "del-header"
+	// HTTPResponseRuleTypeSetLogLevel captures enum value "set-log-level"
+	HTTPResponseRuleTypeSetLogLevel string = "set-log-level"
+
+	// HTTPResponseRuleTypeSetVar captures enum value "set-var"
+	HTTPResponseRuleTypeSetVar string = "set-var"
+
+	// HTTPResponseRuleTypeSetStatus captures enum value "set-status"
+	HTTPResponseRuleTypeSetStatus string = "set-status"
+
+	// HTTPResponseRuleTypeSendSpoeGroup captures enum value "send-spoe-group"
+	HTTPResponseRuleTypeSendSpoeGroup string = "send-spoe-group"
+
+	// HTTPResponseRuleTypeReplaceHeader captures enum value "replace-header"
+	HTTPResponseRuleTypeReplaceHeader string = "replace-header"
+
+	// HTTPResponseRuleTypeReplaceValue captures enum value "replace-value"
+	HTTPResponseRuleTypeReplaceValue string = "replace-value"
 )
 
 // prop value enum

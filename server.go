@@ -28,20 +28,8 @@ type Server struct {
 	// Enum: [enabled]
 	Check string `json:"check,omitempty"`
 
-	// downinter
-	Downinter *int64 `json:"downinter,omitempty"`
-
-	// fall
-	Fall *int64 `json:"fall,omitempty"`
-
-	// fastinter
-	Fastinter *int64 `json:"fastinter,omitempty"`
-
 	// http cookie id
 	HTTPCookieID string `json:"http-cookie-id,omitempty"`
-
-	// inter
-	Inter *int64 `json:"inter,omitempty"`
 
 	// maintenance
 	// Enum: [enabled]
@@ -58,10 +46,6 @@ type Server struct {
 	// Maximum: 65535
 	// Minimum: 0
 	Port *int64 `json:"port,omitempty"`
-
-	// send proxy
-	// Enum: [enabled]
-	SendProxy string `json:"send_proxy,omitempty"`
 
 	// sorry
 	// Enum: [enabled]
@@ -92,10 +76,6 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePort(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSendProxy(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -213,46 +193,6 @@ func (m *Server) validatePort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var serverTypeSendProxyPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		serverTypeSendProxyPropEnum = append(serverTypeSendProxyPropEnum, v)
-	}
-}
-
-const (
-
-	// ServerSendProxyEnabled captures enum value "enabled"
-	ServerSendProxyEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Server) validateSendProxyEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTypeSendProxyPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Server) validateSendProxy(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.SendProxy) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSendProxyEnum("send_proxy", "body", m.SendProxy); err != nil {
 		return err
 	}
 

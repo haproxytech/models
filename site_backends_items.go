@@ -35,9 +35,6 @@ type SiteBackendsItems struct {
 	// Enum: [enabled]
 	HTTPXffHeaderInsert string `json:"http_xff_header_insert,omitempty"`
 
-	// http xff header insert name
-	HTTPXffHeaderInsertName string `json:"http_xff_header_insert_name,omitempty"`
-
 	// log
 	// Enum: [enabled]
 	Log string `json:"log,omitempty"`

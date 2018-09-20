@@ -24,10 +24,6 @@ type Frontend struct {
 	// client inactivity timeout
 	ClientInactivityTimeout *int64 `json:"client_inactivity_timeout,omitempty"`
 
-	// client tcp keep alive
-	// Enum: [disabled enabled]
-	ClientTCPKeepAlive string `json:"client_tcp_keep_alive,omitempty"`
-
 	// continuous statistics
 	// Enum: [enabled]
 	ContinuousStatistics string `json:"continuous_statistics,omitempty"`
@@ -36,53 +32,30 @@ type Frontend struct {
 	DefaultFarm string `json:"default_farm,omitempty"`
 
 	// http connection mode
-	// Enum: [tunnel passive-close forced-close server-close keep-alive pretend-keepalive]
+	// Enum: [tunnel passive-close forced-close server-close keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keepalive timeout
 	HTTPKeepaliveTimeout *int64 `json:"http_keepalive_timeout,omitempty"`
 
+	// http pretend keepalive
+	// Enum: [enabled disabled]
+	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
+
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
-
-	// http xff header insert
-	// Enum: [enabled]
-	HTTPXffHeaderInsert string `json:"http_xff_header_insert,omitempty"`
-
-	// http xff header insert except
-	HTTPXffHeaderInsertExcept string `json:"http_xff_header_insert_except,omitempty"`
-
-	// http xff header insert ifnone
-	// Enum: [enabled]
-	HTTPXffHeaderInsertIfnone string `json:"http_xff_header_insert_ifnone,omitempty"`
-
-	// http xff header insert name
-	HTTPXffHeaderInsertName string `json:"http_xff_header_insert_name,omitempty"`
 
 	// log
 	// Enum: [enabled]
 	Log string `json:"log,omitempty"`
 
 	// log format
-	// Enum: [tcp http clf custom]
+	// Enum: [tcp http clf]
 	LogFormat string `json:"log_format,omitempty"`
-
-	// log format custom
-	LogFormatCustom string `json:"log_format_custom,omitempty"`
-
-	// log format sd
-	LogFormatSd string `json:"log_format_sd,omitempty"`
 
 	// log ignore null
 	// Enum: [enabled disabled]
 	LogIgnoreNull string `json:"log_ignore_null,omitempty"`
-
-	// log separate errors
-	// Enum: [enabled disabled]
-	LogSeparateErrors string `json:"log_separate_errors,omitempty"`
-
-	// log tag
-	LogTag string `json:"log_tag,omitempty"`
 
 	// max connections
 	MaxConnections *int64 `json:"max_connections,omitempty"`
@@ -95,10 +68,6 @@ type Frontend struct {
 	// Enum: [http tcp]
 	Protocol string `json:"protocol,omitempty"`
 
-	// tcp smart accept
-	// Enum: [disabled enabled]
-	TCPSmartAccept string `json:"tcp_smart_accept,omitempty"`
-
 	// tcpreq inspect delay
 	TcpreqInspectDelay *int64 `json:"tcpreq_inspect_delay,omitempty"`
 }
@@ -106,10 +75,6 @@ type Frontend struct {
 // Validate validates this frontend
 func (m *Frontend) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateClientTCPKeepAlive(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateContinuousStatistics(formats); err != nil {
 		res = append(res, err)
@@ -119,11 +84,7 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPXffHeaderInsert(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPXffHeaderInsertIfnone(formats); err != nil {
+	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -139,10 +100,6 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateLogSeparateErrors(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
@@ -151,56 +108,9 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateTCPSmartAccept(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-var frontendTypeClientTCPKeepAlivePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["disabled","enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeClientTCPKeepAlivePropEnum = append(frontendTypeClientTCPKeepAlivePropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendClientTCPKeepAliveDisabled captures enum value "disabled"
-	FrontendClientTCPKeepAliveDisabled string = "disabled"
-
-	// FrontendClientTCPKeepAliveEnabled captures enum value "enabled"
-	FrontendClientTCPKeepAliveEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Frontend) validateClientTCPKeepAliveEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeClientTCPKeepAlivePropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateClientTCPKeepAlive(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.ClientTCPKeepAlive) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateClientTCPKeepAliveEnum("client_tcp_keep_alive", "body", m.ClientTCPKeepAlive); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -248,7 +158,7 @@ var frontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -272,9 +182,6 @@ const (
 
 	// FrontendHTTPConnectionModeKeepAlive captures enum value "keep-alive"
 	FrontendHTTPConnectionModeKeepAlive string = "keep-alive"
-
-	// FrontendHTTPConnectionModePretendKeepalive captures enum value "pretend-keepalive"
-	FrontendHTTPConnectionModePretendKeepalive string = "pretend-keepalive"
 )
 
 // prop value enum
@@ -299,80 +206,43 @@ func (m *Frontend) validateHTTPConnectionMode(formats strfmt.Registry) error {
 	return nil
 }
 
-var frontendTypeHTTPXffHeaderInsertPropEnum []interface{}
+var frontendTypeHTTPPretendKeepalivePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
-		frontendTypeHTTPXffHeaderInsertPropEnum = append(frontendTypeHTTPXffHeaderInsertPropEnum, v)
+		frontendTypeHTTPPretendKeepalivePropEnum = append(frontendTypeHTTPPretendKeepalivePropEnum, v)
 	}
 }
 
 const (
 
-	// FrontendHTTPXffHeaderInsertEnabled captures enum value "enabled"
-	FrontendHTTPXffHeaderInsertEnabled string = "enabled"
+	// FrontendHTTPPretendKeepaliveEnabled captures enum value "enabled"
+	FrontendHTTPPretendKeepaliveEnabled string = "enabled"
+
+	// FrontendHTTPPretendKeepaliveDisabled captures enum value "disabled"
+	FrontendHTTPPretendKeepaliveDisabled string = "disabled"
 )
 
 // prop value enum
-func (m *Frontend) validateHTTPXffHeaderInsertEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeHTTPXffHeaderInsertPropEnum); err != nil {
+func (m *Frontend) validateHTTPPretendKeepaliveEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeHTTPPretendKeepalivePropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Frontend) validateHTTPXffHeaderInsert(formats strfmt.Registry) error {
+func (m *Frontend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.HTTPXffHeaderInsert) { // not required
+	if swag.IsZero(m.HTTPPretendKeepalive) { // not required
 		return nil
 	}
 
 	// value enum
-	if err := m.validateHTTPXffHeaderInsertEnum("http_xff_header_insert", "body", m.HTTPXffHeaderInsert); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var frontendTypeHTTPXffHeaderInsertIfnonePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeHTTPXffHeaderInsertIfnonePropEnum = append(frontendTypeHTTPXffHeaderInsertIfnonePropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendHTTPXffHeaderInsertIfnoneEnabled captures enum value "enabled"
-	FrontendHTTPXffHeaderInsertIfnoneEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Frontend) validateHTTPXffHeaderInsertIfnoneEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeHTTPXffHeaderInsertIfnonePropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateHTTPXffHeaderInsertIfnone(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HTTPXffHeaderInsertIfnone) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPXffHeaderInsertIfnoneEnum("http_xff_header_insert_ifnone", "body", m.HTTPXffHeaderInsertIfnone); err != nil {
+	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
 		return err
 	}
 
@@ -423,7 +293,7 @@ var frontendTypeLogFormatPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tcp","http","clf","custom"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tcp","http","clf"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -441,9 +311,6 @@ const (
 
 	// FrontendLogFormatClf captures enum value "clf"
 	FrontendLogFormatClf string = "clf"
-
-	// FrontendLogFormatCustom captures enum value "custom"
-	FrontendLogFormatCustom string = "custom"
 )
 
 // prop value enum
@@ -511,49 +378,6 @@ func (m *Frontend) validateLogIgnoreNull(formats strfmt.Registry) error {
 	return nil
 }
 
-var frontendTypeLogSeparateErrorsPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeLogSeparateErrorsPropEnum = append(frontendTypeLogSeparateErrorsPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendLogSeparateErrorsEnabled captures enum value "enabled"
-	FrontendLogSeparateErrorsEnabled string = "enabled"
-
-	// FrontendLogSeparateErrorsDisabled captures enum value "disabled"
-	FrontendLogSeparateErrorsDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Frontend) validateLogSeparateErrorsEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeLogSeparateErrorsPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateLogSeparateErrors(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.LogSeparateErrors) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLogSeparateErrorsEnum("log_separate_errors", "body", m.LogSeparateErrors); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *Frontend) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
@@ -600,49 +424,6 @@ func (m *Frontend) validateProtocol(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateProtocolEnum("protocol", "body", m.Protocol); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var frontendTypeTCPSmartAcceptPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["disabled","enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeTCPSmartAcceptPropEnum = append(frontendTypeTCPSmartAcceptPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendTCPSmartAcceptDisabled captures enum value "disabled"
-	FrontendTCPSmartAcceptDisabled string = "disabled"
-
-	// FrontendTCPSmartAcceptEnabled captures enum value "enabled"
-	FrontendTCPSmartAcceptEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Frontend) validateTCPSmartAcceptEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeTCPSmartAcceptPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateTCPSmartAccept(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.TCPSmartAccept) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTCPSmartAcceptEnum("tcp_smart_accept", "body", m.TCPSmartAccept); err != nil {
 		return err
 	}
 

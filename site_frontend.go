@@ -20,16 +20,9 @@ import (
 // swagger:model siteFrontend
 type SiteFrontend struct {
 
-	// http xff header insert
-	// Enum: [enabled]
-	HTTPXffHeaderInsert string `json:"http-xff-header-insert,omitempty"`
-
 	// http connection mode
-	// Enum: [tunnel passive-close forced-close server-close keep-alive pretend-keepalive]
+	// Enum: [tunnel passive-close forced-close server-close keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
-
-	// http xff header insert name
-	HTTPXffHeaderInsertName string `json:"http_xff_header_insert_name,omitempty"`
 
 	// listeners
 	Listeners []*SiteFrontendListenersItems `json:"listeners"`
@@ -49,10 +42,6 @@ type SiteFrontend struct {
 // Validate validates this site frontend
 func (m *SiteFrontend) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateHTTPXffHeaderInsert(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateHTTPConnectionMode(formats); err != nil {
 		res = append(res, err)
@@ -76,51 +65,11 @@ func (m *SiteFrontend) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var siteFrontendTypeHTTPXffHeaderInsertPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		siteFrontendTypeHTTPXffHeaderInsertPropEnum = append(siteFrontendTypeHTTPXffHeaderInsertPropEnum, v)
-	}
-}
-
-const (
-
-	// SiteFrontendHTTPXffHeaderInsertEnabled captures enum value "enabled"
-	SiteFrontendHTTPXffHeaderInsertEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *SiteFrontend) validateHTTPXffHeaderInsertEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, siteFrontendTypeHTTPXffHeaderInsertPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *SiteFrontend) validateHTTPXffHeaderInsert(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HTTPXffHeaderInsert) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPXffHeaderInsertEnum("http-xff-header-insert", "body", m.HTTPXffHeaderInsert); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var siteFrontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive","pretend-keepalive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -144,9 +93,6 @@ const (
 
 	// SiteFrontendHTTPConnectionModeKeepAlive captures enum value "keep-alive"
 	SiteFrontendHTTPConnectionModeKeepAlive string = "keep-alive"
-
-	// SiteFrontendHTTPConnectionModePretendKeepalive captures enum value "pretend-keepalive"
-	SiteFrontendHTTPConnectionModePretendKeepalive string = "pretend-keepalive"
 )
 
 // prop value enum

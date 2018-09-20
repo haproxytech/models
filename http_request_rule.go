@@ -24,21 +24,18 @@ type HTTPRequestRule struct {
 	// auth realm
 	AuthRealm string `json:"auth_realm,omitempty"`
 
-	// capture id
-	CaptureID *int64 `json:"capture_id,omitempty"`
-
-	// capture len
-	CaptureLen *int64 `json:"capture_len,omitempty"`
-
-	// capture sample
-	CaptureSample string `json:"capture_sample,omitempty"`
-
 	// cond
 	// Enum: [if unless]
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
+
+	// hdr format
+	HdrFormat string `json:"hdr_format,omitempty"`
+
+	// hdr match
+	HdrMatch string `json:"hdr_match,omitempty"`
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
@@ -65,23 +62,25 @@ type HTTPRequestRule struct {
 	// Enum: [location prefix scheme]
 	RedirType string `json:"redir_type,omitempty"`
 
-	// src expression
-	SrcExpression string `json:"src_expression,omitempty"`
+	// spoe engine
+	SpoeEngine string `json:"spoe_engine,omitempty"`
+
+	// spoe group
+	SpoeGroup string `json:"spoe_group,omitempty"`
+
+	// svc name
+	SvcName string `json:"svc_name,omitempty"`
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header set-header set-log-level capture set-var set-src]
+	// Enum: [allow deny auth redirect tarpit add-header set-header set-log-level set-var send-spoe-group replace-header replace-value use-service]
 	Type string `json:"type"`
-
-	// var expression
-	VarExpression string `json:"var_expression,omitempty"`
 
 	// var name
 	VarName string `json:"var_name,omitempty"`
 
-	// var scope
-	// Enum: [session transaction request response]
-	VarScope string `json:"var_scope,omitempty"`
+	// var pattern
+	VarPattern string `json:"var_pattern,omitempty"`
 }
 
 // Validate validates this http request rule
@@ -109,10 +108,6 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateType(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateVarScope(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -322,7 +317,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","set-header","set-log-level","capture","set-var","set-src"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","set-header","set-log-level","set-var","send-spoe-group","replace-header","replace-value","use-service"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -356,14 +351,20 @@ const (
 	// HTTPRequestRuleTypeSetLogLevel captures enum value "set-log-level"
 	HTTPRequestRuleTypeSetLogLevel string = "set-log-level"
 
-	// HTTPRequestRuleTypeCapture captures enum value "capture"
-	HTTPRequestRuleTypeCapture string = "capture"
-
 	// HTTPRequestRuleTypeSetVar captures enum value "set-var"
 	HTTPRequestRuleTypeSetVar string = "set-var"
 
-	// HTTPRequestRuleTypeSetSrc captures enum value "set-src"
-	HTTPRequestRuleTypeSetSrc string = "set-src"
+	// HTTPRequestRuleTypeSendSpoeGroup captures enum value "send-spoe-group"
+	HTTPRequestRuleTypeSendSpoeGroup string = "send-spoe-group"
+
+	// HTTPRequestRuleTypeReplaceHeader captures enum value "replace-header"
+	HTTPRequestRuleTypeReplaceHeader string = "replace-header"
+
+	// HTTPRequestRuleTypeReplaceValue captures enum value "replace-value"
+	HTTPRequestRuleTypeReplaceValue string = "replace-value"
+
+	// HTTPRequestRuleTypeUseService captures enum value "use-service"
+	HTTPRequestRuleTypeUseService string = "use-service"
 )
 
 // prop value enum
@@ -382,55 +383,6 @@ func (m *HTTPRequestRule) validateType(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var httpRequestRuleTypeVarScopePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["session","transaction","request","response"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		httpRequestRuleTypeVarScopePropEnum = append(httpRequestRuleTypeVarScopePropEnum, v)
-	}
-}
-
-const (
-
-	// HTTPRequestRuleVarScopeSession captures enum value "session"
-	HTTPRequestRuleVarScopeSession string = "session"
-
-	// HTTPRequestRuleVarScopeTransaction captures enum value "transaction"
-	HTTPRequestRuleVarScopeTransaction string = "transaction"
-
-	// HTTPRequestRuleVarScopeRequest captures enum value "request"
-	HTTPRequestRuleVarScopeRequest string = "request"
-
-	// HTTPRequestRuleVarScopeResponse captures enum value "response"
-	HTTPRequestRuleVarScopeResponse string = "response"
-)
-
-// prop value enum
-func (m *HTTPRequestRule) validateVarScopeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpRequestRuleTypeVarScopePropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *HTTPRequestRule) validateVarScope(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.VarScope) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateVarScopeEnum("var_scope", "body", m.VarScope); err != nil {
 		return err
 	}
 
