@@ -20,15 +20,18 @@ import (
 type SiteBackendsItemsServersItems struct {
 
 	// address
-	Address string `json:"address,omitempty"`
+	// Required: true
+	Address string `json:"address"`
 
 	// name
-	Name string `json:"name,omitempty"`
+	// Required: true
+	Name string `json:"name"`
 
 	// port
+	// Required: true
 	// Maximum: 65535
 	// Minimum: 0
-	Port *int64 `json:"port,omitempty"`
+	Port *int64 `json:"port"`
 
 	// ssl
 	// Enum: [enabled]
@@ -41,6 +44,14 @@ type SiteBackendsItemsServersItems struct {
 // Validate validates this site backends items servers items
 func (m *SiteBackendsItemsServersItems) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateAddress(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validatePort(formats); err != nil {
 		res = append(res, err)
@@ -56,10 +67,28 @@ func (m *SiteBackendsItemsServersItems) Validate(formats strfmt.Registry) error 
 	return nil
 }
 
+func (m *SiteBackendsItemsServersItems) validateAddress(formats strfmt.Registry) error {
+
+	if err := validate.RequiredString("address", "body", string(m.Address)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SiteBackendsItemsServersItems) validateName(formats strfmt.Registry) error {
+
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *SiteBackendsItemsServersItems) validatePort(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Port) { // not required
-		return nil
+	if err := validate.Required("port", "body", m.Port); err != nil {
+		return err
 	}
 
 	if err := validate.MinimumInt("port", "body", int64(*m.Port), 0, false); err != nil {

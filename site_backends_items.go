@@ -40,7 +40,8 @@ type SiteBackendsItems struct {
 	Log string `json:"log,omitempty"`
 
 	// name
-	Name string `json:"name,omitempty"`
+	// Required: true
+	Name string `json:"name"`
 
 	// protocol
 	// Enum: [http tcp]
@@ -50,8 +51,9 @@ type SiteBackendsItems struct {
 	Servers []*SiteBackendsItemsServersItems `json:"servers"`
 
 	// use as
+	// Required: true
 	// Enum: [default conditional]
-	UseAs string `json:"use_as,omitempty"`
+	UseAs string `json:"use_as"`
 }
 
 // Validate validates this site backends items
@@ -71,6 +73,10 @@ func (m *SiteBackendsItems) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -264,6 +270,15 @@ func (m *SiteBackendsItems) validateLog(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *SiteBackendsItems) validateName(formats strfmt.Registry) error {
+
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var siteBackendsItemsTypeProtocolPropEnum []interface{}
 
 func init() {
@@ -363,8 +378,8 @@ func (m *SiteBackendsItems) validateUseAsEnum(path, location string, value strin
 
 func (m *SiteBackendsItems) validateUseAs(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.UseAs) { // not required
-		return nil
+	if err := validate.RequiredString("use_as", "body", string(m.UseAs)); err != nil {
+		return err
 	}
 
 	// value enum
