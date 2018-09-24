@@ -38,7 +38,6 @@ type Listener struct {
 	Ssl string `json:"ssl,omitempty"`
 
 	// ssl certificate
-	// Enum: [default]
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
 	// tcp user timeout
@@ -62,10 +61,6 @@ func (m *Listener) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSsl(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSslCertificate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -139,46 +134,6 @@ func (m *Listener) validateSsl(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslEnum("ssl", "body", m.Ssl); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var listenerTypeSslCertificatePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["default"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		listenerTypeSslCertificatePropEnum = append(listenerTypeSslCertificatePropEnum, v)
-	}
-}
-
-const (
-
-	// ListenerSslCertificateDefault captures enum value "default"
-	ListenerSslCertificateDefault string = "default"
-)
-
-// prop value enum
-func (m *Listener) validateSslCertificateEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, listenerTypeSslCertificatePropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Listener) validateSslCertificate(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.SslCertificate) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSslCertificateEnum("ssl_certificate", "body", m.SslCertificate); err != nil {
 		return err
 	}
 
