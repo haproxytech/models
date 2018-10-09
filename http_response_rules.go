@@ -18,7 +18,7 @@ import (
 //
 // HAProxy HTTP response rules array (corresponds to http-response directives)
 // swagger:model http_response_rules
-type HTTPResponseRules []*HTTPRequestRule
+type HTTPResponseRules []*HTTPResponseRule
 
 // Validate validates this http response rules
 func (m HTTPResponseRules) Validate(formats strfmt.Registry) error {
