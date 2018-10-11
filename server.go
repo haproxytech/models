@@ -61,6 +61,10 @@ type Server struct {
 	// ssl certificate
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
+	// tls tickets
+	// Enum: [enabled disabled]
+	TLSTickets string `json:"tls_tickets,omitempty"`
+
 	// weight
 	Weight *int64 `json:"weight,omitempty"`
 }
@@ -90,6 +94,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSsl(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTLSTickets(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -279,6 +287,49 @@ func (m *Server) validateSsl(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslEnum("ssl", "body", m.Ssl); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeTLSTicketsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeTLSTicketsPropEnum = append(serverTypeTLSTicketsPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerTLSTicketsEnabled captures enum value "enabled"
+	ServerTLSTicketsEnabled string = "enabled"
+
+	// ServerTLSTicketsDisabled captures enum value "disabled"
+	ServerTLSTicketsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateTLSTicketsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeTLSTicketsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateTLSTickets(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TLSTickets) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTLSTicketsEnum("tls_tickets", "body", m.TLSTickets); err != nil {
 		return err
 	}
 
