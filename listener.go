@@ -37,6 +37,9 @@ type Listener struct {
 	// Enum: [enabled]
 	Ssl string `json:"ssl,omitempty"`
 
+	// ssl cafile
+	SslCafile string `json:"ssl_cafile,omitempty"`
+
 	// ssl certificate
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 

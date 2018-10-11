@@ -55,6 +55,12 @@ type Server struct {
 	// Enum: [enabled]
 	Ssl string `json:"ssl,omitempty"`
 
+	// ssl cafile
+	SslCafile string `json:"ssl_cafile,omitempty"`
+
+	// ssl certificate
+	SslCertificate string `json:"ssl_certificate,omitempty"`
+
 	// weight
 	Weight *int64 `json:"weight,omitempty"`
 }
