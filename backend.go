@@ -22,7 +22,7 @@ import (
 type Backend struct {
 
 	// adv check
-	// Enum: [http ssl-hello smtp ldap mysql pgsql tcp]
+	// Enum: [http ssl-hello smtp ldap mysql pgsql tcp redis]
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// adv check http method
@@ -235,7 +235,7 @@ var backendTypeAdvCheckPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http","ssl-hello","smtp","ldap","mysql","pgsql","tcp"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http","ssl-hello","smtp","ldap","mysql","pgsql","tcp","redis"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -265,6 +265,9 @@ const (
 
 	// BackendAdvCheckTCP captures enum value "tcp"
 	BackendAdvCheckTCP string = "tcp"
+
+	// BackendAdvCheckRedis captures enum value "redis"
+	BackendAdvCheckRedis string = "redis"
 )
 
 // prop value enum
