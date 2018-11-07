@@ -27,6 +27,9 @@ type NativeStatsItems struct {
 	// name
 	Name string `json:"name,omitempty"`
 
+	// process
+	Process int64 `json:"process,omitempty"`
+
 	// stats
 	Stats *NativeStatsItemsStats `json:"stats,omitempty"`
 

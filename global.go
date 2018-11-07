@@ -28,6 +28,19 @@ type Global struct {
 	// maxconn
 	Maxconn int64 `json:"maxconn,omitempty"`
 
+	// nbproc
+	Nbproc int64 `json:"nbproc,omitempty"`
+
+	// runtime api
+	RuntimeAPI string `json:"runtime_api,omitempty"`
+
+	// runtime api level
+	// Enum: [user operator admin]
+	RuntimeAPILevel string `json:"runtime_api_level,omitempty"`
+
+	// runtime api mode
+	RuntimeAPIMode string `json:"runtime_api_mode,omitempty"`
+
 	// ssl default bind ciphers
 	SslDefaultBindCiphers string `json:"ssl_default_bind_ciphers,omitempty"`
 
@@ -43,6 +56,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDaemon(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRuntimeAPILevel(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -89,6 +106,52 @@ func (m *Global) validateDaemon(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateDaemonEnum("daemon", "body", m.Daemon); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTypeRuntimeAPILevelPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["user","operator","admin"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeRuntimeAPILevelPropEnum = append(globalTypeRuntimeAPILevelPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalRuntimeAPILevelUser captures enum value "user"
+	GlobalRuntimeAPILevelUser string = "user"
+
+	// GlobalRuntimeAPILevelOperator captures enum value "operator"
+	GlobalRuntimeAPILevelOperator string = "operator"
+
+	// GlobalRuntimeAPILevelAdmin captures enum value "admin"
+	GlobalRuntimeAPILevelAdmin string = "admin"
+)
+
+// prop value enum
+func (m *Global) validateRuntimeAPILevelEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTypeRuntimeAPILevelPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateRuntimeAPILevel(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.RuntimeAPILevel) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateRuntimeAPILevelEnum("runtime_api_level", "body", m.RuntimeAPILevel); err != nil {
 		return err
 	}
 
