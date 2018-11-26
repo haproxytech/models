@@ -33,6 +33,9 @@ type Listener struct {
 	// Minimum: 0
 	Port *int64 `json:"port,omitempty"`
 
+	// process
+	Process string `json:"process,omitempty"`
+
 	// ssl
 	// Enum: [enabled]
 	Ssl string `json:"ssl,omitempty"`

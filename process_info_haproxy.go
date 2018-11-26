@@ -23,15 +23,19 @@ type ProcessInfoHaproxy struct {
 	// Process id of the replying worker process
 	Pid *int64 `json:"pid,omitempty"`
 
-	// Process id of the master process
-	Ppid *int64 `json:"ppid,omitempty"`
-
 	// Number of spawned processes
 	Processes *int64 `json:"processes,omitempty"`
+
+	// HAProxy version release date
+	// Format: date
+	ReleaseDate strfmt.Date `json:"release_date,omitempty"`
 
 	// Current time in milliseconds since Epoch.
 	// Format: date-time
 	Time strfmt.DateTime `json:"time,omitempty"`
+
+	// HAProxy uptime in s
+	Uptime *int64 `json:"uptime,omitempty"`
 
 	// HAProxy version string
 	Version string `json:"version,omitempty"`
@@ -41,6 +45,10 @@ type ProcessInfoHaproxy struct {
 func (m *ProcessInfoHaproxy) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateReleaseDate(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTime(formats); err != nil {
 		res = append(res, err)
 	}
@@ -48,6 +56,19 @@ func (m *ProcessInfoHaproxy) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ProcessInfoHaproxy) validateReleaseDate(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReleaseDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("release_date", "body", "date", m.ReleaseDate.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 
