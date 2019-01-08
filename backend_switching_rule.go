@@ -34,6 +34,7 @@ type BackendSwitchingRule struct {
 
 	// target farm
 	// Required: true
+	// Pattern: ^[A-Za-z0-9-_.:]+$
 	TargetFarm string `json:"target_farm"`
 }
 
@@ -114,6 +115,10 @@ func (m *BackendSwitchingRule) validateID(formats strfmt.Registry) error {
 func (m *BackendSwitchingRule) validateTargetFarm(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("target_farm", "body", string(m.TargetFarm)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("target_farm", "body", string(m.TargetFarm), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

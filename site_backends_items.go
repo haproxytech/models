@@ -41,6 +41,7 @@ type SiteBackendsItems struct {
 
 	// name
 	// Required: true
+	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
 	// protocol
@@ -273,6 +274,10 @@ func (m *SiteBackendsItems) validateLog(formats strfmt.Registry) error {
 func (m *SiteBackendsItems) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

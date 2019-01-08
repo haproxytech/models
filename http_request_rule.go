@@ -22,6 +22,7 @@ import (
 type HTTPRequestRule struct {
 
 	// auth realm
+	// Pattern: ^[^\s]+$
 	AuthRealm string `json:"auth_realm,omitempty"`
 
 	// cond
@@ -32,15 +33,19 @@ type HTTPRequestRule struct {
 	CondTest string `json:"cond_test,omitempty"`
 
 	// hdr format
+	// Pattern: ^[^\s]+$
 	HdrFormat string `json:"hdr_format,omitempty"`
 
 	// hdr match
+	// Pattern: ^[^\s]+$
 	HdrMatch string `json:"hdr_match,omitempty"`
 
 	// hdr name
+	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
 
 	// hdr value
+	// Pattern: ^[^\s]+$
 	HdrValue string `json:"hdr_value,omitempty"`
 
 	// id
@@ -56,6 +61,7 @@ type HTTPRequestRule struct {
 	RedirCode int64 `json:"redir_code,omitempty"`
 
 	// redir to
+	// Pattern: ^[^\s]+$
 	RedirTo string `json:"redir_to,omitempty"`
 
 	// redir type
@@ -63,12 +69,15 @@ type HTTPRequestRule struct {
 	RedirType string `json:"redir_type,omitempty"`
 
 	// spoe engine
+	// Pattern: ^[^\s]+$
 	SpoeEngine string `json:"spoe_engine,omitempty"`
 
 	// spoe group
+	// Pattern: ^[^\s]+$
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
 	// svc name
+	// Pattern: ^[^\s]+$
 	SvcName string `json:"svc_name,omitempty"`
 
 	// type
@@ -77,9 +86,11 @@ type HTTPRequestRule struct {
 	Type string `json:"type"`
 
 	// var name
+	// Pattern: ^[^\s]+$
 	VarName string `json:"var_name,omitempty"`
 
 	// var pattern
+	// Pattern: ^[^\s]+$
 	VarPattern string `json:"var_pattern,omitempty"`
 }
 
@@ -87,7 +98,27 @@ type HTTPRequestRule struct {
 func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAuthRealm(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHdrFormat(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHdrMatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHdrName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHdrValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -103,7 +134,23 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateRedirTo(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRedirType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpoeEngine(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpoeGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSvcName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -111,9 +158,30 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateVarName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVarPattern(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateAuthRealm(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AuthRealm) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("auth_realm", "body", string(m.AuthRealm), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -154,6 +222,58 @@ func (m *HTTPRequestRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateHdrFormat(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrFormat) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_format", "body", string(m.HdrFormat), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateHdrMatch(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrMatch) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_match", "body", string(m.HdrMatch), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateHdrName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_name", "body", string(m.HdrName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateHdrValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_value", "body", string(m.HdrValue), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -267,6 +387,19 @@ func (m *HTTPRequestRule) validateRedirCode(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateRedirTo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.RedirTo) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("redir_to", "body", string(m.RedirTo), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpRequestRuleTypeRedirTypePropEnum []interface{}
 
 func init() {
@@ -307,6 +440,45 @@ func (m *HTTPRequestRule) validateRedirType(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateRedirTypeEnum("redir_type", "body", m.RedirType); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateSpoeEngine(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpoeEngine) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_engine", "body", string(m.SpoeEngine), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateSpoeGroup(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpoeGroup) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_group", "body", string(m.SpoeGroup), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateSvcName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SvcName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("svc_name", "body", string(m.SvcName), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -383,6 +555,32 @@ func (m *HTTPRequestRule) validateType(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateVarName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.VarName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_name", "body", string(m.VarName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateVarPattern(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.VarPattern) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_pattern", "body", string(m.VarPattern), `^[^\s]+$`); err != nil {
 		return err
 	}
 

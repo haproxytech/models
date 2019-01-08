@@ -26,9 +26,11 @@ type Filter struct {
 	ID int64 `json:"id"`
 
 	// spoe config
+	// Pattern: ^[^\s]+$
 	SpoeConfig string `json:"spoe_config,omitempty"`
 
 	// spoe engine
+	// Pattern: ^[^\s]+$
 	SpoeEngine string `json:"spoe_engine,omitempty"`
 
 	// trace hexdump
@@ -36,6 +38,7 @@ type Filter struct {
 	TraceHexdump string `json:"trace_hexdump,omitempty"`
 
 	// trace name
+	// Pattern: ^[^\s]+$
 	TraceName string `json:"trace_name,omitempty"`
 
 	// trace rnd forwarding
@@ -60,7 +63,19 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSpoeConfig(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpoeEngine(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTraceHexdump(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTraceName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -85,6 +100,32 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 func (m *Filter) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Filter) validateSpoeConfig(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpoeConfig) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_config", "body", string(m.SpoeConfig), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Filter) validateSpoeEngine(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpoeEngine) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_engine", "body", string(m.SpoeEngine), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -125,6 +166,19 @@ func (m *Filter) validateTraceHexdump(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTraceHexdumpEnum("trace_hexdump", "body", m.TraceHexdump); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Filter) validateTraceName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TraceName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("trace_name", "body", string(m.TraceName), `^[^\s]+$`); err != nil {
 		return err
 	}
 

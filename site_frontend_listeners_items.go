@@ -21,10 +21,12 @@ type SiteFrontendListenersItems struct {
 
 	// address
 	// Required: true
+	// Pattern: ^[^\s]+$
 	Address string `json:"address"`
 
 	// name
 	// Required: true
+	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
 
 	// port
@@ -38,6 +40,7 @@ type SiteFrontendListenersItems struct {
 	Ssl string `json:"ssl,omitempty"`
 
 	// ssl certificate
+	// Pattern: ^[^\s]+$
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 }
 
@@ -61,6 +64,10 @@ func (m *SiteFrontendListenersItems) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSslCertificate(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -73,12 +80,20 @@ func (m *SiteFrontendListenersItems) validateAddress(formats strfmt.Registry) er
 		return err
 	}
 
+	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (m *SiteFrontendListenersItems) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -136,6 +151,19 @@ func (m *SiteFrontendListenersItems) validateSsl(formats strfmt.Registry) error 
 
 	// value enum
 	if err := m.validateSslEnum("ssl", "body", m.Ssl); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SiteFrontendListenersItems) validateSslCertificate(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslCertificate) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("ssl_certificate", "body", string(m.SslCertificate), `^[^\s]+$`); err != nil {
 		return err
 	}
 

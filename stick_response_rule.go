@@ -33,9 +33,11 @@ type StickResponseRule struct {
 	ID int64 `json:"id"`
 
 	// pattern
+	// Pattern: ^[^\s]+$
 	Pattern string `json:"pattern,omitempty"`
 
 	// table
+	// Pattern: ^[^\s]+$
 	Table string `json:"table,omitempty"`
 
 	// type
@@ -53,6 +55,14 @@ func (m *StickResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePattern(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTable(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -112,6 +122,32 @@ func (m *StickResponseRule) validateCond(formats strfmt.Registry) error {
 func (m *StickResponseRule) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *StickResponseRule) validatePattern(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Pattern) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("pattern", "body", string(m.Pattern), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *StickResponseRule) validateTable(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Table) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("table", "body", string(m.Table), `^[^\s]+$`); err != nil {
 		return err
 	}
 

@@ -29,15 +29,19 @@ type HTTPResponseRule struct {
 	CondTest string `json:"cond_test,omitempty"`
 
 	// hdr format
+	// Pattern: ^[^\s]+$
 	HdrFormat string `json:"hdr_format,omitempty"`
 
 	// hdr match
+	// Pattern: ^[^\s]+$
 	HdrMatch string `json:"hdr_match,omitempty"`
 
 	// hdr name
+	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
 
 	// hdr value
+	// Pattern: ^[^\s]+$
 	HdrValue string `json:"hdr_value,omitempty"`
 
 	// id
@@ -49,9 +53,11 @@ type HTTPResponseRule struct {
 	LogLevel string `json:"log_level,omitempty"`
 
 	// spoe engine
+	// Pattern: ^[^\s]+$
 	SpoeEngine string `json:"spoe_engine,omitempty"`
 
 	// spoe group
+	// Pattern: ^[^\s]+$
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
 	// status group
@@ -63,9 +69,11 @@ type HTTPResponseRule struct {
 	Type string `json:"type"`
 
 	// var name
+	// Pattern: ^[^\s]+$
 	VarName string `json:"var_name,omitempty"`
 
 	// var pattern
+	// Pattern: ^[^\s]+$
 	VarPattern string `json:"var_pattern,omitempty"`
 }
 
@@ -77,6 +85,22 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHdrFormat(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHdrMatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHdrName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHdrValue(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
 	}
@@ -85,7 +109,23 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSpoeEngine(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpoeGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVarName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVarPattern(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -132,6 +172,58 @@ func (m *HTTPResponseRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateHdrFormat(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrFormat) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_format", "body", string(m.HdrFormat), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateHdrMatch(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrMatch) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_match", "body", string(m.HdrMatch), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateHdrName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_name", "body", string(m.HdrName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateHdrValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HdrValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hdr_value", "body", string(m.HdrValue), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -211,6 +303,32 @@ func (m *HTTPResponseRule) validateLogLevel(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPResponseRule) validateSpoeEngine(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpoeEngine) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_engine", "body", string(m.SpoeEngine), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateSpoeGroup(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpoeGroup) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_group", "body", string(m.SpoeGroup), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
@@ -272,6 +390,32 @@ func (m *HTTPResponseRule) validateType(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateVarName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.VarName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_name", "body", string(m.VarName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateVarPattern(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.VarPattern) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_pattern", "body", string(m.VarPattern), `^[^\s]+$`); err != nil {
 		return err
 	}
 

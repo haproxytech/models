@@ -30,9 +30,11 @@ type Backend struct {
 	AdvCheckHTTPMethod string `json:"adv_check_http_method,omitempty"`
 
 	// adv check http uri
+	// Pattern: ^[^\s]+$
 	AdvCheckHTTPURI string `json:"adv_check_http_uri,omitempty"`
 
 	// adv check http version
+	// Pattern: ^[^\s]+$
 	AdvCheckHTTPVersion string `json:"adv_check_http_version,omitempty"`
 
 	// balance
@@ -64,6 +66,7 @@ type Backend struct {
 	ConnectRetries *int64 `json:"connect_retries,omitempty"`
 
 	// connect source
+	// Pattern: ^[^\s]+$
 	ConnectSource string `json:"connect_source,omitempty"`
 
 	// connect timeout
@@ -90,6 +93,7 @@ type Backend struct {
 	HTTPCookieMode string `json:"http_cookie_mode,omitempty"`
 
 	// http cookie name
+	// Pattern: ^[^\s]+$
 	HTTPCookieName string `json:"http_cookie_name,omitempty"`
 
 	// http cookie nocache
@@ -110,6 +114,7 @@ type Backend struct {
 
 	// name
 	// Required: true
+	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
 	// protocol
@@ -137,6 +142,7 @@ type Backend struct {
 	StickTableNopurge string `json:"stick_table_nopurge,omitempty"`
 
 	// stick table peers
+	// Pattern: ^[^\s]+$
 	StickTablePeers string `json:"stick_table_peers,omitempty"`
 
 	// stick table size
@@ -161,6 +167,14 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAdvCheckHTTPURI(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAdvCheckHTTPVersion(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateBalance(formats); err != nil {
 		res = append(res, err)
 	}
@@ -170,6 +184,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateConnectFailureRedispatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateConnectSource(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -190,6 +208,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPCookieMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPCookieName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -222,6 +244,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStickTableNopurge(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStickTablePeers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -347,6 +373,32 @@ func (m *Backend) validateAdvCheckHTTPMethod(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Backend) validateAdvCheckHTTPURI(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AdvCheckHTTPURI) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("adv_check_http_uri", "body", string(m.AdvCheckHTTPURI), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateAdvCheckHTTPVersion(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AdvCheckHTTPVersion) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("adv_check_http_version", "body", string(m.AdvCheckHTTPVersion), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeBalancePropEnum []interface{}
 
 func init() {
@@ -450,6 +502,19 @@ func (m *Backend) validateConnectFailureRedispatch(formats strfmt.Registry) erro
 
 	// value enum
 	if err := m.validateConnectFailureRedispatchEnum("connect_failure_redispatch", "body", m.ConnectFailureRedispatch); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateConnectSource(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ConnectSource) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("connect_source", "body", string(m.ConnectSource), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -695,6 +760,19 @@ func (m *Backend) validateHTTPCookieMode(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Backend) validateHTTPCookieName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPCookieName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("http_cookie_name", "body", string(m.HTTPCookieName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeHTTPCookieNocachePropEnum []interface{}
 
 func init() {
@@ -870,6 +948,10 @@ func (m *Backend) validateName(formats strfmt.Registry) error {
 		return err
 	}
 
+	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -1002,6 +1084,19 @@ func (m *Backend) validateStickTableNopurge(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateStickTableNopurgeEnum("stick_table_nopurge", "body", m.StickTableNopurge); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateStickTablePeers(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StickTablePeers) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("stick_table_peers", "body", string(m.StickTablePeers), `^[^\s]+$`); err != nil {
 		return err
 	}
 

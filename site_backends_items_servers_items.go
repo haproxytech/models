@@ -21,10 +21,12 @@ type SiteBackendsItemsServersItems struct {
 
 	// address
 	// Required: true
+	// Pattern: ^[^\s]+$
 	Address string `json:"address"`
 
 	// name
 	// Required: true
+	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
 
 	// port
@@ -73,12 +75,20 @@ func (m *SiteBackendsItemsServersItems) validateAddress(formats strfmt.Registry)
 		return err
 	}
 
+	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (m *SiteBackendsItemsServersItems) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
 		return err
 	}
 

@@ -29,6 +29,7 @@ type Frontend struct {
 	ContinuousStatistics string `json:"continuous_statistics,omitempty"`
 
 	// default farm
+	// Pattern: ^[A-Za-z0-9-_.:]+$
 	DefaultFarm string `json:"default_farm,omitempty"`
 
 	// http connection mode
@@ -62,6 +63,7 @@ type Frontend struct {
 
 	// name
 	// Required: true
+	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
 	// protocol
@@ -77,6 +79,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateContinuousStatistics(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDefaultFarm(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -148,6 +154,19 @@ func (m *Frontend) validateContinuousStatistics(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateContinuousStatisticsEnum("continuous_statistics", "body", m.ContinuousStatistics); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateDefaultFarm(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DefaultFarm) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("default_farm", "body", string(m.DefaultFarm), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 
@@ -381,6 +400,10 @@ func (m *Frontend) validateLogIgnoreNull(formats strfmt.Registry) error {
 func (m *Frontend) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

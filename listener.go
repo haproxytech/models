@@ -22,10 +22,12 @@ import (
 type Listener struct {
 
 	// address
+	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
 	// name
 	// Required: true
+	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
 
 	// port
@@ -34,6 +36,7 @@ type Listener struct {
 	Port *int64 `json:"port,omitempty"`
 
 	// process
+	// Pattern: ^[^\s]+$
 	Process string `json:"process,omitempty"`
 
 	// ssl
@@ -41,9 +44,11 @@ type Listener struct {
 	Ssl string `json:"ssl,omitempty"`
 
 	// ssl cafile
+	// Pattern: ^[^\s]+$
 	SslCafile string `json:"ssl_cafile,omitempty"`
 
 	// ssl certificate
+	// Pattern: ^[^\s]+$
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
 	// tcp user timeout
@@ -58,6 +63,10 @@ type Listener struct {
 func (m *Listener) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAddress(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
@@ -66,7 +75,19 @@ func (m *Listener) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateProcess(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSsl(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslCafile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslCertificate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -80,9 +101,26 @@ func (m *Listener) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Listener) validateAddress(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Address) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Listener) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -100,6 +138,19 @@ func (m *Listener) validatePort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Listener) validateProcess(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Process) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("process", "body", string(m.Process), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -140,6 +191,32 @@ func (m *Listener) validateSsl(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslEnum("ssl", "body", m.Ssl); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Listener) validateSslCafile(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslCafile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("ssl_cafile", "body", string(m.SslCafile), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Listener) validateSslCertificate(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslCertificate) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("ssl_certificate", "body", string(m.SslCertificate), `^[^\s]+$`); err != nil {
 		return err
 	}
 

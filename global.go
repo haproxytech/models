@@ -32,6 +32,7 @@ type Global struct {
 	Nbproc int64 `json:"nbproc,omitempty"`
 
 	// runtime api
+	// Pattern: ^[^\s]+$
 	RuntimeAPI string `json:"runtime_api,omitempty"`
 
 	// runtime api level
@@ -39,6 +40,7 @@ type Global struct {
 	RuntimeAPILevel string `json:"runtime_api_level,omitempty"`
 
 	// runtime api mode
+	// Pattern: ^[^\s]+$
 	RuntimeAPIMode string `json:"runtime_api_mode,omitempty"`
 
 	// ssl default bind ciphers
@@ -59,7 +61,15 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateRuntimeAPI(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRuntimeAPILevel(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRuntimeAPIMode(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -112,6 +122,19 @@ func (m *Global) validateDaemon(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateRuntimeAPI(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.RuntimeAPI) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("runtime_api", "body", string(m.RuntimeAPI), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var globalTypeRuntimeAPILevelPropEnum []interface{}
 
 func init() {
@@ -152,6 +175,19 @@ func (m *Global) validateRuntimeAPILevel(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateRuntimeAPILevelEnum("runtime_api_level", "body", m.RuntimeAPILevel); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateRuntimeAPIMode(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.RuntimeAPIMode) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("runtime_api_mode", "body", string(m.RuntimeAPIMode), `^[^\s]+$`); err != nil {
 		return err
 	}
 

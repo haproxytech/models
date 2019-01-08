@@ -22,6 +22,7 @@ import (
 type Server struct {
 
 	// address
+	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
 	// check
@@ -29,6 +30,7 @@ type Server struct {
 	Check string `json:"check,omitempty"`
 
 	// http cookie id
+	// Pattern: ^[^\s]+$
 	HTTPCookieID string `json:"http-cookie-id,omitempty"`
 
 	// maintenance
@@ -40,6 +42,7 @@ type Server struct {
 
 	// name
 	// Required: true
+	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
 
 	// port
@@ -56,9 +59,11 @@ type Server struct {
 	Ssl string `json:"ssl,omitempty"`
 
 	// ssl cafile
+	// Pattern: ^[^\s]+$
 	SslCafile string `json:"ssl_cafile,omitempty"`
 
 	// ssl certificate
+	// Pattern: ^[^\s]+$
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
 	// tls tickets
@@ -73,7 +78,15 @@ type Server struct {
 func (m *Server) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAddress(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPCookieID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -97,6 +110,14 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSslCafile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslCertificate(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTLSTickets(formats); err != nil {
 		res = append(res, err)
 	}
@@ -104,6 +125,19 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Server) validateAddress(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Address) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -141,6 +175,19 @@ func (m *Server) validateCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCheckEnum("check", "body", m.Check); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateHTTPCookieID(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPCookieID) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("http-cookie-id", "body", string(m.HTTPCookieID), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -190,6 +237,10 @@ func (m *Server) validateMaintenance(formats strfmt.Registry) error {
 func (m *Server) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -287,6 +338,32 @@ func (m *Server) validateSsl(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslEnum("ssl", "body", m.Ssl); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateSslCafile(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslCafile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("ssl_cafile", "body", string(m.SslCafile), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateSslCertificate(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslCertificate) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("ssl_certificate", "body", string(m.SslCertificate), `^[^\s]+$`); err != nil {
 		return err
 	}
 

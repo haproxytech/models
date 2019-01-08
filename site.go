@@ -33,6 +33,7 @@ type Site struct {
 
 	// name
 	// Required: true
+	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 }
 
@@ -104,6 +105,10 @@ func (m *Site) validateFrontend(formats strfmt.Registry) error {
 func (m *Site) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

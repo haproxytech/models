@@ -34,6 +34,7 @@ type ServerSwitchingRule struct {
 
 	// target server
 	// Required: true
+	// Pattern: ^[^\s]+$
 	TargetServer string `json:"target_server"`
 }
 
@@ -114,6 +115,10 @@ func (m *ServerSwitchingRule) validateID(formats strfmt.Registry) error {
 func (m *ServerSwitchingRule) validateTargetServer(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("target_server", "body", string(m.TargetServer)); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("target_server", "body", string(m.TargetServer), `^[^\s]+$`); err != nil {
 		return err
 	}
 

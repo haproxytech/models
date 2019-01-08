@@ -8,7 +8,9 @@ package models
 import (
 	strfmt "github.com/go-openapi/strfmt"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // TransactionOperationsItems transaction operations items
@@ -19,6 +21,7 @@ type TransactionOperationsItems struct {
 	Data interface{} `json:"data,omitempty"`
 
 	// operation
+	// Pattern: ^[^\s]+$
 	Operation string `json:"operation,omitempty"`
 
 	// response
@@ -27,6 +30,28 @@ type TransactionOperationsItems struct {
 
 // Validate validates this transaction operations items
 func (m *TransactionOperationsItems) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateOperation(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *TransactionOperationsItems) validateOperation(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Operation) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("operation", "body", string(m.Operation), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -26,6 +26,7 @@ type Transaction struct {
 	Version int64 `json:"_version,omitempty"`
 
 	// id
+	// Pattern: ^[^\s]+$
 	ID string `json:"id,omitempty"`
 
 	// operations
@@ -40,6 +41,10 @@ type Transaction struct {
 func (m *Transaction) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateOperations(formats); err != nil {
 		res = append(res, err)
 	}
@@ -51,6 +56,19 @@ func (m *Transaction) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Transaction) validateID(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ID) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("id", "body", string(m.ID), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
