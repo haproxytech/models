@@ -1,5 +1,0 @@
-README
-
-./swagger generate model -f ~/projects/haproxy-api/haproxy-open-api-spec/build/haproxy_spec.yaml \
-    -m models \
-    -t $GOPATH/src/github.com/haproxytech/
