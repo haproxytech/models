@@ -7,7 +7,6 @@ package models
 
 import (
 	"encoding/json"
-	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 
@@ -29,9 +28,6 @@ type Transaction struct {
 	// Pattern: ^[^\s]+$
 	ID string `json:"id,omitempty"`
 
-	// operations
-	Operations []*TransactionOperationsItems `json:"operations"`
-
 	// status
 	// Enum: [failed in_progress]
 	Status string `json:"status,omitempty"`
@@ -42,10 +38,6 @@ func (m *Transaction) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateOperations(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -67,31 +59,6 @@ func (m *Transaction) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("id", "body", string(m.ID), `^[^\s]+$`); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (m *Transaction) validateOperations(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Operations) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.Operations); i++ {
-		if swag.IsZero(m.Operations[i]) { // not required
-			continue
-		}
-
-		if m.Operations[i] != nil {
-			if err := m.Operations[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("operations" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
 	}
 
 	return nil
