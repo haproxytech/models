@@ -14,14 +14,14 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// TCPRules TCP Rules Array
+// TCPRequestRules TCP Request Rules Array
 //
-// HAProxy TCP rules array (corresponds to tcp-request and tcp-response directives)
-// swagger:model tcp_rules
-type TCPRules []*TCPRule
+// HAProxy TCP Request Rules array (corresponds to tcp-request directive)
+// swagger:model tcp_request_rules
+type TCPRequestRules []*TCPRequestRule
 
-// Validate validates this tcp rules
-func (m TCPRules) Validate(formats strfmt.Registry) error {
+// Validate validates this tcp request rules
+func (m TCPRequestRules) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

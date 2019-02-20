@@ -14,14 +14,14 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// StickRequestRules Stick Request Rules Array
+// Binds Binds
 //
-// HAProxy backend stick request rules array (corresponds to stick store-request or stick match)
-// swagger:model stick_request_rules
-type StickRequestRules []*StickRequestRule
+// HAProxy frontend binds array (corresponds to bind directives)
+// swagger:model binds
+type Binds []*Bind
 
-// Validate validates this stick request rules
-func (m StickRequestRules) Validate(formats strfmt.Registry) error {
+// Validate validates this binds
+func (m Binds) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

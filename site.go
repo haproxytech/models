@@ -17,39 +17,39 @@ import (
 
 // Site Site
 //
-// Site configuration. Sites are considered as one frontend and all backends connected to that frontend.
-// Backends are connected to frontend using use-backend and default_backend directives. Sites let you
+// Site configuration. Sites are considered as one service and all farms connected to that service.
+// Farms are connected to service using use-backend and default_backend directives. Sites let you
 // configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
 // endpoints.
 //
 // swagger:model site
 type Site struct {
 
-	// backends
-	Backends []*SiteBackendsItems `json:"backends"`
-
-	// frontend
-	Frontend *SiteFrontend `json:"frontend,omitempty"`
+	// farms
+	Farms []*SiteFarmsItems `json:"farms"`
 
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
+
+	// service
+	Service *SiteService `json:"service,omitempty"`
 }
 
 // Validate validates this site
 func (m *Site) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateBackends(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateFrontend(formats); err != nil {
+	if err := m.validateFarms(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateService(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -59,44 +59,26 @@ func (m *Site) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Site) validateBackends(formats strfmt.Registry) error {
+func (m *Site) validateFarms(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Backends) { // not required
+	if swag.IsZero(m.Farms) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.Backends); i++ {
-		if swag.IsZero(m.Backends[i]) { // not required
+	for i := 0; i < len(m.Farms); i++ {
+		if swag.IsZero(m.Farms[i]) { // not required
 			continue
 		}
 
-		if m.Backends[i] != nil {
-			if err := m.Backends[i].Validate(formats); err != nil {
+		if m.Farms[i] != nil {
+			if err := m.Farms[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("backends" + "." + strconv.Itoa(i))
+					return ve.ValidateName("farms" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Site) validateFrontend(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Frontend) { // not required
-		return nil
-	}
-
-	if m.Frontend != nil {
-		if err := m.Frontend.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("frontend")
-			}
-			return err
-		}
 	}
 
 	return nil
@@ -110,6 +92,24 @@ func (m *Site) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Site) validateService(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Service) { // not required
+		return nil
+	}
+
+	if m.Service != nil {
+		if err := m.Service.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("service")
+			}
+			return err
+		}
 	}
 
 	return nil

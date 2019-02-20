@@ -21,9 +21,13 @@ import (
 // swagger:model filter
 type Filter struct {
 
+	// cache name
+	// Pattern: ^[^\s]+$
+	CacheName string `json:"cache_name,omitempty"`
+
 	// id
 	// Required: true
-	ID int64 `json:"id"`
+	ID *int64 `json:"id"`
 
 	// spoe config
 	// Pattern: ^[^\s]+$
@@ -34,30 +38,31 @@ type Filter struct {
 	SpoeEngine string `json:"spoe_engine,omitempty"`
 
 	// trace hexdump
-	// Enum: [enabled]
-	TraceHexdump string `json:"trace_hexdump,omitempty"`
+	TraceHexdump bool `json:"trace_hexdump,omitempty"`
 
 	// trace name
 	// Pattern: ^[^\s]+$
 	TraceName string `json:"trace_name,omitempty"`
 
 	// trace rnd forwarding
-	// Enum: [enabled]
-	TraceRndForwarding string `json:"trace_rnd_forwarding,omitempty"`
+	TraceRndForwarding bool `json:"trace_rnd_forwarding,omitempty"`
 
 	// trace rnd parsing
-	// Enum: [enabled]
-	TraceRndParsing string `json:"trace_rnd_parsing,omitempty"`
+	TraceRndParsing bool `json:"trace_rnd_parsing,omitempty"`
 
 	// type
 	// Required: true
-	// Enum: [trace compression spoe]
+	// Enum: [trace compression spoe cache]
 	Type string `json:"type"`
 }
 
 // Validate validates this filter
 func (m *Filter) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateCacheName(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
@@ -71,19 +76,7 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateTraceHexdump(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateTraceName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTraceRndForwarding(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTraceRndParsing(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -97,9 +90,22 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Filter) validateCacheName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CacheName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("cache_name", "body", string(m.CacheName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Filter) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 
@@ -132,46 +138,6 @@ func (m *Filter) validateSpoeEngine(formats strfmt.Registry) error {
 	return nil
 }
 
-var filterTypeTraceHexdumpPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		filterTypeTraceHexdumpPropEnum = append(filterTypeTraceHexdumpPropEnum, v)
-	}
-}
-
-const (
-
-	// FilterTraceHexdumpEnabled captures enum value "enabled"
-	FilterTraceHexdumpEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Filter) validateTraceHexdumpEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, filterTypeTraceHexdumpPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Filter) validateTraceHexdump(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.TraceHexdump) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTraceHexdumpEnum("trace_hexdump", "body", m.TraceHexdump); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *Filter) validateTraceName(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TraceName) { // not required
@@ -185,91 +151,11 @@ func (m *Filter) validateTraceName(formats strfmt.Registry) error {
 	return nil
 }
 
-var filterTypeTraceRndForwardingPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		filterTypeTraceRndForwardingPropEnum = append(filterTypeTraceRndForwardingPropEnum, v)
-	}
-}
-
-const (
-
-	// FilterTraceRndForwardingEnabled captures enum value "enabled"
-	FilterTraceRndForwardingEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Filter) validateTraceRndForwardingEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, filterTypeTraceRndForwardingPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Filter) validateTraceRndForwarding(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.TraceRndForwarding) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTraceRndForwardingEnum("trace_rnd_forwarding", "body", m.TraceRndForwarding); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var filterTypeTraceRndParsingPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		filterTypeTraceRndParsingPropEnum = append(filterTypeTraceRndParsingPropEnum, v)
-	}
-}
-
-const (
-
-	// FilterTraceRndParsingEnabled captures enum value "enabled"
-	FilterTraceRndParsingEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Filter) validateTraceRndParsingEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, filterTypeTraceRndParsingPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Filter) validateTraceRndParsing(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.TraceRndParsing) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTraceRndParsingEnum("trace_rnd_parsing", "body", m.TraceRndParsing); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var filterTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["trace","compression","spoe"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["trace","compression","spoe","cache"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -287,6 +173,9 @@ const (
 
 	// FilterTypeSpoe captures enum value "spoe"
 	FilterTypeSpoe string = "spoe"
+
+	// FilterTypeCache captures enum value "cache"
+	FilterTypeCache string = "cache"
 )
 
 // prop value enum

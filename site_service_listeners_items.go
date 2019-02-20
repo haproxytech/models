@@ -6,8 +6,6 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
-
 	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/go-openapi/errors"
@@ -15,9 +13,9 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// SiteBackendsItemsServersItems site backends items servers items
-// swagger:model siteBackendsItemsServersItems
-type SiteBackendsItemsServersItems struct {
+// SiteServiceListenersItems site service listeners items
+// swagger:model siteServiceListenersItems
+type SiteServiceListenersItems struct {
 
 	// address
 	// Required: true
@@ -36,15 +34,15 @@ type SiteBackendsItemsServersItems struct {
 	Port *int64 `json:"port"`
 
 	// ssl
-	// Enum: [enabled]
-	Ssl string `json:"ssl,omitempty"`
+	Ssl bool `json:"ssl,omitempty"`
 
-	// weight
-	Weight *int64 `json:"weight,omitempty"`
+	// ssl certificate
+	// Pattern: ^[^\s]+$
+	SslCertificate string `json:"ssl_certificate,omitempty"`
 }
 
-// Validate validates this site backends items servers items
-func (m *SiteBackendsItemsServersItems) Validate(formats strfmt.Registry) error {
+// Validate validates this site service listeners items
+func (m *SiteServiceListenersItems) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAddress(formats); err != nil {
@@ -59,7 +57,7 @@ func (m *SiteBackendsItemsServersItems) Validate(formats strfmt.Registry) error 
 		res = append(res, err)
 	}
 
-	if err := m.validateSsl(formats); err != nil {
+	if err := m.validateSslCertificate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -69,7 +67,7 @@ func (m *SiteBackendsItemsServersItems) Validate(formats strfmt.Registry) error 
 	return nil
 }
 
-func (m *SiteBackendsItemsServersItems) validateAddress(formats strfmt.Registry) error {
+func (m *SiteServiceListenersItems) validateAddress(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("address", "body", string(m.Address)); err != nil {
 		return err
@@ -82,7 +80,7 @@ func (m *SiteBackendsItemsServersItems) validateAddress(formats strfmt.Registry)
 	return nil
 }
 
-func (m *SiteBackendsItemsServersItems) validateName(formats strfmt.Registry) error {
+func (m *SiteServiceListenersItems) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
 		return err
@@ -95,7 +93,7 @@ func (m *SiteBackendsItemsServersItems) validateName(formats strfmt.Registry) er
 	return nil
 }
 
-func (m *SiteBackendsItemsServersItems) validatePort(formats strfmt.Registry) error {
+func (m *SiteServiceListenersItems) validatePort(formats strfmt.Registry) error {
 
 	if err := validate.Required("port", "body", m.Port); err != nil {
 		return err
@@ -112,40 +110,13 @@ func (m *SiteBackendsItemsServersItems) validatePort(formats strfmt.Registry) er
 	return nil
 }
 
-var siteBackendsItemsServersItemsTypeSslPropEnum []interface{}
+func (m *SiteServiceListenersItems) validateSslCertificate(formats strfmt.Registry) error {
 
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		siteBackendsItemsServersItemsTypeSslPropEnum = append(siteBackendsItemsServersItemsTypeSslPropEnum, v)
-	}
-}
-
-const (
-
-	// SiteBackendsItemsServersItemsSslEnabled captures enum value "enabled"
-	SiteBackendsItemsServersItemsSslEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *SiteBackendsItemsServersItems) validateSslEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, siteBackendsItemsServersItemsTypeSslPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *SiteBackendsItemsServersItems) validateSsl(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Ssl) { // not required
+	if swag.IsZero(m.SslCertificate) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateSslEnum("ssl", "body", m.Ssl); err != nil {
+	if err := validate.Pattern("ssl_certificate", "body", string(m.SslCertificate), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -153,7 +124,7 @@ func (m *SiteBackendsItemsServersItems) validateSsl(formats strfmt.Registry) err
 }
 
 // MarshalBinary interface implementation
-func (m *SiteBackendsItemsServersItems) MarshalBinary() ([]byte, error) {
+func (m *SiteServiceListenersItems) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -161,8 +132,8 @@ func (m *SiteBackendsItemsServersItems) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *SiteBackendsItemsServersItems) UnmarshalBinary(b []byte) error {
-	var res SiteBackendsItemsServersItems
+func (m *SiteServiceListenersItems) UnmarshalBinary(b []byte) error {
+	var res SiteServiceListenersItems
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

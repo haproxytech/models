@@ -21,23 +21,35 @@ import (
 // swagger:model frontend
 type Frontend struct {
 
-	// client inactivity timeout
-	ClientInactivityTimeout *int64 `json:"client_inactivity_timeout,omitempty"`
+	// client timeout
+	ClientTimeout *int64 `json:"client_timeout,omitempty"`
 
-	// continuous statistics
-	// Enum: [enabled]
-	ContinuousStatistics string `json:"continuous_statistics,omitempty"`
+	// clitcpka
+	// Enum: [enabled disabled]
+	Clitcpka string `json:"clitcpka,omitempty"`
 
-	// default farm
+	// contstats
+	// Enum: [enabled disabled]
+	Contstats string `json:"contstats,omitempty"`
+
+	// default backend
 	// Pattern: ^[A-Za-z0-9-_.:]+$
-	DefaultFarm string `json:"default_farm,omitempty"`
+	DefaultBackend string `json:"default_backend,omitempty"`
+
+	// dontlognull
+	// Enum: [enabled disabled]
+	Dontlognull string `json:"dontlognull,omitempty"`
+
+	// http use htx
+	// Enum: [enabled disabled]
+	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
-	// Enum: [tunnel passive-close forced-close server-close keep-alive]
+	// Enum: [http-tunnel httpclose forced-close http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
-	// http keepalive timeout
-	HTTPKeepaliveTimeout *int64 `json:"http_keepalive_timeout,omitempty"`
+	// http keep alive timeout
+	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
 	// http pretend keepalive
 	// Enum: [enabled disabled]
@@ -47,42 +59,54 @@ type Frontend struct {
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
 	// log
-	// Enum: [enabled]
-	Log string `json:"log,omitempty"`
+	Log bool `json:"log,omitempty"`
 
 	// log format
 	// Enum: [tcp http clf]
 	LogFormat string `json:"log_format,omitempty"`
 
-	// log ignore null
+	// log separate errors
 	// Enum: [enabled disabled]
-	LogIgnoreNull string `json:"log_ignore_null,omitempty"`
+	LogSeparateErrors string `json:"log_separate_errors,omitempty"`
 
-	// max connections
-	MaxConnections *int64 `json:"max_connections,omitempty"`
+	// log tag
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	LogTag string `json:"log_tag,omitempty"`
+
+	// maxconn
+	Maxconn *int64 `json:"maxconn,omitempty"`
+
+	// mode
+	// Enum: [http tcp]
+	Mode string `json:"mode,omitempty"`
 
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
-
-	// protocol
-	// Enum: [http tcp]
-	Protocol string `json:"protocol,omitempty"`
-
-	// tcpreq inspect delay
-	TcpreqInspectDelay *int64 `json:"tcpreq_inspect_delay,omitempty"`
 }
 
 // Validate validates this frontend
 func (m *Frontend) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateContinuousStatistics(formats); err != nil {
+	if err := m.validateClitcpka(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateDefaultFarm(formats); err != nil {
+	if err := m.validateContstats(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDefaultBackend(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDontlognull(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPUseHtx(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -94,23 +118,23 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateLog(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateLogFormat(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateLogIgnoreNull(formats); err != nil {
+	if err := m.validateLogSeparateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLogTag(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMode(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateProtocol(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -120,53 +144,185 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var frontendTypeContinuousStatisticsPropEnum []interface{}
+var frontendTypeClitcpkaPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
-		frontendTypeContinuousStatisticsPropEnum = append(frontendTypeContinuousStatisticsPropEnum, v)
+		frontendTypeClitcpkaPropEnum = append(frontendTypeClitcpkaPropEnum, v)
 	}
 }
 
 const (
 
-	// FrontendContinuousStatisticsEnabled captures enum value "enabled"
-	FrontendContinuousStatisticsEnabled string = "enabled"
+	// FrontendClitcpkaEnabled captures enum value "enabled"
+	FrontendClitcpkaEnabled string = "enabled"
+
+	// FrontendClitcpkaDisabled captures enum value "disabled"
+	FrontendClitcpkaDisabled string = "disabled"
 )
 
 // prop value enum
-func (m *Frontend) validateContinuousStatisticsEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeContinuousStatisticsPropEnum); err != nil {
+func (m *Frontend) validateClitcpkaEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeClitcpkaPropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Frontend) validateContinuousStatistics(formats strfmt.Registry) error {
+func (m *Frontend) validateClitcpka(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.ContinuousStatistics) { // not required
+	if swag.IsZero(m.Clitcpka) { // not required
 		return nil
 	}
 
 	// value enum
-	if err := m.validateContinuousStatisticsEnum("continuous_statistics", "body", m.ContinuousStatistics); err != nil {
+	if err := m.validateClitcpkaEnum("clitcpka", "body", m.Clitcpka); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *Frontend) validateDefaultFarm(formats strfmt.Registry) error {
+var frontendTypeContstatsPropEnum []interface{}
 
-	if swag.IsZero(m.DefaultFarm) { // not required
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeContstatsPropEnum = append(frontendTypeContstatsPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendContstatsEnabled captures enum value "enabled"
+	FrontendContstatsEnabled string = "enabled"
+
+	// FrontendContstatsDisabled captures enum value "disabled"
+	FrontendContstatsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateContstatsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeContstatsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateContstats(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Contstats) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("default_farm", "body", string(m.DefaultFarm), `^[A-Za-z0-9-_.:]+$`); err != nil {
+	// value enum
+	if err := m.validateContstatsEnum("contstats", "body", m.Contstats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateDefaultBackend(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DefaultBackend) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("default_backend", "body", string(m.DefaultBackend), `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeDontlognullPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeDontlognullPropEnum = append(frontendTypeDontlognullPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendDontlognullEnabled captures enum value "enabled"
+	FrontendDontlognullEnabled string = "enabled"
+
+	// FrontendDontlognullDisabled captures enum value "disabled"
+	FrontendDontlognullDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateDontlognullEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeDontlognullPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateDontlognull(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Dontlognull) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDontlognullEnum("dontlognull", "body", m.Dontlognull); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeHTTPUseHtxPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeHTTPUseHtxPropEnum = append(frontendTypeHTTPUseHtxPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendHTTPUseHtxEnabled captures enum value "enabled"
+	FrontendHTTPUseHtxEnabled string = "enabled"
+
+	// FrontendHTTPUseHtxDisabled captures enum value "disabled"
+	FrontendHTTPUseHtxDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateHTTPUseHtxEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeHTTPUseHtxPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateHTTPUseHtx(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPUseHtx) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPUseHtxEnum("http-use-htx", "body", m.HTTPUseHtx); err != nil {
 		return err
 	}
 
@@ -177,7 +333,7 @@ var frontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -187,20 +343,20 @@ func init() {
 
 const (
 
-	// FrontendHTTPConnectionModeTunnel captures enum value "tunnel"
-	FrontendHTTPConnectionModeTunnel string = "tunnel"
+	// FrontendHTTPConnectionModeHTTPTunnel captures enum value "http-tunnel"
+	FrontendHTTPConnectionModeHTTPTunnel string = "http-tunnel"
 
-	// FrontendHTTPConnectionModePassiveClose captures enum value "passive-close"
-	FrontendHTTPConnectionModePassiveClose string = "passive-close"
+	// FrontendHTTPConnectionModeHttpclose captures enum value "httpclose"
+	FrontendHTTPConnectionModeHttpclose string = "httpclose"
 
 	// FrontendHTTPConnectionModeForcedClose captures enum value "forced-close"
 	FrontendHTTPConnectionModeForcedClose string = "forced-close"
 
-	// FrontendHTTPConnectionModeServerClose captures enum value "server-close"
-	FrontendHTTPConnectionModeServerClose string = "server-close"
+	// FrontendHTTPConnectionModeHTTPServerClose captures enum value "http-server-close"
+	FrontendHTTPConnectionModeHTTPServerClose string = "http-server-close"
 
-	// FrontendHTTPConnectionModeKeepAlive captures enum value "keep-alive"
-	FrontendHTTPConnectionModeKeepAlive string = "keep-alive"
+	// FrontendHTTPConnectionModeHTTPKeepAlive captures enum value "http-keep-alive"
+	FrontendHTTPConnectionModeHTTPKeepAlive string = "http-keep-alive"
 )
 
 // prop value enum
@@ -268,46 +424,6 @@ func (m *Frontend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 	return nil
 }
 
-var frontendTypeLogPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeLogPropEnum = append(frontendTypeLogPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendLogEnabled captures enum value "enabled"
-	FrontendLogEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Frontend) validateLogEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeLogPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateLog(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Log) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLogEnum("log", "body", m.Log); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var frontendTypeLogFormatPropEnum []interface{}
 
 func init() {
@@ -354,7 +470,7 @@ func (m *Frontend) validateLogFormat(formats strfmt.Registry) error {
 	return nil
 }
 
-var frontendTypeLogIgnoreNullPropEnum []interface{}
+var frontendTypeLogSeparateErrorsPropEnum []interface{}
 
 func init() {
 	var res []string
@@ -362,35 +478,91 @@ func init() {
 		panic(err)
 	}
 	for _, v := range res {
-		frontendTypeLogIgnoreNullPropEnum = append(frontendTypeLogIgnoreNullPropEnum, v)
+		frontendTypeLogSeparateErrorsPropEnum = append(frontendTypeLogSeparateErrorsPropEnum, v)
 	}
 }
 
 const (
 
-	// FrontendLogIgnoreNullEnabled captures enum value "enabled"
-	FrontendLogIgnoreNullEnabled string = "enabled"
+	// FrontendLogSeparateErrorsEnabled captures enum value "enabled"
+	FrontendLogSeparateErrorsEnabled string = "enabled"
 
-	// FrontendLogIgnoreNullDisabled captures enum value "disabled"
-	FrontendLogIgnoreNullDisabled string = "disabled"
+	// FrontendLogSeparateErrorsDisabled captures enum value "disabled"
+	FrontendLogSeparateErrorsDisabled string = "disabled"
 )
 
 // prop value enum
-func (m *Frontend) validateLogIgnoreNullEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeLogIgnoreNullPropEnum); err != nil {
+func (m *Frontend) validateLogSeparateErrorsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeLogSeparateErrorsPropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Frontend) validateLogIgnoreNull(formats strfmt.Registry) error {
+func (m *Frontend) validateLogSeparateErrors(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.LogIgnoreNull) { // not required
+	if swag.IsZero(m.LogSeparateErrors) { // not required
 		return nil
 	}
 
 	// value enum
-	if err := m.validateLogIgnoreNullEnum("log_ignore_null", "body", m.LogIgnoreNull); err != nil {
+	if err := m.validateLogSeparateErrorsEnum("log_separate_errors", "body", m.LogSeparateErrors); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateLogTag(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LogTag) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("log_tag", "body", string(m.LogTag), `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeModePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["http","tcp"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeModePropEnum = append(frontendTypeModePropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendModeHTTP captures enum value "http"
+	FrontendModeHTTP string = "http"
+
+	// FrontendModeTCP captures enum value "tcp"
+	FrontendModeTCP string = "tcp"
+)
+
+// prop value enum
+func (m *Frontend) validateModeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeModePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateMode(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Mode) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateModeEnum("mode", "body", m.Mode); err != nil {
 		return err
 	}
 
@@ -404,49 +576,6 @@ func (m *Frontend) validateName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var frontendTypeProtocolPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["http","tcp"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeProtocolPropEnum = append(frontendTypeProtocolPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendProtocolHTTP captures enum value "http"
-	FrontendProtocolHTTP string = "http"
-
-	// FrontendProtocolTCP captures enum value "tcp"
-	FrontendProtocolTCP string = "tcp"
-)
-
-// prop value enum
-func (m *Frontend) validateProtocolEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeProtocolPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateProtocol(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Protocol) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateProtocolEnum("protocol", "body", m.Protocol); err != nil {
 		return err
 	}
 

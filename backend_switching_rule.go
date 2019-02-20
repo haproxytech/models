@@ -30,12 +30,12 @@ type BackendSwitchingRule struct {
 
 	// id
 	// Required: true
-	ID int64 `json:"id"`
+	ID *int64 `json:"id"`
 
-	// target farm
+	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
-	TargetFarm string `json:"target_farm"`
+	Name string `json:"name"`
 }
 
 // Validate validates this backend switching rule
@@ -50,7 +50,7 @@ func (m *BackendSwitchingRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateTargetFarm(formats); err != nil {
+	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -105,20 +105,20 @@ func (m *BackendSwitchingRule) validateCond(formats strfmt.Registry) error {
 
 func (m *BackendSwitchingRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *BackendSwitchingRule) validateTargetFarm(formats strfmt.Registry) error {
+func (m *BackendSwitchingRule) validateName(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("target_farm", "body", string(m.TargetFarm)); err != nil {
+	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("target_farm", "body", string(m.TargetFarm), `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

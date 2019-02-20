@@ -12,19 +12,19 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// GetListenerOKBody get listener o k body
-// swagger:model getListenerOKBody
-type GetListenerOKBody struct {
+// GetTCPRequestRulesOKBody get Tcp request rules o k body
+// swagger:model getTcpRequestRulesOKBody
+type GetTCPRequestRulesOKBody struct {
 
 	// version
 	Version int64 `json:"_version,omitempty"`
 
 	// data
-	Data *Listener `json:"data,omitempty"`
+	Data TCPRequestRules `json:"data"`
 }
 
-// Validate validates this get listener o k body
-func (m *GetListenerOKBody) Validate(formats strfmt.Registry) error {
+// Validate validates this get Tcp request rules o k body
+func (m *GetTCPRequestRulesOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateData(formats); err != nil {
@@ -37,26 +37,24 @@ func (m *GetListenerOKBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GetListenerOKBody) validateData(formats strfmt.Registry) error {
+func (m *GetTCPRequestRulesOKBody) validateData(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Data) { // not required
 		return nil
 	}
 
-	if m.Data != nil {
-		if err := m.Data.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("data")
-			}
-			return err
+	if err := m.Data.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("data")
 		}
+		return err
 	}
 
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *GetListenerOKBody) MarshalBinary() ([]byte, error) {
+func (m *GetTCPRequestRulesOKBody) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -64,8 +62,8 @@ func (m *GetListenerOKBody) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *GetListenerOKBody) UnmarshalBinary(b []byte) error {
-	var res GetListenerOKBody
+func (m *GetTCPRequestRulesOKBody) UnmarshalBinary(b []byte) error {
+	var res GetTCPRequestRulesOKBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

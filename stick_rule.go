@@ -15,11 +15,11 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// StickResponseRule Stick Response Rule
+// StickRule Stick Rule
 //
-// Define a response pattern matching condition to create an entry in a stickiness table.
-// swagger:model stick_response_rule
-type StickResponseRule struct {
+// Define a pattern used to create an entry in a stickiness table or matching condition or associate a user to a server.
+// swagger:model stick_rule
+type StickRule struct {
 
 	// cond
 	// Enum: [if unless]
@@ -30,7 +30,7 @@ type StickResponseRule struct {
 
 	// id
 	// Required: true
-	ID int64 `json:"id"`
+	ID *int64 `json:"id"`
 
 	// pattern
 	// Pattern: ^[^\s]+$
@@ -42,12 +42,12 @@ type StickResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [storeonly]
+	// Enum: [match on store-request store-response]
 	Type string `json:"type"`
 }
 
-// Validate validates this stick response rule
-func (m *StickResponseRule) Validate(formats strfmt.Registry) error {
+// Validate validates this stick rule
+func (m *StickRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCond(formats); err != nil {
@@ -76,7 +76,7 @@ func (m *StickResponseRule) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var stickResponseRuleTypeCondPropEnum []interface{}
+var stickRuleTypeCondPropEnum []interface{}
 
 func init() {
 	var res []string
@@ -84,28 +84,28 @@ func init() {
 		panic(err)
 	}
 	for _, v := range res {
-		stickResponseRuleTypeCondPropEnum = append(stickResponseRuleTypeCondPropEnum, v)
+		stickRuleTypeCondPropEnum = append(stickRuleTypeCondPropEnum, v)
 	}
 }
 
 const (
 
-	// StickResponseRuleCondIf captures enum value "if"
-	StickResponseRuleCondIf string = "if"
+	// StickRuleCondIf captures enum value "if"
+	StickRuleCondIf string = "if"
 
-	// StickResponseRuleCondUnless captures enum value "unless"
-	StickResponseRuleCondUnless string = "unless"
+	// StickRuleCondUnless captures enum value "unless"
+	StickRuleCondUnless string = "unless"
 )
 
 // prop value enum
-func (m *StickResponseRule) validateCondEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, stickResponseRuleTypeCondPropEnum); err != nil {
+func (m *StickRule) validateCondEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, stickRuleTypeCondPropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *StickResponseRule) validateCond(formats strfmt.Registry) error {
+func (m *StickRule) validateCond(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Cond) { // not required
 		return nil
@@ -119,16 +119,16 @@ func (m *StickResponseRule) validateCond(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *StickResponseRule) validateID(formats strfmt.Registry) error {
+func (m *StickRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *StickResponseRule) validatePattern(formats strfmt.Registry) error {
+func (m *StickRule) validatePattern(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Pattern) { // not required
 		return nil
@@ -141,7 +141,7 @@ func (m *StickResponseRule) validatePattern(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *StickResponseRule) validateTable(formats strfmt.Registry) error {
+func (m *StickRule) validateTable(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Table) { // not required
 		return nil
@@ -154,33 +154,42 @@ func (m *StickResponseRule) validateTable(formats strfmt.Registry) error {
 	return nil
 }
 
-var stickResponseRuleTypeTypePropEnum []interface{}
+var stickRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["storeonly"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["match","on","store-request","store-response"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
-		stickResponseRuleTypeTypePropEnum = append(stickResponseRuleTypeTypePropEnum, v)
+		stickRuleTypeTypePropEnum = append(stickRuleTypeTypePropEnum, v)
 	}
 }
 
 const (
 
-	// StickResponseRuleTypeStoreonly captures enum value "storeonly"
-	StickResponseRuleTypeStoreonly string = "storeonly"
+	// StickRuleTypeMatch captures enum value "match"
+	StickRuleTypeMatch string = "match"
+
+	// StickRuleTypeOn captures enum value "on"
+	StickRuleTypeOn string = "on"
+
+	// StickRuleTypeStoreRequest captures enum value "store-request"
+	StickRuleTypeStoreRequest string = "store-request"
+
+	// StickRuleTypeStoreResponse captures enum value "store-response"
+	StickRuleTypeStoreResponse string = "store-response"
 )
 
 // prop value enum
-func (m *StickResponseRule) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, stickResponseRuleTypeTypePropEnum); err != nil {
+func (m *StickRule) validateTypeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, stickRuleTypeTypePropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *StickResponseRule) validateType(formats strfmt.Registry) error {
+func (m *StickRule) validateType(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
 		return err
@@ -195,7 +204,7 @@ func (m *StickResponseRule) validateType(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *StickResponseRule) MarshalBinary() ([]byte, error) {
+func (m *StickRule) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -203,8 +212,8 @@ func (m *StickResponseRule) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *StickResponseRule) UnmarshalBinary(b []byte) error {
-	var res StickResponseRule
+func (m *StickRule) UnmarshalBinary(b []byte) error {
+	var res StickRule
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

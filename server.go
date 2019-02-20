@@ -25,20 +25,24 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
+	// backup
+	// Enum: [enabled disabled]
+	Backup string `json:"backup,omitempty"`
+
 	// check
-	// Enum: [enabled]
+	// Enum: [enabled disabled]
 	Check string `json:"check,omitempty"`
 
-	// http cookie id
+	// cookie
 	// Pattern: ^[^\s]+$
-	HTTPCookieID string `json:"http-cookie-id,omitempty"`
+	Cookie string `json:"cookie,omitempty"`
 
 	// maintenance
-	// Enum: [enabled]
+	// Enum: [enabled disabled]
 	Maintenance string `json:"maintenance,omitempty"`
 
-	// max connections
-	MaxConnections *int64 `json:"max-connections,omitempty"`
+	// maxconn
+	Maxconn *int64 `json:"maxconn,omitempty"`
 
 	// name
 	// Required: true
@@ -50,12 +54,8 @@ type Server struct {
 	// Minimum: 0
 	Port *int64 `json:"port,omitempty"`
 
-	// sorry
-	// Enum: [enabled]
-	Sorry string `json:"sorry,omitempty"`
-
 	// ssl
-	// Enum: [enabled]
+	// Enum: [enabled disabled]
 	Ssl string `json:"ssl,omitempty"`
 
 	// ssl cafile
@@ -82,11 +82,15 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateBackup(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPCookieID(formats); err != nil {
+	if err := m.validateCookie(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -99,10 +103,6 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePort(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSorry(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -141,11 +141,54 @@ func (m *Server) validateAddress(formats strfmt.Registry) error {
 	return nil
 }
 
+var serverTypeBackupPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeBackupPropEnum = append(serverTypeBackupPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerBackupEnabled captures enum value "enabled"
+	ServerBackupEnabled string = "enabled"
+
+	// ServerBackupDisabled captures enum value "disabled"
+	ServerBackupDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateBackupEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeBackupPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateBackup(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Backup) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateBackupEnum("backup", "body", m.Backup); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var serverTypeCheckPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -157,6 +200,9 @@ const (
 
 	// ServerCheckEnabled captures enum value "enabled"
 	ServerCheckEnabled string = "enabled"
+
+	// ServerCheckDisabled captures enum value "disabled"
+	ServerCheckDisabled string = "disabled"
 )
 
 // prop value enum
@@ -181,13 +227,13 @@ func (m *Server) validateCheck(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Server) validateHTTPCookieID(formats strfmt.Registry) error {
+func (m *Server) validateCookie(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.HTTPCookieID) { // not required
+	if swag.IsZero(m.Cookie) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("http-cookie-id", "body", string(m.HTTPCookieID), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("cookie", "body", string(m.Cookie), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -198,7 +244,7 @@ var serverTypeMaintenancePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -210,6 +256,9 @@ const (
 
 	// ServerMaintenanceEnabled captures enum value "enabled"
 	ServerMaintenanceEnabled string = "enabled"
+
+	// ServerMaintenanceDisabled captures enum value "disabled"
+	ServerMaintenanceDisabled string = "disabled"
 )
 
 // prop value enum
@@ -264,51 +313,11 @@ func (m *Server) validatePort(formats strfmt.Registry) error {
 	return nil
 }
 
-var serverTypeSorryPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		serverTypeSorryPropEnum = append(serverTypeSorryPropEnum, v)
-	}
-}
-
-const (
-
-	// ServerSorryEnabled captures enum value "enabled"
-	ServerSorryEnabled string = "enabled"
-)
-
-// prop value enum
-func (m *Server) validateSorryEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTypeSorryPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Server) validateSorry(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Sorry) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSorryEnum("sorry", "body", m.Sorry); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var serverTypeSslPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -320,6 +329,9 @@ const (
 
 	// ServerSslEnabled captures enum value "enabled"
 	ServerSslEnabled string = "enabled"
+
+	// ServerSslDisabled captures enum value "disabled"
+	ServerSslDisabled string = "disabled"
 )
 
 // prop value enum

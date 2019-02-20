@@ -21,6 +21,14 @@ import (
 // swagger:model http_request_rule
 type HTTPRequestRule struct {
 
+	// acl file
+	// Pattern: ^[^\s]+$
+	ACLFile string `json:"acl_file,omitempty"`
+
+	// acl keyfmt
+	// Pattern: ^[^\s]+$
+	ACLKeyfmt string `json:"acl_keyfmt,omitempty"`
+
 	// auth realm
 	// Pattern: ^[^\s]+$
 	AuthRealm string `json:"auth_realm,omitempty"`
@@ -31,6 +39,9 @@ type HTTPRequestRule struct {
 
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
+
+	// deny status
+	DenyStatus int64 `json:"deny_status,omitempty"`
 
 	// hdr format
 	// Pattern: ^[^\s]+$
@@ -44,13 +55,9 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
 
-	// hdr value
-	// Pattern: ^[^\s]+$
-	HdrValue string `json:"hdr_value,omitempty"`
-
 	// id
 	// Required: true
-	ID int64 `json:"id"`
+	ID *int64 `json:"id"`
 
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
@@ -60,13 +67,16 @@ type HTTPRequestRule struct {
 	// Enum: [301 302 303]
 	RedirCode int64 `json:"redir_code,omitempty"`
 
-	// redir to
-	// Pattern: ^[^\s]+$
-	RedirTo string `json:"redir_to,omitempty"`
+	// redir option
+	RedirOption string `json:"redir_option,omitempty"`
 
 	// redir type
 	// Enum: [location prefix scheme]
 	RedirType string `json:"redir_type,omitempty"`
+
+	// redir value
+	// Pattern: ^[^\s]+$
+	RedirValue string `json:"redir_value,omitempty"`
 
 	// spoe engine
 	// Pattern: ^[^\s]+$
@@ -76,27 +86,34 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
-	// svc name
-	// Pattern: ^[^\s]+$
-	SvcName string `json:"svc_name,omitempty"`
-
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header set-header set-log-level set-var send-spoe-group replace-header replace-value use-service]
+	// Enum: [allow deny auth redirect tarpit add-header set-header set-log-level set-var send-spoe-group replace-header replace-value add-acl del-acl del-header]
 	Type string `json:"type"`
+
+	// var expr
+	VarExpr string `json:"var_expr,omitempty"`
 
 	// var name
 	// Pattern: ^[^\s]+$
 	VarName string `json:"var_name,omitempty"`
 
-	// var pattern
+	// var scope
 	// Pattern: ^[^\s]+$
-	VarPattern string `json:"var_pattern,omitempty"`
+	VarScope string `json:"var_scope,omitempty"`
 }
 
 // Validate validates this http request rule
 func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateACLFile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateACLKeyfmt(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateAuthRealm(formats); err != nil {
 		res = append(res, err)
@@ -118,10 +135,6 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHdrValue(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
 	}
@@ -134,11 +147,11 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateRedirTo(formats); err != nil {
+	if err := m.validateRedirType(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateRedirType(formats); err != nil {
+	if err := m.validateRedirValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -150,10 +163,6 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateSvcName(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateType(formats); err != nil {
 		res = append(res, err)
 	}
@@ -162,13 +171,39 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateVarPattern(formats); err != nil {
+	if err := m.validateVarScope(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateACLFile(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ACLFile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("acl_file", "body", string(m.ACLFile), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateACLKeyfmt(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ACLKeyfmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("acl_keyfmt", "body", string(m.ACLKeyfmt), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -267,22 +302,9 @@ func (m *HTTPRequestRule) validateHdrName(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HTTPRequestRule) validateHdrValue(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrValue) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_value", "body", string(m.HdrValue), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *HTTPRequestRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 
@@ -387,19 +409,6 @@ func (m *HTTPRequestRule) validateRedirCode(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HTTPRequestRule) validateRedirTo(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.RedirTo) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("redir_to", "body", string(m.RedirTo), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var httpRequestRuleTypeRedirTypePropEnum []interface{}
 
 func init() {
@@ -446,6 +455,19 @@ func (m *HTTPRequestRule) validateRedirType(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateRedirValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.RedirValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("redir_value", "body", string(m.RedirValue), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validateSpoeEngine(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.SpoeEngine) { // not required
@@ -472,24 +494,11 @@ func (m *HTTPRequestRule) validateSpoeGroup(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HTTPRequestRule) validateSvcName(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.SvcName) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("svc_name", "body", string(m.SvcName), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","set-header","set-log-level","set-var","send-spoe-group","replace-header","replace-value","use-service"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","set-header","set-log-level","set-var","send-spoe-group","replace-header","replace-value","add-acl","del-acl","del-header"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -535,8 +544,14 @@ const (
 	// HTTPRequestRuleTypeReplaceValue captures enum value "replace-value"
 	HTTPRequestRuleTypeReplaceValue string = "replace-value"
 
-	// HTTPRequestRuleTypeUseService captures enum value "use-service"
-	HTTPRequestRuleTypeUseService string = "use-service"
+	// HTTPRequestRuleTypeAddACL captures enum value "add-acl"
+	HTTPRequestRuleTypeAddACL string = "add-acl"
+
+	// HTTPRequestRuleTypeDelACL captures enum value "del-acl"
+	HTTPRequestRuleTypeDelACL string = "del-acl"
+
+	// HTTPRequestRuleTypeDelHeader captures enum value "del-header"
+	HTTPRequestRuleTypeDelHeader string = "del-header"
 )
 
 // prop value enum
@@ -574,13 +589,13 @@ func (m *HTTPRequestRule) validateVarName(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HTTPRequestRule) validateVarPattern(formats strfmt.Registry) error {
+func (m *HTTPRequestRule) validateVarScope(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.VarPattern) { // not required
+	if swag.IsZero(m.VarScope) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_pattern", "body", string(m.VarPattern), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_scope", "body", string(m.VarScope), `^[^\s]+$`); err != nil {
 		return err
 	}
 

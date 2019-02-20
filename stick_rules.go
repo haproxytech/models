@@ -14,14 +14,14 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// StickResponseRules Stick Response Rules Array
+// StickRules Stick Rules Array
 //
-// HAProxy backend stick response rules array (corresponds to stick store-response)
-// swagger:model stick_response_rules
-type StickResponseRules []*StickResponseRule
+// HAProxy backend stick rules array (corresponds to stick store-request, stick match, stick on, stick store-response)
+// swagger:model stick_rules
+type StickRules []*StickRule
 
-// Validate validates this stick response rules
-func (m StickResponseRules) Validate(formats strfmt.Registry) error {
+// Validate validates this stick rules
+func (m StickRules) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

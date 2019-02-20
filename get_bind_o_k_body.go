@@ -12,19 +12,19 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// GetStickRequestRuleOKBody get stick request rule o k body
-// swagger:model getStickRequestRuleOKBody
-type GetStickRequestRuleOKBody struct {
+// GetBindOKBody get bind o k body
+// swagger:model getBindOKBody
+type GetBindOKBody struct {
 
 	// version
 	Version int64 `json:"_version,omitempty"`
 
 	// data
-	Data *StickRequestRule `json:"data,omitempty"`
+	Data *Bind `json:"data,omitempty"`
 }
 
-// Validate validates this get stick request rule o k body
-func (m *GetStickRequestRuleOKBody) Validate(formats strfmt.Registry) error {
+// Validate validates this get bind o k body
+func (m *GetBindOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateData(formats); err != nil {
@@ -37,7 +37,7 @@ func (m *GetStickRequestRuleOKBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GetStickRequestRuleOKBody) validateData(formats strfmt.Registry) error {
+func (m *GetBindOKBody) validateData(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Data) { // not required
 		return nil
@@ -56,7 +56,7 @@ func (m *GetStickRequestRuleOKBody) validateData(formats strfmt.Registry) error 
 }
 
 // MarshalBinary interface implementation
-func (m *GetStickRequestRuleOKBody) MarshalBinary() ([]byte, error) {
+func (m *GetBindOKBody) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -64,8 +64,8 @@ func (m *GetStickRequestRuleOKBody) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *GetStickRequestRuleOKBody) UnmarshalBinary(b []byte) error {
-	var res GetStickRequestRuleOKBody
+func (m *GetBindOKBody) UnmarshalBinary(b []byte) error {
+	var res GetBindOKBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

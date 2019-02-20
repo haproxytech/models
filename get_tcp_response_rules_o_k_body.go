@@ -12,19 +12,19 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// GetTCPContentRuleOKBody get Tcp content rule o k body
-// swagger:model getTcpContentRuleOKBody
-type GetTCPContentRuleOKBody struct {
+// GetTCPResponseRulesOKBody get Tcp response rules o k body
+// swagger:model getTcpResponseRulesOKBody
+type GetTCPResponseRulesOKBody struct {
 
 	// version
 	Version int64 `json:"_version,omitempty"`
 
 	// data
-	Data *TCPRule `json:"data,omitempty"`
+	Data TCPResponseRules `json:"data"`
 }
 
-// Validate validates this get Tcp content rule o k body
-func (m *GetTCPContentRuleOKBody) Validate(formats strfmt.Registry) error {
+// Validate validates this get Tcp response rules o k body
+func (m *GetTCPResponseRulesOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateData(formats); err != nil {
@@ -37,26 +37,24 @@ func (m *GetTCPContentRuleOKBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GetTCPContentRuleOKBody) validateData(formats strfmt.Registry) error {
+func (m *GetTCPResponseRulesOKBody) validateData(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Data) { // not required
 		return nil
 	}
 
-	if m.Data != nil {
-		if err := m.Data.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("data")
-			}
-			return err
+	if err := m.Data.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("data")
 		}
+		return err
 	}
 
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *GetTCPContentRuleOKBody) MarshalBinary() ([]byte, error) {
+func (m *GetTCPResponseRulesOKBody) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -64,8 +62,8 @@ func (m *GetTCPContentRuleOKBody) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *GetTCPContentRuleOKBody) UnmarshalBinary(b []byte) error {
-	var res GetTCPContentRuleOKBody
+func (m *GetTCPResponseRulesOKBody) UnmarshalBinary(b []byte) error {
+	var res GetTCPResponseRulesOKBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

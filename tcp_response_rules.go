@@ -14,14 +14,14 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Listeners Listeners
+// TCPResponseRules TCP Response Rules Array
 //
-// HAProxy frontend listeners array (corresponds to bind directives)
-// swagger:model listeners
-type Listeners []*Listener
+// HAProxy TCP Response Rules array (corresponds to tcp-response directive)
+// swagger:model tcp_response_rules
+type TCPResponseRules []*TCPResponseRule
 
-// Validate validates this listeners
-func (m Listeners) Validate(formats strfmt.Registry) error {
+// Validate validates this tcp response rules
+func (m TCPResponseRules) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

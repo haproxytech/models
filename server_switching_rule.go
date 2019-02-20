@@ -30,7 +30,7 @@ type ServerSwitchingRule struct {
 
 	// id
 	// Required: true
-	ID int64 `json:"id"`
+	ID *int64 `json:"id"`
 
 	// target server
 	// Required: true
@@ -105,7 +105,7 @@ func (m *ServerSwitchingRule) validateCond(formats strfmt.Registry) error {
 
 func (m *ServerSwitchingRule) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 

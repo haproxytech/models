@@ -12,19 +12,19 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// GetTCPConnectionRuleOKBody get Tcp connection rule o k body
-// swagger:model getTcpConnectionRuleOKBody
-type GetTCPConnectionRuleOKBody struct {
+// GetStickRulesOKBody get stick rules o k body
+// swagger:model getStickRulesOKBody
+type GetStickRulesOKBody struct {
 
 	// version
 	Version int64 `json:"_version,omitempty"`
 
 	// data
-	Data *TCPRule `json:"data,omitempty"`
+	Data StickRules `json:"data"`
 }
 
-// Validate validates this get Tcp connection rule o k body
-func (m *GetTCPConnectionRuleOKBody) Validate(formats strfmt.Registry) error {
+// Validate validates this get stick rules o k body
+func (m *GetStickRulesOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateData(formats); err != nil {
@@ -37,26 +37,24 @@ func (m *GetTCPConnectionRuleOKBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GetTCPConnectionRuleOKBody) validateData(formats strfmt.Registry) error {
+func (m *GetStickRulesOKBody) validateData(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Data) { // not required
 		return nil
 	}
 
-	if m.Data != nil {
-		if err := m.Data.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("data")
-			}
-			return err
+	if err := m.Data.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("data")
 		}
+		return err
 	}
 
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *GetTCPConnectionRuleOKBody) MarshalBinary() ([]byte, error) {
+func (m *GetStickRulesOKBody) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -64,8 +62,8 @@ func (m *GetTCPConnectionRuleOKBody) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *GetTCPConnectionRuleOKBody) UnmarshalBinary(b []byte) error {
-	var res GetTCPConnectionRuleOKBody
+func (m *GetStickRulesOKBody) UnmarshalBinary(b []byte) error {
+	var res GetStickRulesOKBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
