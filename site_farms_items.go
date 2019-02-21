@@ -33,9 +33,6 @@ type SiteFarmsItems struct {
 	// forwardfor
 	Forwardfor bool `json:"forwardfor,omitempty"`
 
-	// log
-	Log bool `json:"log,omitempty"`
-
 	// mode
 	// Enum: [http tcp]
 	Mode string `json:"mode,omitempty"`

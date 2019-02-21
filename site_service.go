@@ -27,9 +27,6 @@ type SiteService struct {
 	// listeners
 	Listeners []*SiteServiceListenersItems `json:"listeners"`
 
-	// log
-	Log bool `json:"log,omitempty"`
-
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 

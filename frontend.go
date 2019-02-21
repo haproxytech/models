@@ -21,6 +21,9 @@ import (
 // swagger:model frontend
 type Frontend struct {
 
+	// clflog
+	Clflog bool `json:"clflog,omitempty"`
+
 	// client timeout
 	ClientTimeout *int64 `json:"client_timeout,omitempty"`
 
@@ -58,12 +61,14 @@ type Frontend struct {
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
-	// log
-	Log bool `json:"log,omitempty"`
+	// httplog
+	Httplog bool `json:"httplog,omitempty"`
 
 	// log format
-	// Enum: [tcp http clf]
 	LogFormat string `json:"log_format,omitempty"`
+
+	// log format sd
+	LogFormatSd string `json:"log_format_sd,omitempty"`
 
 	// log separate errors
 	// Enum: [enabled disabled]
@@ -84,6 +89,9 @@ type Frontend struct {
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
+
+	// tcplog
+	Tcplog bool `json:"tcplog,omitempty"`
 }
 
 // Validate validates this frontend
@@ -115,10 +123,6 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLogFormat(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -418,52 +422,6 @@ func (m *Frontend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var frontendTypeLogFormatPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["tcp","http","clf"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeLogFormatPropEnum = append(frontendTypeLogFormatPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendLogFormatTCP captures enum value "tcp"
-	FrontendLogFormatTCP string = "tcp"
-
-	// FrontendLogFormatHTTP captures enum value "http"
-	FrontendLogFormatHTTP string = "http"
-
-	// FrontendLogFormatClf captures enum value "clf"
-	FrontendLogFormatClf string = "clf"
-)
-
-// prop value enum
-func (m *Frontend) validateLogFormatEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeLogFormatPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateLogFormat(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.LogFormat) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLogFormatEnum("log_format", "body", m.LogFormat); err != nil {
 		return err
 	}
 

@@ -56,12 +56,9 @@ type Backend struct {
 	// httpchk
 	Httpchk *BackendHttpchk `json:"httpchk,omitempty"`
 
-	// log
-	Log bool `json:"log,omitempty"`
-
-	// log format
-	// Enum: [tcp http clf]
-	LogFormat string `json:"log_format,omitempty"`
+	// log tag
+	// Pattern: ^[^\s]+$
+	LogTag string `json:"log_tag,omitempty"`
 
 	// mode
 	// Enum: [http tcp]
@@ -125,7 +122,7 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateLogFormat(formats); err != nil {
+	if err := m.validateLogTag(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -414,46 +411,13 @@ func (m *Backend) validateHttpchk(formats strfmt.Registry) error {
 	return nil
 }
 
-var backendTypeLogFormatPropEnum []interface{}
+func (m *Backend) validateLogTag(formats strfmt.Registry) error {
 
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["tcp","http","clf"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeLogFormatPropEnum = append(backendTypeLogFormatPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendLogFormatTCP captures enum value "tcp"
-	BackendLogFormatTCP string = "tcp"
-
-	// BackendLogFormatHTTP captures enum value "http"
-	BackendLogFormatHTTP string = "http"
-
-	// BackendLogFormatClf captures enum value "clf"
-	BackendLogFormatClf string = "clf"
-)
-
-// prop value enum
-func (m *Backend) validateLogFormatEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendTypeLogFormatPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateLogFormat(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.LogFormat) { // not required
+	if swag.IsZero(m.LogTag) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateLogFormatEnum("log_format", "body", m.LogFormat); err != nil {
+	if err := validate.Pattern("log_tag", "body", string(m.LogTag), `^[^\s]+$`); err != nil {
 		return err
 	}
 

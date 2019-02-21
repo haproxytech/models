@@ -22,9 +22,8 @@ import (
 type TCPRequestRule struct {
 
 	// action
-	// Required: true
 	// Enum: [accept reject]
-	Action string `json:"action"`
+	Action string `json:"action,omitempty"`
 
 	// cond
 	// Enum: [if unless]
@@ -103,8 +102,8 @@ func (m *TCPRequestRule) validateActionEnum(path, location string, value string)
 
 func (m *TCPRequestRule) validateAction(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("action", "body", string(m.Action)); err != nil {
-		return err
+	if swag.IsZero(m.Action) { // not required
+		return nil
 	}
 
 	// value enum
