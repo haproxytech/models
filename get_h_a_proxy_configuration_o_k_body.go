@@ -18,8 +18,8 @@ type GetHAProxyConfigurationOKBody struct {
 	// version
 	Version int64 `json:"_version,omitempty"`
 
-	// configuration
-	Configuration string `json:"configuration,omitempty"`
+	// data
+	Data string `json:"data,omitempty"`
 }
 
 // Validate validates this get h a proxy configuration o k body
