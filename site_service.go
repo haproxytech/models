@@ -21,7 +21,7 @@ import (
 type SiteService struct {
 
 	// http connection mode
-	// Enum: [tunnel passive-close forced-close server-close keep-alive]
+	// Enum: [http-tunnel httpclose forced-close http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// listeners
@@ -61,7 +61,7 @@ var siteServiceTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tunnel","passive-close","forced-close","server-close","keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -71,20 +71,20 @@ func init() {
 
 const (
 
-	// SiteServiceHTTPConnectionModeTunnel captures enum value "tunnel"
-	SiteServiceHTTPConnectionModeTunnel string = "tunnel"
+	// SiteServiceHTTPConnectionModeHTTPTunnel captures enum value "http-tunnel"
+	SiteServiceHTTPConnectionModeHTTPTunnel string = "http-tunnel"
 
-	// SiteServiceHTTPConnectionModePassiveClose captures enum value "passive-close"
-	SiteServiceHTTPConnectionModePassiveClose string = "passive-close"
+	// SiteServiceHTTPConnectionModeHttpclose captures enum value "httpclose"
+	SiteServiceHTTPConnectionModeHttpclose string = "httpclose"
 
 	// SiteServiceHTTPConnectionModeForcedClose captures enum value "forced-close"
 	SiteServiceHTTPConnectionModeForcedClose string = "forced-close"
 
-	// SiteServiceHTTPConnectionModeServerClose captures enum value "server-close"
-	SiteServiceHTTPConnectionModeServerClose string = "server-close"
+	// SiteServiceHTTPConnectionModeHTTPServerClose captures enum value "http-server-close"
+	SiteServiceHTTPConnectionModeHTTPServerClose string = "http-server-close"
 
-	// SiteServiceHTTPConnectionModeKeepAlive captures enum value "keep-alive"
-	SiteServiceHTTPConnectionModeKeepAlive string = "keep-alive"
+	// SiteServiceHTTPConnectionModeHTTPKeepAlive captures enum value "http-keep-alive"
+	SiteServiceHTTPConnectionModeHTTPKeepAlive string = "http-keep-alive"
 )
 
 // prop value enum
