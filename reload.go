@@ -22,7 +22,7 @@ import (
 type Reload struct {
 
 	// id
-	// Pattern: ^[^\s]+$
+	// Pattern: ^\d{4}-\d{2}-\d{2}-\d+$
 	ID string `json:"id,omitempty"`
 
 	// reload timestamp
@@ -60,7 +60,7 @@ func (m *Reload) validateID(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("id", "body", string(m.ID), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("id", "body", string(m.ID), `^\d{4}-\d{2}-\d{2}-\d+$`); err != nil {
 		return err
 	}
 
