@@ -7,6 +7,7 @@ package models
 
 import (
 	"encoding/json"
+	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 
@@ -31,17 +32,8 @@ type Global struct {
 	// nbproc
 	Nbproc int64 `json:"nbproc,omitempty"`
 
-	// runtime api
-	// Pattern: ^[^\s]+$
-	RuntimeAPI string `json:"runtime_api,omitempty"`
-
-	// runtime api level
-	// Enum: [user operator admin]
-	RuntimeAPILevel string `json:"runtime_api_level,omitempty"`
-
-	// runtime api mode
-	// Pattern: ^[^\s]+$
-	RuntimeAPIMode string `json:"runtime_api_mode,omitempty"`
+	// runtime apis
+	RuntimeApis []*GlobalRuntimeApisItems `json:"runtime_apis"`
 
 	// ssl default bind ciphers
 	SslDefaultBindCiphers string `json:"ssl_default_bind_ciphers,omitempty"`
@@ -61,15 +53,7 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateRuntimeAPI(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateRuntimeAPILevel(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateRuntimeAPIMode(formats); err != nil {
+	if err := m.validateRuntimeApis(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -122,73 +106,26 @@ func (m *Global) validateDaemon(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Global) validateRuntimeAPI(formats strfmt.Registry) error {
+func (m *Global) validateRuntimeApis(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.RuntimeAPI) { // not required
+	if swag.IsZero(m.RuntimeApis) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("runtime_api", "body", string(m.RuntimeAPI), `^[^\s]+$`); err != nil {
-		return err
-	}
+	for i := 0; i < len(m.RuntimeApis); i++ {
+		if swag.IsZero(m.RuntimeApis[i]) { // not required
+			continue
+		}
 
-	return nil
-}
+		if m.RuntimeApis[i] != nil {
+			if err := m.RuntimeApis[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
 
-var globalTypeRuntimeAPILevelPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["user","operator","admin"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTypeRuntimeAPILevelPropEnum = append(globalTypeRuntimeAPILevelPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalRuntimeAPILevelUser captures enum value "user"
-	GlobalRuntimeAPILevelUser string = "user"
-
-	// GlobalRuntimeAPILevelOperator captures enum value "operator"
-	GlobalRuntimeAPILevelOperator string = "operator"
-
-	// GlobalRuntimeAPILevelAdmin captures enum value "admin"
-	GlobalRuntimeAPILevelAdmin string = "admin"
-)
-
-// prop value enum
-func (m *Global) validateRuntimeAPILevelEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTypeRuntimeAPILevelPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Global) validateRuntimeAPILevel(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.RuntimeAPILevel) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateRuntimeAPILevelEnum("runtime_api_level", "body", m.RuntimeAPILevel); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Global) validateRuntimeAPIMode(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.RuntimeAPIMode) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("runtime_api_mode", "body", string(m.RuntimeAPIMode), `^[^\s]+$`); err != nil {
-		return err
 	}
 
 	return nil
