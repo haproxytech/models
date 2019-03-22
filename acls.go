@@ -14,14 +14,14 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Stats Stats Array
+// Acls ACL Rules Array
 //
-// HAProxy stats array
-// swagger:model stats
-type Stats []*StatsItems
+// HAProxy ACL Rules array (corresponds to acl directives)
+// swagger:model acls
+type Acls []*ACL
 
-// Validate validates this stats
-func (m Stats) Validate(formats strfmt.Registry) error {
+// Validate validates this acls
+func (m Acls) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

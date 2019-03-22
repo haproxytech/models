@@ -22,15 +22,27 @@ import (
 // swagger:model global
 type Global struct {
 
+	// cpu maps
+	CPUMaps []*GlobalCPUMapsItems `json:"cpu_maps"`
+
 	// daemon
 	// Enum: [enabled disabled]
 	Daemon string `json:"daemon,omitempty"`
+
+	// master worker
+	MasterWorker bool `json:"master-worker,omitempty"`
 
 	// maxconn
 	Maxconn int64 `json:"maxconn,omitempty"`
 
 	// nbproc
 	Nbproc int64 `json:"nbproc,omitempty"`
+
+	// nbthread
+	Nbthread int64 `json:"nbthread,omitempty"`
+
+	// pidfile
+	Pidfile string `json:"pidfile,omitempty"`
 
 	// runtime apis
 	RuntimeApis []*GlobalRuntimeApisItems `json:"runtime_apis"`
@@ -41,6 +53,9 @@ type Global struct {
 	// ssl default bind options
 	SslDefaultBindOptions string `json:"ssl_default_bind_options,omitempty"`
 
+	// stats timeout
+	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
+
 	// tune ssl default dh param
 	TuneSslDefaultDhParam int64 `json:"tune_ssl_default_dh_param,omitempty"`
 }
@@ -48,6 +63,10 @@ type Global struct {
 // Validate validates this global
 func (m *Global) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateCPUMaps(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateDaemon(formats); err != nil {
 		res = append(res, err)
@@ -60,6 +79,31 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Global) validateCPUMaps(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CPUMaps) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.CPUMaps); i++ {
+		if swag.IsZero(m.CPUMaps[i]) { // not required
+			continue
+		}
+
+		if m.CPUMaps[i] != nil {
+			if err := m.CPUMaps[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

@@ -46,8 +46,7 @@ type Backend struct {
 	DefaultServer *BackendDefaultServer `json:"default_server,omitempty"`
 
 	// forwardfor
-	// Enum: [enabled disabled]
-	Forwardfor string `json:"forwardfor,omitempty"`
+	Forwardfor *BackendForwardfor `json:"forwardfor,omitempty"`
 
 	// http connection mode
 	// Enum: [http-tunnel httpclose forced-close http-server-close http-keep-alive]
@@ -73,8 +72,7 @@ type Backend struct {
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
 
 	// redispatch
-	// Enum: [enabled disabled]
-	Redispatch string `json:"redispatch,omitempty"`
+	Redispatch *BackendRedispatch `json:"redispatch,omitempty"`
 
 	// retries
 	Retries *int64 `json:"retries,omitempty"`
@@ -298,44 +296,19 @@ func (m *Backend) validateDefaultServer(formats strfmt.Registry) error {
 	return nil
 }
 
-var backendTypeForwardforPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeForwardforPropEnum = append(backendTypeForwardforPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendForwardforEnabled captures enum value "enabled"
-	BackendForwardforEnabled string = "enabled"
-
-	// BackendForwardforDisabled captures enum value "disabled"
-	BackendForwardforDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateForwardforEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendTypeForwardforPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (m *Backend) validateForwardfor(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Forwardfor) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateForwardforEnum("forwardfor", "body", m.Forwardfor); err != nil {
-		return err
+	if m.Forwardfor != nil {
+		if err := m.Forwardfor.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("forwardfor")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -480,44 +453,19 @@ func (m *Backend) validateName(formats strfmt.Registry) error {
 	return nil
 }
 
-var backendTypeRedispatchPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeRedispatchPropEnum = append(backendTypeRedispatchPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendRedispatchEnabled captures enum value "enabled"
-	BackendRedispatchEnabled string = "enabled"
-
-	// BackendRedispatchDisabled captures enum value "disabled"
-	BackendRedispatchDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateRedispatchEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendTypeRedispatchPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (m *Backend) validateRedispatch(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Redispatch) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateRedispatchEnum("redispatch", "body", m.Redispatch); err != nil {
-		return err
+	if m.Redispatch != nil {
+		if err := m.Redispatch.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("redispatch")
+			}
+			return err
+		}
 	}
 
 	return nil

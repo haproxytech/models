@@ -31,7 +31,7 @@ type SiteFarmsItems struct {
 	CondTest string `json:"cond_test,omitempty"`
 
 	// forwardfor
-	Forwardfor bool `json:"forwardfor,omitempty"`
+	Forwardfor *SiteFarmsItemsForwardfor `json:"forwardfor,omitempty"`
 
 	// mode
 	// Enum: [http tcp]
@@ -60,6 +60,10 @@ func (m *SiteFarmsItems) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForwardfor(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -141,6 +145,24 @@ func (m *SiteFarmsItems) validateCond(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *SiteFarmsItems) validateForwardfor(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Forwardfor) { // not required
+		return nil
+	}
+
+	if m.Forwardfor != nil {
+		if err := m.Forwardfor.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("forwardfor")
+			}
+			return err
+		}
 	}
 
 	return nil
