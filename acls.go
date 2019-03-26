@@ -14,9 +14,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Acls ACL Rules Array
+// Acls ACL Lines Array
 //
-// HAProxy ACL Rules array (corresponds to acl directives)
+// HAProxy ACL lines array (corresponds to acl directives)
 // swagger:model acls
 type Acls []*ACL
 

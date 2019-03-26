@@ -16,7 +16,7 @@ import (
 
 // LogTargets Log Target Array
 //
-// HAProxy Log Target array (corresponds to log directives)
+// HAProxy log target array (corresponds to log directives)
 // swagger:model log_targets
 type LogTargets []*LogTarget
 

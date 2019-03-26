@@ -16,7 +16,7 @@ import (
 
 // Filters Filters Array
 //
-// HAProxy filters
+// HAProxy filters array (corresponds to filter directive)
 // swagger:model filters
 type Filters []*Filter
 

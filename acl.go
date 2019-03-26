@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// ACL ACL Rules
+// ACL ACL Lines
 //
 // The use of Access Control Lists (ACL) provides a flexible solution to perform
 // content switching and generally to take decisions based on content extracted

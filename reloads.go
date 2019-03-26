@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Reloads HAProxy reloads array
+// Reloads HAProxy Reloads Array
 //
 // HAProxy reloads array
 // swagger:model reloads

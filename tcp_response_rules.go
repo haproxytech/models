@@ -16,7 +16,7 @@ import (
 
 // TCPResponseRules TCP Response Rules Array
 //
-// HAProxy TCP Response Rules array (corresponds to tcp-response directive)
+// HAProxy TCP response rules array (corresponds to tcp-response directive)
 // swagger:model tcp_response_rules
 type TCPResponseRules []*TCPResponseRule
 

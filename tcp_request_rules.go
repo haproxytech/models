@@ -16,7 +16,7 @@ import (
 
 // TCPRequestRules TCP Request Rules Array
 //
-// HAProxy TCP Request Rules array (corresponds to tcp-request directive)
+// HAProxy TCP request rules array (corresponds to tcp-request directive)
 // swagger:model tcp_request_rules
 type TCPRequestRules []*TCPRequestRule
 

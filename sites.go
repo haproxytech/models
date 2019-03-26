@@ -16,8 +16,8 @@ import (
 
 // Sites Sites
 //
-// Sites array. Sites are considered as one frontend and all backends connected to that frontend.
-// Backends are connected to frontend using use-backend and default_backend directives. Sites let you
+// Sites array. Sites are considered as one service and all farms connected to that service.
+// Farms are connected to service using use-backend and default_backend directives. Sites let you
 // configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
 // endpoints.
 //
