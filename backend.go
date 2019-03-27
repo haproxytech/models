@@ -49,7 +49,7 @@ type Backend struct {
 	Forwardfor *BackendForwardfor `json:"forwardfor,omitempty"`
 
 	// http connection mode
-	// Enum: [http-tunnel httpclose forced-close http-server-close http-keep-alive]
+	// Enum: [http-tunnel httpclose forceclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// httpchk
@@ -318,7 +318,7 @@ var backendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forceclose","http-server-close","http-keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -334,8 +334,8 @@ const (
 	// BackendHTTPConnectionModeHttpclose captures enum value "httpclose"
 	BackendHTTPConnectionModeHttpclose string = "httpclose"
 
-	// BackendHTTPConnectionModeForcedClose captures enum value "forced-close"
-	BackendHTTPConnectionModeForcedClose string = "forced-close"
+	// BackendHTTPConnectionModeForceclose captures enum value "forceclose"
+	BackendHTTPConnectionModeForceclose string = "forceclose"
 
 	// BackendHTTPConnectionModeHTTPServerClose captures enum value "http-server-close"
 	BackendHTTPConnectionModeHTTPServerClose string = "http-server-close"

@@ -48,7 +48,7 @@ type Frontend struct {
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
-	// Enum: [http-tunnel httpclose forced-close http-server-close http-keep-alive]
+	// Enum: [http-tunnel httpclose forceclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keep alive timeout
@@ -337,7 +337,7 @@ var frontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forceclose","http-server-close","http-keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -353,8 +353,8 @@ const (
 	// FrontendHTTPConnectionModeHttpclose captures enum value "httpclose"
 	FrontendHTTPConnectionModeHttpclose string = "httpclose"
 
-	// FrontendHTTPConnectionModeForcedClose captures enum value "forced-close"
-	FrontendHTTPConnectionModeForcedClose string = "forced-close"
+	// FrontendHTTPConnectionModeForceclose captures enum value "forceclose"
+	FrontendHTTPConnectionModeForceclose string = "forceclose"
 
 	// FrontendHTTPConnectionModeHTTPServerClose captures enum value "http-server-close"
 	FrontendHTTPConnectionModeHTTPServerClose string = "http-server-close"
