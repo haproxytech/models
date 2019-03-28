@@ -48,6 +48,10 @@ type Backend struct {
 	// forwardfor
 	Forwardfor *BackendForwardfor `json:"forwardfor,omitempty"`
 
+	// http use htx
+	// Enum: [enabled disabled]
+	HTTPUseHtx string `json:"http-use-htx,omitempty"`
+
 	// http connection mode
 	// Enum: [http-tunnel httpclose forceclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
@@ -109,6 +113,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPUseHtx(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -309,6 +317,49 @@ func (m *Backend) validateForwardfor(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeHTTPUseHtxPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPUseHtxPropEnum = append(backendTypeHTTPUseHtxPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPUseHtxEnabled captures enum value "enabled"
+	BackendHTTPUseHtxEnabled string = "enabled"
+
+	// BackendHTTPUseHtxDisabled captures enum value "disabled"
+	BackendHTTPUseHtxDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPUseHtxEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPUseHtxPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPUseHtx(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPUseHtx) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPUseHtxEnum("http-use-htx", "body", m.HTTPUseHtx); err != nil {
+		return err
 	}
 
 	return nil
