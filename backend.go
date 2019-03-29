@@ -22,7 +22,7 @@ import (
 type Backend struct {
 
 	// adv check
-	// Enum: [ssl-hello-check smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
+	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// balance
@@ -158,7 +158,7 @@ var backendTypeAdvCheckPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["ssl-hello-check","smtpchk","ldap-check","mysql-check","pgsql-check","tcp-check","redis-check"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["ssl-hello-chk","smtpchk","ldap-check","mysql-check","pgsql-check","tcp-check","redis-check"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -168,8 +168,8 @@ func init() {
 
 const (
 
-	// BackendAdvCheckSslHelloCheck captures enum value "ssl-hello-check"
-	BackendAdvCheckSslHelloCheck string = "ssl-hello-check"
+	// BackendAdvCheckSslHelloChk captures enum value "ssl-hello-chk"
+	BackendAdvCheckSslHelloChk string = "ssl-hello-chk"
 
 	// BackendAdvCheckSmtpchk captures enum value "smtpchk"
 	BackendAdvCheckSmtpchk string = "smtpchk"
