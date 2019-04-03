@@ -17,24 +17,24 @@ import (
 // swagger:model globalCpuMapsItems
 type GlobalCPUMapsItems struct {
 
-	// name
+	// cpu set
 	// Required: true
-	Name *string `json:"name"`
+	CPUSet *string `json:"cpu_set"`
 
-	// value
+	// process
 	// Required: true
-	Value *string `json:"value"`
+	Process *string `json:"process"`
 }
 
 // Validate validates this global Cpu maps items
 func (m *GlobalCPUMapsItems) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateName(formats); err != nil {
+	if err := m.validateCPUSet(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateValue(formats); err != nil {
+	if err := m.validateProcess(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -44,18 +44,18 @@ func (m *GlobalCPUMapsItems) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalCPUMapsItems) validateName(formats strfmt.Registry) error {
+func (m *GlobalCPUMapsItems) validateCPUSet(formats strfmt.Registry) error {
 
-	if err := validate.Required("name", "body", m.Name); err != nil {
+	if err := validate.Required("cpu_set", "body", m.CPUSet); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *GlobalCPUMapsItems) validateValue(formats strfmt.Registry) error {
+func (m *GlobalCPUMapsItems) validateProcess(formats strfmt.Registry) error {
 
-	if err := validate.Required("value", "body", m.Value); err != nil {
+	if err := validate.Required("process", "body", m.Process); err != nil {
 		return err
 	}
 
