@@ -88,7 +88,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header set-header set-log-level set-var send-spoe-group replace-header replace-value add-acl del-acl del-header]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-var send-spoe-group add-acl del-acl]
 	Type string `json:"type"`
 
 	// var expr
@@ -498,7 +498,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","set-header","set-log-level","set-var","send-spoe-group","replace-header","replace-value","add-acl","del-acl","del-header"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-var","send-spoe-group","add-acl","del-acl"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -526,6 +526,15 @@ const (
 	// HTTPRequestRuleTypeAddHeader captures enum value "add-header"
 	HTTPRequestRuleTypeAddHeader string = "add-header"
 
+	// HTTPRequestRuleTypeReplaceHeader captures enum value "replace-header"
+	HTTPRequestRuleTypeReplaceHeader string = "replace-header"
+
+	// HTTPRequestRuleTypeReplaceValue captures enum value "replace-value"
+	HTTPRequestRuleTypeReplaceValue string = "replace-value"
+
+	// HTTPRequestRuleTypeDelHeader captures enum value "del-header"
+	HTTPRequestRuleTypeDelHeader string = "del-header"
+
 	// HTTPRequestRuleTypeSetHeader captures enum value "set-header"
 	HTTPRequestRuleTypeSetHeader string = "set-header"
 
@@ -538,20 +547,11 @@ const (
 	// HTTPRequestRuleTypeSendSpoeGroup captures enum value "send-spoe-group"
 	HTTPRequestRuleTypeSendSpoeGroup string = "send-spoe-group"
 
-	// HTTPRequestRuleTypeReplaceHeader captures enum value "replace-header"
-	HTTPRequestRuleTypeReplaceHeader string = "replace-header"
-
-	// HTTPRequestRuleTypeReplaceValue captures enum value "replace-value"
-	HTTPRequestRuleTypeReplaceValue string = "replace-value"
-
 	// HTTPRequestRuleTypeAddACL captures enum value "add-acl"
 	HTTPRequestRuleTypeAddACL string = "add-acl"
 
 	// HTTPRequestRuleTypeDelACL captures enum value "del-acl"
 	HTTPRequestRuleTypeDelACL string = "del-acl"
-
-	// HTTPRequestRuleTypeDelHeader captures enum value "del-header"
-	HTTPRequestRuleTypeDelHeader string = "del-header"
 )
 
 // prop value enum

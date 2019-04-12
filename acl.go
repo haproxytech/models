@@ -23,19 +23,22 @@ import (
 type ACL struct {
 
 	// acl name
+	// Required: true
 	// Pattern: ^[^\s]+$
-	ACLName string `json:"acl_name,omitempty"`
+	ACLName *string `json:"acl_name"`
 
 	// criterion
+	// Required: true
 	// Pattern: ^[^\s]+$
-	Criterion string `json:"criterion,omitempty"`
+	Criterion *string `json:"criterion"`
 
 	// id
 	// Required: true
 	ID *int64 `json:"id"`
 
 	// value
-	Value string `json:"value,omitempty"`
+	// Required: true
+	Value *string `json:"value"`
 }
 
 // Validate validates this acl
@@ -54,6 +57,10 @@ func (m *ACL) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateValue(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -62,11 +69,11 @@ func (m *ACL) Validate(formats strfmt.Registry) error {
 
 func (m *ACL) validateACLName(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.ACLName) { // not required
-		return nil
+	if err := validate.Required("acl_name", "body", m.ACLName); err != nil {
+		return err
 	}
 
-	if err := validate.Pattern("acl_name", "body", string(m.ACLName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("acl_name", "body", string(*m.ACLName), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -75,11 +82,11 @@ func (m *ACL) validateACLName(formats strfmt.Registry) error {
 
 func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Criterion) { // not required
-		return nil
+	if err := validate.Required("criterion", "body", m.Criterion); err != nil {
+		return err
 	}
 
-	if err := validate.Pattern("criterion", "body", string(m.Criterion), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("criterion", "body", string(*m.Criterion), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -89,6 +96,15 @@ func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 func (m *ACL) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", m.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ACL) validateValue(formats strfmt.Registry) error {
+
+	if err := validate.Required("value", "body", m.Value); err != nil {
 		return err
 	}
 
