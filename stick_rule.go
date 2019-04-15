@@ -35,7 +35,7 @@ type StickRule struct {
 	// pattern
 	// Required: true
 	// Pattern: ^[^\s]+$
-	Pattern *string `json:"pattern"`
+	Pattern string `json:"pattern"`
 
 	// table
 	// Pattern: ^[^\s]+$
@@ -131,11 +131,11 @@ func (m *StickRule) validateID(formats strfmt.Registry) error {
 
 func (m *StickRule) validatePattern(formats strfmt.Registry) error {
 
-	if err := validate.Required("pattern", "body", m.Pattern); err != nil {
+	if err := validate.RequiredString("pattern", "body", string(m.Pattern)); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("pattern", "body", string(*m.Pattern), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("pattern", "body", string(m.Pattern), `^[^\s]+$`); err != nil {
 		return err
 	}
 

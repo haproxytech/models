@@ -25,12 +25,12 @@ type ACL struct {
 	// acl name
 	// Required: true
 	// Pattern: ^[^\s]+$
-	ACLName *string `json:"acl_name"`
+	ACLName string `json:"acl_name"`
 
 	// criterion
 	// Required: true
 	// Pattern: ^[^\s]+$
-	Criterion *string `json:"criterion"`
+	Criterion string `json:"criterion"`
 
 	// id
 	// Required: true
@@ -38,7 +38,7 @@ type ACL struct {
 
 	// value
 	// Required: true
-	Value *string `json:"value"`
+	Value string `json:"value"`
 }
 
 // Validate validates this acl
@@ -69,11 +69,11 @@ func (m *ACL) Validate(formats strfmt.Registry) error {
 
 func (m *ACL) validateACLName(formats strfmt.Registry) error {
 
-	if err := validate.Required("acl_name", "body", m.ACLName); err != nil {
+	if err := validate.RequiredString("acl_name", "body", string(m.ACLName)); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("acl_name", "body", string(*m.ACLName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("acl_name", "body", string(m.ACLName), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -82,11 +82,11 @@ func (m *ACL) validateACLName(formats strfmt.Registry) error {
 
 func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 
-	if err := validate.Required("criterion", "body", m.Criterion); err != nil {
+	if err := validate.RequiredString("criterion", "body", string(m.Criterion)); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("criterion", "body", string(*m.Criterion), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("criterion", "body", string(m.Criterion), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -104,7 +104,7 @@ func (m *ACL) validateID(formats strfmt.Registry) error {
 
 func (m *ACL) validateValue(formats strfmt.Registry) error {
 
-	if err := validate.Required("value", "body", m.Value); err != nil {
+	if err := validate.RequiredString("value", "body", string(m.Value)); err != nil {
 		return err
 	}
 
