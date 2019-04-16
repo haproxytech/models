@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+
 	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/go-openapi/errors"
@@ -34,7 +36,8 @@ type SiteFarmsItemsServersItems struct {
 	Port *int64 `json:"port"`
 
 	// ssl
-	Ssl bool `json:"ssl,omitempty"`
+	// Enum: [enabled disabled]
+	Ssl string `json:"ssl,omitempty"`
 
 	// ssl certificate
 	// Pattern: ^[^\s]+$
@@ -57,6 +60,10 @@ func (m *SiteFarmsItemsServersItems) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSsl(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -107,6 +114,49 @@ func (m *SiteFarmsItemsServersItems) validatePort(formats strfmt.Registry) error
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var siteFarmsItemsServersItemsTypeSslPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		siteFarmsItemsServersItemsTypeSslPropEnum = append(siteFarmsItemsServersItemsTypeSslPropEnum, v)
+	}
+}
+
+const (
+
+	// SiteFarmsItemsServersItemsSslEnabled captures enum value "enabled"
+	SiteFarmsItemsServersItemsSslEnabled string = "enabled"
+
+	// SiteFarmsItemsServersItemsSslDisabled captures enum value "disabled"
+	SiteFarmsItemsServersItemsSslDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *SiteFarmsItemsServersItems) validateSslEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, siteFarmsItemsServersItemsTypeSslPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SiteFarmsItemsServersItems) validateSsl(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Ssl) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslEnum("ssl", "body", m.Ssl); err != nil {
 		return err
 	}
 
