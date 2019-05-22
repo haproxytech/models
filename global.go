@@ -37,11 +37,11 @@ import (
 // swagger:model global
 type Global struct {
 
-	// CPU map
-	CPUMap []*GlobalCPUMapsItems0 `json:"cpu_maps"`
+	// CPU maps
+	CPUMaps []*CPUMap `json:"cpu_maps"`
 
-	// runtime API
-	RuntimeAPI []*GlobalRuntimeApisItems0 `json:"runtime_apis"`
+	// runtime apis
+	RuntimeApis []*RuntimeAPI `json:"runtime_apis"`
 
 	// daemon
 	// Enum: [enabled disabled]
@@ -79,11 +79,11 @@ type Global struct {
 func (m *Global) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateCPUMap(formats); err != nil {
+	if err := m.validateCPUMaps(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateRuntimeAPI(formats); err != nil {
+	if err := m.validateRuntimeApis(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -97,19 +97,19 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Global) validateCPUMap(formats strfmt.Registry) error {
+func (m *Global) validateCPUMaps(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.CPUMap) { // not required
+	if swag.IsZero(m.CPUMaps) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.CPUMap); i++ {
-		if swag.IsZero(m.CPUMap[i]) { // not required
+	for i := 0; i < len(m.CPUMaps); i++ {
+		if swag.IsZero(m.CPUMaps[i]) { // not required
 			continue
 		}
 
-		if m.CPUMap[i] != nil {
-			if err := m.CPUMap[i].Validate(formats); err != nil {
+		if m.CPUMaps[i] != nil {
+			if err := m.CPUMaps[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
 				}
@@ -122,19 +122,19 @@ func (m *Global) validateCPUMap(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Global) validateRuntimeAPI(formats strfmt.Registry) error {
+func (m *Global) validateRuntimeApis(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.RuntimeAPI) { // not required
+	if swag.IsZero(m.RuntimeApis) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.RuntimeAPI); i++ {
-		if swag.IsZero(m.RuntimeAPI[i]) { // not required
+	for i := 0; i < len(m.RuntimeApis); i++ {
+		if swag.IsZero(m.RuntimeApis[i]) { // not required
 			continue
 		}
 
-		if m.RuntimeAPI[i] != nil {
-			if err := m.RuntimeAPI[i].Validate(formats); err != nil {
+		if m.RuntimeApis[i] != nil {
+			if err := m.RuntimeApis[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
 				}
@@ -208,9 +208,9 @@ func (m *Global) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// GlobalCPUMapsItems0 global CPU maps items0
-// swagger:model GlobalCPUMapsItems0
-type GlobalCPUMapsItems0 struct {
+// CPUMap CPU map
+// swagger:model CPUMap
+type CPUMap struct {
 
 	// cpu set
 	// Required: true
@@ -221,8 +221,8 @@ type GlobalCPUMapsItems0 struct {
 	Process *string `json:"process"`
 }
 
-// Validate validates this global CPU maps items0
-func (m *GlobalCPUMapsItems0) Validate(formats strfmt.Registry) error {
+// Validate validates this CPU map
+func (m *CPUMap) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCPUSet(formats); err != nil {
@@ -239,7 +239,7 @@ func (m *GlobalCPUMapsItems0) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalCPUMapsItems0) validateCPUSet(formats strfmt.Registry) error {
+func (m *CPUMap) validateCPUSet(formats strfmt.Registry) error {
 
 	if err := validate.Required("cpu_set", "body", m.CPUSet); err != nil {
 		return err
@@ -248,7 +248,7 @@ func (m *GlobalCPUMapsItems0) validateCPUSet(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalCPUMapsItems0) validateProcess(formats strfmt.Registry) error {
+func (m *CPUMap) validateProcess(formats strfmt.Registry) error {
 
 	if err := validate.Required("process", "body", m.Process); err != nil {
 		return err
@@ -258,7 +258,7 @@ func (m *GlobalCPUMapsItems0) validateProcess(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *GlobalCPUMapsItems0) MarshalBinary() ([]byte, error) {
+func (m *CPUMap) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -266,8 +266,8 @@ func (m *GlobalCPUMapsItems0) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *GlobalCPUMapsItems0) UnmarshalBinary(b []byte) error {
-	var res GlobalCPUMapsItems0
+func (m *CPUMap) UnmarshalBinary(b []byte) error {
+	var res CPUMap
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
@@ -275,9 +275,9 @@ func (m *GlobalCPUMapsItems0) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// GlobalRuntimeApisItems0 global runtime apis items0
-// swagger:model GlobalRuntimeApisItems0
-type GlobalRuntimeApisItems0 struct {
+// RuntimeAPI runtime API
+// swagger:model RuntimeAPI
+type RuntimeAPI struct {
 
 	// address
 	// Required: true
@@ -300,8 +300,8 @@ type GlobalRuntimeApisItems0 struct {
 	Process string `json:"process,omitempty"`
 }
 
-// Validate validates this global runtime apis items0
-func (m *GlobalRuntimeApisItems0) Validate(formats strfmt.Registry) error {
+// Validate validates this runtime API
+func (m *RuntimeAPI) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAddress(formats); err != nil {
@@ -326,7 +326,7 @@ func (m *GlobalRuntimeApisItems0) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalRuntimeApisItems0) validateAddress(formats strfmt.Registry) error {
+func (m *RuntimeAPI) validateAddress(formats strfmt.Registry) error {
 
 	if err := validate.Required("address", "body", m.Address); err != nil {
 		return err
@@ -339,7 +339,7 @@ func (m *GlobalRuntimeApisItems0) validateAddress(formats strfmt.Registry) error
 	return nil
 }
 
-var globalRuntimeApisItems0TypeLevelPropEnum []interface{}
+var runtimeApiTypeLevelPropEnum []interface{}
 
 func init() {
 	var res []string
@@ -347,31 +347,31 @@ func init() {
 		panic(err)
 	}
 	for _, v := range res {
-		globalRuntimeApisItems0TypeLevelPropEnum = append(globalRuntimeApisItems0TypeLevelPropEnum, v)
+		runtimeApiTypeLevelPropEnum = append(runtimeApiTypeLevelPropEnum, v)
 	}
 }
 
 const (
 
-	// GlobalRuntimeApisItems0LevelUser captures enum value "user"
-	GlobalRuntimeApisItems0LevelUser string = "user"
+	// RuntimeAPILevelUser captures enum value "user"
+	RuntimeAPILevelUser string = "user"
 
-	// GlobalRuntimeApisItems0LevelOperator captures enum value "operator"
-	GlobalRuntimeApisItems0LevelOperator string = "operator"
+	// RuntimeAPILevelOperator captures enum value "operator"
+	RuntimeAPILevelOperator string = "operator"
 
-	// GlobalRuntimeApisItems0LevelAdmin captures enum value "admin"
-	GlobalRuntimeApisItems0LevelAdmin string = "admin"
+	// RuntimeAPILevelAdmin captures enum value "admin"
+	RuntimeAPILevelAdmin string = "admin"
 )
 
 // prop value enum
-func (m *GlobalRuntimeApisItems0) validateLevelEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalRuntimeApisItems0TypeLevelPropEnum); err != nil {
+func (m *RuntimeAPI) validateLevelEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, runtimeApiTypeLevelPropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *GlobalRuntimeApisItems0) validateLevel(formats strfmt.Registry) error {
+func (m *RuntimeAPI) validateLevel(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Level) { // not required
 		return nil
@@ -385,7 +385,7 @@ func (m *GlobalRuntimeApisItems0) validateLevel(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalRuntimeApisItems0) validateMode(formats strfmt.Registry) error {
+func (m *RuntimeAPI) validateMode(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Mode) { // not required
 		return nil
@@ -398,7 +398,7 @@ func (m *GlobalRuntimeApisItems0) validateMode(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalRuntimeApisItems0) validateProcess(formats strfmt.Registry) error {
+func (m *RuntimeAPI) validateProcess(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Process) { // not required
 		return nil
@@ -412,7 +412,7 @@ func (m *GlobalRuntimeApisItems0) validateProcess(formats strfmt.Registry) error
 }
 
 // MarshalBinary interface implementation
-func (m *GlobalRuntimeApisItems0) MarshalBinary() ([]byte, error) {
+func (m *RuntimeAPI) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -420,8 +420,8 @@ func (m *GlobalRuntimeApisItems0) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *GlobalRuntimeApisItems0) UnmarshalBinary(b []byte) error {
-	var res GlobalRuntimeApisItems0
+func (m *RuntimeAPI) UnmarshalBinary(b []byte) error {
+	var res RuntimeAPI
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

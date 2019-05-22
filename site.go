@@ -41,8 +41,8 @@ import (
 // swagger:model site
 type Site struct {
 
-	// site farms
-	SiteFarms []*SiteFarm `json:"farms"`
+	// farms
+	Farms []*SiteFarm `json:"farms"`
 
 	// name
 	// Required: true
@@ -57,7 +57,7 @@ type Site struct {
 func (m *Site) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateSiteFarms(formats); err != nil {
+	if err := m.validateFarms(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -75,19 +75,19 @@ func (m *Site) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Site) validateSiteFarms(formats strfmt.Registry) error {
+func (m *Site) validateFarms(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.SiteFarms) { // not required
+	if swag.IsZero(m.Farms) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.SiteFarms); i++ {
-		if swag.IsZero(m.SiteFarms[i]) { // not required
+	for i := 0; i < len(m.Farms); i++ {
+		if swag.IsZero(m.Farms[i]) { // not required
 			continue
 		}
 
-		if m.SiteFarms[i] != nil {
-			if err := m.SiteFarms[i].Validate(formats); err != nil {
+		if m.Farms[i] != nil {
+			if err := m.Farms[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("farms" + "." + strconv.Itoa(i))
 				}
@@ -153,9 +153,6 @@ func (m *Site) UnmarshalBinary(b []byte) error {
 // swagger:model SiteFarm
 type SiteFarm struct {
 
-	// site servers
-	SiteServers []*SiteServer `json:"servers"`
-
 	// balance
 	Balance *SiteFarmBalance `json:"balance,omitempty"`
 
@@ -178,6 +175,9 @@ type SiteFarm struct {
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
+	// servers
+	Servers []*SiteServer `json:"servers"`
+
 	// use as
 	// Required: true
 	// Enum: [default conditional]
@@ -187,10 +187,6 @@ type SiteFarm struct {
 // Validate validates this site farm
 func (m *SiteFarm) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateSiteServers(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateBalance(formats); err != nil {
 		res = append(res, err)
@@ -212,6 +208,10 @@ func (m *SiteFarm) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateServers(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateUseAs(formats); err != nil {
 		res = append(res, err)
 	}
@@ -219,31 +219,6 @@ func (m *SiteFarm) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *SiteFarm) validateSiteServers(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.SiteServers) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.SiteServers); i++ {
-		if swag.IsZero(m.SiteServers[i]) { // not required
-			continue
-		}
-
-		if m.SiteServers[i] != nil {
-			if err := m.SiteServers[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("servers" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
 	return nil
 }
 
@@ -377,6 +352,31 @@ func (m *SiteFarm) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *SiteFarm) validateServers(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Servers) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Servers); i++ {
+		if swag.IsZero(m.Servers[i]) { // not required
+			continue
+		}
+
+		if m.Servers[i] != nil {
+			if err := m.Servers[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("servers" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -882,12 +882,12 @@ func (m *SiteServer) UnmarshalBinary(b []byte) error {
 // swagger:model SiteService
 type SiteService struct {
 
-	// site listeners
-	SiteListeners []*SiteListener `json:"listeners"`
-
 	// http connection mode
 	// Enum: [http-tunnel httpclose forced-close http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
+
+	// listeners
+	Listeners []*SiteListener `json:"listeners"`
 
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
@@ -901,11 +901,11 @@ type SiteService struct {
 func (m *SiteService) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateSiteListeners(formats); err != nil {
+	if err := m.validateHTTPConnectionMode(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPConnectionMode(formats); err != nil {
+	if err := m.validateListeners(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -916,31 +916,6 @@ func (m *SiteService) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *SiteService) validateSiteListeners(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.SiteListeners) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.SiteListeners); i++ {
-		if swag.IsZero(m.SiteListeners[i]) { // not required
-			continue
-		}
-
-		if m.SiteListeners[i] != nil {
-			if err := m.SiteListeners[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("service" + "." + "listeners" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
 	return nil
 }
 
@@ -991,6 +966,31 @@ func (m *SiteService) validateHTTPConnectionMode(formats strfmt.Registry) error 
 	// value enum
 	if err := m.validateHTTPConnectionModeEnum("service"+"."+"http_connection_mode", "body", m.HTTPConnectionMode); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *SiteService) validateListeners(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Listeners) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Listeners); i++ {
+		if swag.IsZero(m.Listeners[i]) { // not required
+			continue
+		}
+
+		if m.Listeners[i] != nil {
+			if err := m.Listeners[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("service" + "." + "listeners" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
