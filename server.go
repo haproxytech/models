@@ -52,6 +52,9 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Cookie string `json:"cookie,omitempty"`
 
+	// inter
+	Inter *int64 `json:"inter,omitempty"`
+
 	// maintenance
 	// Enum: [enabled disabled]
 	Maintenance string `json:"maintenance,omitempty"`
