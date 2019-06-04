@@ -22,7 +22,6 @@ package models
 
 import (
 	"encoding/json"
-	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 
@@ -42,7 +41,7 @@ type Backend struct {
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// balance
-	Balance *BackendBalance `json:"balance,omitempty"`
+	Balance *Balance `json:"balance,omitempty"`
 
 	// check timeout
 	CheckTimeout *int64 `json:"check_timeout,omitempty"`
@@ -59,17 +58,17 @@ type Backend struct {
 	Cookie string `json:"cookie,omitempty"`
 
 	// default server
-	DefaultServer *BackendDefaultServer `json:"default_server,omitempty"`
+	DefaultServer *DefaultServer `json:"default_server,omitempty"`
 
 	// forwardfor
-	Forwardfor *BackendForwardfor `json:"forwardfor,omitempty"`
+	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
 	// http use htx
 	// Enum: [enabled disabled]
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
-	// Enum: [http-tunnel httpclose forceclose http-server-close http-keep-alive]
+	// Enum: [http-tunnel httpclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// httpchk
@@ -80,7 +79,7 @@ type Backend struct {
 	LogTag string `json:"log_tag,omitempty"`
 
 	// mode
-	// Enum: [http tcp]
+	// Enum: [http tcp health]
 	Mode string `json:"mode,omitempty"`
 
 	// name
@@ -385,7 +384,7 @@ var backendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forceclose","http-server-close","http-keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","http-server-close","http-keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -400,9 +399,6 @@ const (
 
 	// BackendHTTPConnectionModeHttpclose captures enum value "httpclose"
 	BackendHTTPConnectionModeHttpclose string = "httpclose"
-
-	// BackendHTTPConnectionModeForceclose captures enum value "forceclose"
-	BackendHTTPConnectionModeForceclose string = "forceclose"
 
 	// BackendHTTPConnectionModeHTTPServerClose captures enum value "http-server-close"
 	BackendHTTPConnectionModeHTTPServerClose string = "http-server-close"
@@ -468,7 +464,7 @@ var backendTypeModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http","tcp"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http","tcp","health"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -483,6 +479,9 @@ const (
 
 	// BackendModeTCP captures enum value "tcp"
 	BackendModeTCP string = "tcp"
+
+	// BackendModeHealth captures enum value "health"
+	BackendModeHealth string = "health"
 )
 
 // prop value enum
@@ -567,330 +566,6 @@ func (m *Backend) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Backend) UnmarshalBinary(b []byte) error {
 	var res Backend
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// BackendBalance backend balance
-// swagger:model BackendBalance
-type BackendBalance struct {
-
-	// algorithm
-	// Enum: [roundrobin static-rr leastconn first source uri url_param random]
-	Algorithm string `json:"algorithm,omitempty"`
-
-	// arguments
-	Arguments []string `json:"arguments"`
-}
-
-// Validate validates this backend balance
-func (m *BackendBalance) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateAlgorithm(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateArguments(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var backendBalanceTypeAlgorithmPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["roundrobin","static-rr","leastconn","first","source","uri","url_param","random"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendBalanceTypeAlgorithmPropEnum = append(backendBalanceTypeAlgorithmPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendBalanceAlgorithmRoundrobin captures enum value "roundrobin"
-	BackendBalanceAlgorithmRoundrobin string = "roundrobin"
-
-	// BackendBalanceAlgorithmStaticRr captures enum value "static-rr"
-	BackendBalanceAlgorithmStaticRr string = "static-rr"
-
-	// BackendBalanceAlgorithmLeastconn captures enum value "leastconn"
-	BackendBalanceAlgorithmLeastconn string = "leastconn"
-
-	// BackendBalanceAlgorithmFirst captures enum value "first"
-	BackendBalanceAlgorithmFirst string = "first"
-
-	// BackendBalanceAlgorithmSource captures enum value "source"
-	BackendBalanceAlgorithmSource string = "source"
-
-	// BackendBalanceAlgorithmURI captures enum value "uri"
-	BackendBalanceAlgorithmURI string = "uri"
-
-	// BackendBalanceAlgorithmURLParam captures enum value "url_param"
-	BackendBalanceAlgorithmURLParam string = "url_param"
-
-	// BackendBalanceAlgorithmRandom captures enum value "random"
-	BackendBalanceAlgorithmRandom string = "random"
-)
-
-// prop value enum
-func (m *BackendBalance) validateAlgorithmEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendBalanceTypeAlgorithmPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendBalance) validateAlgorithm(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Algorithm) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateAlgorithmEnum("balance"+"."+"algorithm", "body", m.Algorithm); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BackendBalance) validateArguments(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Arguments) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.Arguments); i++ {
-
-		if err := validate.Pattern("balance"+"."+"arguments"+"."+strconv.Itoa(i), "body", string(m.Arguments[i]), `^[^\s]+$`); err != nil {
-			return err
-		}
-
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *BackendBalance) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *BackendBalance) UnmarshalBinary(b []byte) error {
-	var res BackendBalance
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// BackendDefaultServer backend default server
-// swagger:model BackendDefaultServer
-type BackendDefaultServer struct {
-
-	// fall
-	Fall *int64 `json:"fall,omitempty"`
-
-	// inter
-	Inter *int64 `json:"inter,omitempty"`
-
-	// port
-	// Maximum: 65535
-	// Minimum: 0
-	Port *int64 `json:"port,omitempty"`
-
-	// rise
-	Rise *int64 `json:"rise,omitempty"`
-}
-
-// Validate validates this backend default server
-func (m *BackendDefaultServer) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validatePort(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *BackendDefaultServer) validatePort(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Port) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("default_server"+"."+"port", "body", int64(*m.Port), 0, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("default_server"+"."+"port", "body", int64(*m.Port), 65535, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *BackendDefaultServer) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *BackendDefaultServer) UnmarshalBinary(b []byte) error {
-	var res BackendDefaultServer
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// BackendForwardfor backend forwardfor
-// swagger:model BackendForwardfor
-type BackendForwardfor struct {
-
-	// enabled
-	// Required: true
-	// Enum: [enabled disabled]
-	Enabled *string `json:"enabled"`
-
-	// except
-	// Pattern: ^[^\s]+$
-	Except string `json:"except,omitempty"`
-
-	// header
-	// Pattern: ^[^\s]+$
-	Header string `json:"header,omitempty"`
-
-	// ifnone
-	Ifnone bool `json:"ifnone,omitempty"`
-}
-
-// Validate validates this backend forwardfor
-func (m *BackendForwardfor) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateEnabled(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateExcept(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHeader(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var backendForwardforTypeEnabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendForwardforTypeEnabledPropEnum = append(backendForwardforTypeEnabledPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendForwardforEnabledEnabled captures enum value "enabled"
-	BackendForwardforEnabledEnabled string = "enabled"
-
-	// BackendForwardforEnabledDisabled captures enum value "disabled"
-	BackendForwardforEnabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *BackendForwardfor) validateEnabledEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, backendForwardforTypeEnabledPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendForwardfor) validateEnabled(formats strfmt.Registry) error {
-
-	if err := validate.Required("forwardfor"+"."+"enabled", "body", m.Enabled); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateEnabledEnum("forwardfor"+"."+"enabled", "body", *m.Enabled); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BackendForwardfor) validateExcept(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Except) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("forwardfor"+"."+"except", "body", string(m.Except), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BackendForwardfor) validateHeader(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Header) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("forwardfor"+"."+"header", "body", string(m.Header), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *BackendForwardfor) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *BackendForwardfor) UnmarshalBinary(b []byte) error {
-	var res BackendForwardfor
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

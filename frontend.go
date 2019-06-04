@@ -63,7 +63,7 @@ type Frontend struct {
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
-	// Enum: [http-tunnel httpclose forceclose http-server-close http-keep-alive]
+	// Enum: [http-tunnel httpclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keep alive timeout
@@ -97,7 +97,7 @@ type Frontend struct {
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
 	// mode
-	// Enum: [http tcp]
+	// Enum: [http tcp health]
 	Mode string `json:"mode,omitempty"`
 
 	// name
@@ -352,7 +352,7 @@ var frontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","forceclose","http-server-close","http-keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","http-server-close","http-keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -367,9 +367,6 @@ const (
 
 	// FrontendHTTPConnectionModeHttpclose captures enum value "httpclose"
 	FrontendHTTPConnectionModeHttpclose string = "httpclose"
-
-	// FrontendHTTPConnectionModeForceclose captures enum value "forceclose"
-	FrontendHTTPConnectionModeForceclose string = "forceclose"
 
 	// FrontendHTTPConnectionModeHTTPServerClose captures enum value "http-server-close"
 	FrontendHTTPConnectionModeHTTPServerClose string = "http-server-close"
@@ -503,7 +500,7 @@ var frontendTypeModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http","tcp"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http","tcp","health"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -518,6 +515,9 @@ const (
 
 	// FrontendModeTCP captures enum value "tcp"
 	FrontendModeTCP string = "tcp"
+
+	// FrontendModeHealth captures enum value "health"
+	FrontendModeHealth string = "health"
 )
 
 // prop value enum
