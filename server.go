@@ -67,6 +67,18 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
 
+	// on error
+	// Enum: [fastinter fail-check sudden-death mark-down]
+	OnError *string `json:"on-error,omitempty"`
+
+	// on marked down
+	// Enum: [shutdown-sessions]
+	OnMarkedDown *string `json:"on-marked-down,omitempty"`
+
+	// on marked up
+	// Enum: [shutdown-backup-sessions]
+	OnMarkedUp *string `json:"on-marked-up,omitempty"`
+
 	// port
 	// Maximum: 65535
 	// Minimum: 0
@@ -117,6 +129,18 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOnError(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOnMarkedDown(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOnMarkedUp(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -308,6 +332,135 @@ func (m *Server) validateName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeOnErrorPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["fastinter","fail-check","sudden-death","mark-down"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeOnErrorPropEnum = append(serverTypeOnErrorPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerOnErrorFastinter captures enum value "fastinter"
+	ServerOnErrorFastinter string = "fastinter"
+
+	// ServerOnErrorFailCheck captures enum value "fail-check"
+	ServerOnErrorFailCheck string = "fail-check"
+
+	// ServerOnErrorSuddenDeath captures enum value "sudden-death"
+	ServerOnErrorSuddenDeath string = "sudden-death"
+
+	// ServerOnErrorMarkDown captures enum value "mark-down"
+	ServerOnErrorMarkDown string = "mark-down"
+)
+
+// prop value enum
+func (m *Server) validateOnErrorEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeOnErrorPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateOnError(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.OnError) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateOnErrorEnum("on-error", "body", *m.OnError); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeOnMarkedDownPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["shutdown-sessions"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeOnMarkedDownPropEnum = append(serverTypeOnMarkedDownPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerOnMarkedDownShutdownSessions captures enum value "shutdown-sessions"
+	ServerOnMarkedDownShutdownSessions string = "shutdown-sessions"
+)
+
+// prop value enum
+func (m *Server) validateOnMarkedDownEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeOnMarkedDownPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateOnMarkedDown(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.OnMarkedDown) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateOnMarkedDownEnum("on-marked-down", "body", *m.OnMarkedDown); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeOnMarkedUpPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["shutdown-backup-sessions"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeOnMarkedUpPropEnum = append(serverTypeOnMarkedUpPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerOnMarkedUpShutdownBackupSessions captures enum value "shutdown-backup-sessions"
+	ServerOnMarkedUpShutdownBackupSessions string = "shutdown-backup-sessions"
+)
+
+// prop value enum
+func (m *Server) validateOnMarkedUpEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeOnMarkedUpPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateOnMarkedUp(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.OnMarkedUp) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateOnMarkedUpEnum("on-marked-up", "body", *m.OnMarkedUp); err != nil {
 		return err
 	}
 
