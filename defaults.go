@@ -70,6 +70,17 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
 
+	// external check
+	ExternalCheck bool `json:"external_check,omitempty"`
+
+	// external check command
+	// Pattern: ^[^\s]+$
+	ExternalCheckCommand string `json:"external_check_command,omitempty"`
+
+	// external check path
+	// Pattern: ^[^\s]+$
+	ExternalCheckPath string `json:"external_check_path,omitempty"`
+
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
@@ -129,6 +140,14 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDontlognull(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExternalCheckCommand(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExternalCheckPath(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -308,6 +327,32 @@ func (m *Defaults) validateDontlognull(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateDontlognullEnum("dontlognull", "body", m.Dontlognull); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateExternalCheckCommand(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExternalCheckCommand) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("external_check_command", "body", string(m.ExternalCheckCommand), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateExternalCheckPath(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExternalCheckPath) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("external_check_path", "body", string(m.ExternalCheckPath), `^[^\s]+$`); err != nil {
 		return err
 	}
 

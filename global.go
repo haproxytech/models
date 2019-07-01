@@ -47,6 +47,9 @@ type Global struct {
 	// Enum: [enabled disabled]
 	Daemon string `json:"daemon,omitempty"`
 
+	// external check
+	ExternalCheck bool `json:"external_check,omitempty"`
+
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
 
