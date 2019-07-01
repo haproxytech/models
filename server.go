@@ -100,6 +100,10 @@ type Server struct {
 	// Enum: [enabled disabled]
 	TLSTickets string `json:"tls_tickets,omitempty"`
 
+	// verify
+	// Enum: [none required]
+	Verify string `json:"verify,omitempty"`
+
 	// weight
 	Weight *int64 `json:"weight,omitempty"`
 }
@@ -161,6 +165,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTLSTickets(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVerify(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -590,6 +598,49 @@ func (m *Server) validateTLSTickets(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTLSTicketsEnum("tls_tickets", "body", m.TLSTickets); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeVerifyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["none","required"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeVerifyPropEnum = append(serverTypeVerifyPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerVerifyNone captures enum value "none"
+	ServerVerifyNone string = "none"
+
+	// ServerVerifyRequired captures enum value "required"
+	ServerVerifyRequired string = "required"
+)
+
+// prop value enum
+func (m *Server) validateVerifyEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeVerifyPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateVerify(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Verify) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateVerifyEnum("verify", "body", m.Verify); err != nil {
 		return err
 	}
 

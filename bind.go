@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+
 	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/go-openapi/errors"
@@ -68,6 +70,10 @@ type Bind struct {
 
 	// transparent
 	Transparent bool `json:"transparent,omitempty"`
+
+	// verify
+	// Enum: [none optional required]
+	Verify string `json:"verify,omitempty"`
 }
 
 // Validate validates this bind
@@ -95,6 +101,10 @@ func (m *Bind) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslCertificate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVerify(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -180,6 +190,52 @@ func (m *Bind) validateSslCertificate(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("ssl_certificate", "body", string(m.SslCertificate), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var bindTypeVerifyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["none","optional","required"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bindTypeVerifyPropEnum = append(bindTypeVerifyPropEnum, v)
+	}
+}
+
+const (
+
+	// BindVerifyNone captures enum value "none"
+	BindVerifyNone string = "none"
+
+	// BindVerifyOptional captures enum value "optional"
+	BindVerifyOptional string = "optional"
+
+	// BindVerifyRequired captures enum value "required"
+	BindVerifyRequired string = "required"
+)
+
+// prop value enum
+func (m *Bind) validateVerifyEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, bindTypeVerifyPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Bind) validateVerify(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Verify) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateVerifyEnum("verify", "body", m.Verify); err != nil {
 		return err
 	}
 
