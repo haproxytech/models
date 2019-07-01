@@ -36,6 +36,9 @@ import (
 // swagger:model bind
 type Bind struct {
 
+	// accept proxy
+	AcceptProxy bool `json:"accept_proxy,omitempty"`
+
 	// address
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
