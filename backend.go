@@ -60,6 +60,17 @@ type Backend struct {
 	// default server
 	DefaultServer *DefaultServer `json:"default_server,omitempty"`
 
+	// external check
+	ExternalCheck bool `json:"external_check,omitempty"`
+
+	// external check command
+	// Pattern: ^[^\s]+$
+	ExternalCheckCommand string `json:"external_check_command,omitempty"`
+
+	// external check path
+	// Pattern: ^[^\s]+$
+	ExternalCheckPath string `json:"external_check_path,omitempty"`
+
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
@@ -124,6 +135,14 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDefaultServer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExternalCheckCommand(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExternalCheckPath(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -314,6 +333,32 @@ func (m *Backend) validateDefaultServer(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateExternalCheckCommand(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExternalCheckCommand) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("external_check_command", "body", string(m.ExternalCheckCommand), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateExternalCheckPath(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExternalCheckPath) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("external_check_path", "body", string(m.ExternalCheckPath), `^[^\s]+$`); err != nil {
+		return err
 	}
 
 	return nil
