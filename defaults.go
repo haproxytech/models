@@ -71,7 +71,8 @@ type Defaults struct {
 	Dontlognull string `json:"dontlognull,omitempty"`
 
 	// external check
-	ExternalCheck bool `json:"external_check,omitempty"`
+	// Enum: [enabled disabled]
+	ExternalCheck string `json:"external_check,omitempty"`
 
 	// external check command
 	// Pattern: ^[^\s]+$
@@ -140,6 +141,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDontlognull(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExternalCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -327,6 +332,49 @@ func (m *Defaults) validateDontlognull(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateDontlognullEnum("dontlognull", "body", m.Dontlognull); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeExternalCheckPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeExternalCheckPropEnum = append(defaultsTypeExternalCheckPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsExternalCheckEnabled captures enum value "enabled"
+	DefaultsExternalCheckEnabled string = "enabled"
+
+	// DefaultsExternalCheckDisabled captures enum value "disabled"
+	DefaultsExternalCheckDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateExternalCheckEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeExternalCheckPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateExternalCheck(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExternalCheck) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateExternalCheckEnum("external_check", "body", m.ExternalCheck); err != nil {
 		return err
 	}
 

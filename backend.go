@@ -61,7 +61,8 @@ type Backend struct {
 	DefaultServer *DefaultServer `json:"default_server,omitempty"`
 
 	// external check
-	ExternalCheck bool `json:"external_check,omitempty"`
+	// Enum: [enabled disabled]
+	ExternalCheck string `json:"external_check,omitempty"`
 
 	// external check command
 	// Pattern: ^[^\s]+$
@@ -135,6 +136,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDefaultServer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExternalCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -333,6 +338,49 @@ func (m *Backend) validateDefaultServer(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeExternalCheckPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeExternalCheckPropEnum = append(backendTypeExternalCheckPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendExternalCheckEnabled captures enum value "enabled"
+	BackendExternalCheckEnabled string = "enabled"
+
+	// BackendExternalCheckDisabled captures enum value "disabled"
+	BackendExternalCheckDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateExternalCheckEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeExternalCheckPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateExternalCheck(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExternalCheck) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateExternalCheckEnum("external_check", "body", m.ExternalCheck); err != nil {
+		return err
 	}
 
 	return nil
