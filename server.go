@@ -69,15 +69,15 @@ type Server struct {
 
 	// on error
 	// Enum: [fastinter fail-check sudden-death mark-down]
-	OnError *string `json:"on-error,omitempty"`
+	OnError string `json:"on-error,omitempty"`
 
 	// on marked down
 	// Enum: [shutdown-sessions]
-	OnMarkedDown *string `json:"on-marked-down,omitempty"`
+	OnMarkedDown string `json:"on-marked-down,omitempty"`
 
 	// on marked up
 	// Enum: [shutdown-backup-sessions]
-	OnMarkedUp *string `json:"on-marked-up,omitempty"`
+	OnMarkedUp string `json:"on-marked-up,omitempty"`
 
 	// port
 	// Maximum: 65535
@@ -388,7 +388,7 @@ func (m *Server) validateOnError(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateOnErrorEnum("on-error", "body", *m.OnError); err != nil {
+	if err := m.validateOnErrorEnum("on-error", "body", m.OnError); err != nil {
 		return err
 	}
 
@@ -428,7 +428,7 @@ func (m *Server) validateOnMarkedDown(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateOnMarkedDownEnum("on-marked-down", "body", *m.OnMarkedDown); err != nil {
+	if err := m.validateOnMarkedDownEnum("on-marked-down", "body", m.OnMarkedDown); err != nil {
 		return err
 	}
 
@@ -468,7 +468,7 @@ func (m *Server) validateOnMarkedUp(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateOnMarkedUpEnum("on-marked-up", "body", *m.OnMarkedUp); err != nil {
+	if err := m.validateOnMarkedUpEnum("on-marked-up", "body", m.OnMarkedUp); err != nil {
 		return err
 	}
 
