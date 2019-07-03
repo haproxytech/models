@@ -74,6 +74,9 @@ type Bind struct {
 	// transparent
 	Transparent bool `json:"transparent,omitempty"`
 
+	// v4v6
+	V4v6 bool `json:"v4v6,omitempty"`
+
 	// verify
 	// Enum: [none optional required]
 	Verify string `json:"verify,omitempty"`
