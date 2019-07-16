@@ -30,40 +30,24 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Forwardfor forwardfor
-// swagger:model forwardfor
-type Forwardfor struct {
+// Redispatch redispatch
+// swagger:model redispatch
+type Redispatch struct {
 
 	// enabled
 	// Required: true
-	// Enum: [enabled]
+	// Enum: [enabled disabled]
 	Enabled *string `json:"enabled"`
 
-	// except
-	// Pattern: ^[^\s]+$
-	Except string `json:"except,omitempty"`
-
-	// header
-	// Pattern: ^[^\s]+$
-	Header string `json:"header,omitempty"`
-
-	// ifnone
-	Ifnone bool `json:"ifnone,omitempty"`
+	// interval
+	Interval int64 `json:"interval,omitempty"`
 }
 
-// Validate validates this forwardfor
-func (m *Forwardfor) Validate(formats strfmt.Registry) error {
+// Validate validates this redispatch
+func (m *Redispatch) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateEnabled(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateExcept(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHeader(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -73,33 +57,36 @@ func (m *Forwardfor) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var forwardforTypeEnabledPropEnum []interface{}
+var redispatchTypeEnabledPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
-		forwardforTypeEnabledPropEnum = append(forwardforTypeEnabledPropEnum, v)
+		redispatchTypeEnabledPropEnum = append(redispatchTypeEnabledPropEnum, v)
 	}
 }
 
 const (
 
-	// ForwardforEnabledEnabled captures enum value "enabled"
-	ForwardforEnabledEnabled string = "enabled"
+	// RedispatchEnabledEnabled captures enum value "enabled"
+	RedispatchEnabledEnabled string = "enabled"
+
+	// RedispatchEnabledDisabled captures enum value "disabled"
+	RedispatchEnabledDisabled string = "disabled"
 )
 
 // prop value enum
-func (m *Forwardfor) validateEnabledEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, forwardforTypeEnabledPropEnum); err != nil {
+func (m *Redispatch) validateEnabledEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, redispatchTypeEnabledPropEnum); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Forwardfor) validateEnabled(formats strfmt.Registry) error {
+func (m *Redispatch) validateEnabled(formats strfmt.Registry) error {
 
 	if err := validate.Required("enabled", "body", m.Enabled); err != nil {
 		return err
@@ -113,34 +100,8 @@ func (m *Forwardfor) validateEnabled(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Forwardfor) validateExcept(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Except) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("except", "body", string(m.Except), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Forwardfor) validateHeader(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Header) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("header", "body", string(m.Header), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // MarshalBinary interface implementation
-func (m *Forwardfor) MarshalBinary() ([]byte, error) {
+func (m *Redispatch) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -148,8 +109,8 @@ func (m *Forwardfor) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Forwardfor) UnmarshalBinary(b []byte) error {
-	var res Forwardfor
+func (m *Redispatch) UnmarshalBinary(b []byte) error {
+	var res Redispatch
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

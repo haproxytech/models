@@ -47,7 +47,7 @@ type Frontend struct {
 	Clitcpka string `json:"clitcpka,omitempty"`
 
 	// contstats
-	// Enum: [enabled disabled]
+	// Enum: [enabled]
 	Contstats string `json:"contstats,omitempty"`
 
 	// default backend
@@ -58,20 +58,19 @@ type Frontend struct {
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
 
+	// forwardfor
+	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
+
 	// http use htx
 	// Enum: [enabled disabled]
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
-	// Enum: [http-tunnel httpclose http-server-close http-keep-alive]
+	// Enum: [httpclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keep alive timeout
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
-
-	// http pretend keepalive
-	// Enum: [enabled disabled]
-	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
@@ -97,7 +96,7 @@ type Frontend struct {
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
 	// mode
-	// Enum: [http tcp health]
+	// Enum: [http tcp]
 	Mode string `json:"mode,omitempty"`
 
 	// name
@@ -129,15 +128,15 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPUseHtx(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateHTTPConnectionMode(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -210,7 +209,7 @@ var frontendTypeContstatsPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -222,9 +221,6 @@ const (
 
 	// FrontendContstatsEnabled captures enum value "enabled"
 	FrontendContstatsEnabled string = "enabled"
-
-	// FrontendContstatsDisabled captures enum value "disabled"
-	FrontendContstatsDisabled string = "disabled"
 )
 
 // prop value enum
@@ -305,6 +301,24 @@ func (m *Frontend) validateDontlognull(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Frontend) validateForwardfor(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Forwardfor) { // not required
+		return nil
+	}
+
+	if m.Forwardfor != nil {
+		if err := m.Forwardfor.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("forwardfor")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 var frontendTypeHTTPUseHtxPropEnum []interface{}
 
 func init() {
@@ -352,7 +366,7 @@ var frontendTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http-tunnel","httpclose","http-server-close","http-keep-alive"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["httpclose","http-server-close","http-keep-alive"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -361,9 +375,6 @@ func init() {
 }
 
 const (
-
-	// FrontendHTTPConnectionModeHTTPTunnel captures enum value "http-tunnel"
-	FrontendHTTPConnectionModeHTTPTunnel string = "http-tunnel"
 
 	// FrontendHTTPConnectionModeHttpclose captures enum value "httpclose"
 	FrontendHTTPConnectionModeHttpclose string = "httpclose"
@@ -391,49 +402,6 @@ func (m *Frontend) validateHTTPConnectionMode(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPConnectionModeEnum("http_connection_mode", "body", m.HTTPConnectionMode); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var frontendTypeHTTPPretendKeepalivePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeHTTPPretendKeepalivePropEnum = append(frontendTypeHTTPPretendKeepalivePropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendHTTPPretendKeepaliveEnabled captures enum value "enabled"
-	FrontendHTTPPretendKeepaliveEnabled string = "enabled"
-
-	// FrontendHTTPPretendKeepaliveDisabled captures enum value "disabled"
-	FrontendHTTPPretendKeepaliveDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Frontend) validateHTTPPretendKeepaliveEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, frontendTypeHTTPPretendKeepalivePropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HTTPPretendKeepalive) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
 		return err
 	}
 
@@ -500,7 +468,7 @@ var frontendTypeModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http","tcp","health"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http","tcp"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -515,9 +483,6 @@ const (
 
 	// FrontendModeTCP captures enum value "tcp"
 	FrontendModeTCP string = "tcp"
-
-	// FrontendModeHealth captures enum value "health"
-	FrontendModeHealth string = "health"
 )
 
 // prop value enum
