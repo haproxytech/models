@@ -43,6 +43,10 @@ type Bind struct {
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
+	// alpn
+	// Pattern: ^[^\s]+$
+	Alpn string `json:"alpn,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[^\s]+$
@@ -90,6 +94,10 @@ func (m *Bind) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAlpn(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
@@ -127,6 +135,19 @@ func (m *Bind) validateAddress(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Bind) validateAlpn(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Alpn) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("alpn", "body", string(m.Alpn), `^[^\s]+$`); err != nil {
 		return err
 	}
 
