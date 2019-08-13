@@ -71,6 +71,9 @@ type Backend struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// hash type
+	HashType *BackendHashType `json:"hash_type,omitempty"`
+
 	// http use htx
 	// Enum: [enabled disabled]
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
@@ -154,6 +157,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHashType(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -385,6 +392,24 @@ func (m *Backend) validateForwardfor(formats strfmt.Registry) error {
 		if err := m.Forwardfor.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("forwardfor")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHashType(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HashType) { // not required
+		return nil
+	}
+
+	if m.HashType != nil {
+		if err := m.HashType.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("hash_type")
 			}
 			return err
 		}
@@ -659,6 +684,195 @@ func (m *Backend) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Backend) UnmarshalBinary(b []byte) error {
 	var res Backend
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// BackendHashType backend hash type
+// swagger:model BackendHashType
+type BackendHashType struct {
+
+	// function
+	// Enum: [sdbm djb2 wt6 crc32]
+	Function string `json:"function,omitempty"`
+
+	// method
+	// Enum: [map-based consistent]
+	Method string `json:"method,omitempty"`
+
+	// modifier
+	// Enum: [avalanche]
+	Modifier string `json:"modifier,omitempty"`
+}
+
+// Validate validates this backend hash type
+func (m *BackendHashType) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFunction(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMethod(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateModifier(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var backendHashTypeTypeFunctionPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["sdbm","djb2","wt6","crc32"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendHashTypeTypeFunctionPropEnum = append(backendHashTypeTypeFunctionPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHashTypeFunctionSdbm captures enum value "sdbm"
+	BackendHashTypeFunctionSdbm string = "sdbm"
+
+	// BackendHashTypeFunctionDjb2 captures enum value "djb2"
+	BackendHashTypeFunctionDjb2 string = "djb2"
+
+	// BackendHashTypeFunctionWt6 captures enum value "wt6"
+	BackendHashTypeFunctionWt6 string = "wt6"
+
+	// BackendHashTypeFunctionCrc32 captures enum value "crc32"
+	BackendHashTypeFunctionCrc32 string = "crc32"
+)
+
+// prop value enum
+func (m *BackendHashType) validateFunctionEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendHashTypeTypeFunctionPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BackendHashType) validateFunction(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Function) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateFunctionEnum("hash_type"+"."+"function", "body", m.Function); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendHashTypeTypeMethodPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["map-based","consistent"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendHashTypeTypeMethodPropEnum = append(backendHashTypeTypeMethodPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHashTypeMethodMapBased captures enum value "map-based"
+	BackendHashTypeMethodMapBased string = "map-based"
+
+	// BackendHashTypeMethodConsistent captures enum value "consistent"
+	BackendHashTypeMethodConsistent string = "consistent"
+)
+
+// prop value enum
+func (m *BackendHashType) validateMethodEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendHashTypeTypeMethodPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BackendHashType) validateMethod(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Method) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateMethodEnum("hash_type"+"."+"method", "body", m.Method); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendHashTypeTypeModifierPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["avalanche"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendHashTypeTypeModifierPropEnum = append(backendHashTypeTypeModifierPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHashTypeModifierAvalanche captures enum value "avalanche"
+	BackendHashTypeModifierAvalanche string = "avalanche"
+)
+
+// prop value enum
+func (m *BackendHashType) validateModifierEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendHashTypeTypeModifierPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BackendHashType) validateModifier(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Modifier) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateModifierEnum("hash_type"+"."+"modifier", "body", m.Modifier); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *BackendHashType) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *BackendHashType) UnmarshalBinary(b []byte) error {
+	var res BackendHashType
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
