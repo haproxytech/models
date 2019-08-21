@@ -92,9 +92,6 @@ func (m *ProcessInfo) UnmarshalBinary(b []byte) error {
 // swagger:model ProcessInfoHaproxy
 type ProcessInfoHaproxy struct {
 
-	// The address of the replying server
-	Address string `json:"address,omitempty"`
-
 	// Process id of the replying worker process
 	Pid *int64 `json:"pid,omitempty"`
 
@@ -104,10 +101,6 @@ type ProcessInfoHaproxy struct {
 	// HAProxy version release date
 	// Format: date
 	ReleaseDate strfmt.Date `json:"release_date,omitempty"`
-
-	// Current time in milliseconds since Epoch.
-	// Format: date-time
-	Time strfmt.DateTime `json:"time,omitempty"`
 
 	// HAProxy uptime in s
 	Uptime *int64 `json:"uptime,omitempty"`
@@ -124,10 +117,6 @@ func (m *ProcessInfoHaproxy) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateTime(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -141,19 +130,6 @@ func (m *ProcessInfoHaproxy) validateReleaseDate(formats strfmt.Registry) error 
 	}
 
 	if err := validate.FormatOf("haproxy"+"."+"release_date", "body", "date", m.ReleaseDate.String(), formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *ProcessInfoHaproxy) validateTime(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Time) { // not required
-		return nil
-	}
-
-	if err := validate.FormatOf("haproxy"+"."+"time", "body", "date-time", m.Time.String(), formats); err != nil {
 		return err
 	}
 
