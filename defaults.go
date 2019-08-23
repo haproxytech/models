@@ -68,7 +68,6 @@ type Defaults struct {
 	Contstats string `json:"contstats,omitempty"`
 
 	// cookie
-	// Pattern: ^[^\s]+$
 	Cookie string `json:"cookie,omitempty"`
 
 	// default backend
@@ -179,10 +178,6 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateContstats(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateCookie(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -430,19 +425,6 @@ func (m *Defaults) validateContstats(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateContstatsEnum("contstats", "body", m.Contstats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Defaults) validateCookie(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Cookie) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("cookie", "body", string(m.Cookie), `^[^\s]+$`); err != nil {
 		return err
 	}
 

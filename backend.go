@@ -50,7 +50,6 @@ type Backend struct {
 	ConnectTimeout *int64 `json:"connect_timeout,omitempty"`
 
 	// cookie
-	// Pattern: ^[^\s]+$
 	Cookie string `json:"cookie,omitempty"`
 
 	// default server
@@ -133,10 +132,6 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBalance(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateCookie(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -277,19 +272,6 @@ func (m *Backend) validateBalance(formats strfmt.Registry) error {
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateCookie(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Cookie) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("cookie", "body", string(m.Cookie), `^[^\s]+$`); err != nil {
-		return err
 	}
 
 	return nil

@@ -49,7 +49,7 @@ type BackendSwitchingRule struct {
 
 	// name
 	// Required: true
-	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
 }
 
@@ -133,7 +133,7 @@ func (m *BackendSwitchingRule) validateName(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
 		return err
 	}
 
