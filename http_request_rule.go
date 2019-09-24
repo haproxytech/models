@@ -78,6 +78,9 @@ type HTTPRequestRule struct {
 	// Enum: [emerg alert crit err warning notice info debug silent]
 	LogLevel string `json:"log_level,omitempty"`
 
+	// query fmt
+	QueryFmt string `json:"query-fmt,omitempty"`
+
 	// redir code
 	// Enum: [301 302 303]
 	RedirCode int64 `json:"redir_code,omitempty"`
@@ -103,8 +106,11 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-var send-spoe-group add-acl del-acl]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-query set-uri set-var send-spoe-group add-acl del-acl]
 	Type string `json:"type"`
+
+	// uri fmt
+	URIFmt string `json:"uri-fmt,omitempty"`
 
 	// var expr
 	VarExpr string `json:"var_expr,omitempty"`
@@ -513,7 +519,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-var","send-spoe-group","add-acl","del-acl"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -555,6 +561,12 @@ const (
 
 	// HTTPRequestRuleTypeSetLogLevel captures enum value "set-log-level"
 	HTTPRequestRuleTypeSetLogLevel string = "set-log-level"
+
+	// HTTPRequestRuleTypeSetQuery captures enum value "set-query"
+	HTTPRequestRuleTypeSetQuery string = "set-query"
+
+	// HTTPRequestRuleTypeSetURI captures enum value "set-uri"
+	HTTPRequestRuleTypeSetURI string = "set-uri"
 
 	// HTTPRequestRuleTypeSetVar captures enum value "set-var"
 	HTTPRequestRuleTypeSetVar string = "set-var"
