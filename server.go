@@ -84,6 +84,14 @@ type Server struct {
 	// Minimum: 0
 	Port *int64 `json:"port,omitempty"`
 
+	// send proxy
+	// Enum: [enabled disabled]
+	SendProxy string `json:"send-proxy,omitempty"`
+
+	// send proxy v2
+	// Enum: [enabled disabled]
+	SendProxyV2 string `json:"send-proxy-v2,omitempty"`
+
 	// ssl
 	// Enum: [enabled disabled]
 	Ssl string `json:"ssl,omitempty"`
@@ -149,6 +157,14 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSendProxy(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSendProxyV2(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -486,6 +502,92 @@ func (m *Server) validatePort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeSendProxyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeSendProxyPropEnum = append(serverTypeSendProxyPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerSendProxyEnabled captures enum value "enabled"
+	ServerSendProxyEnabled string = "enabled"
+
+	// ServerSendProxyDisabled captures enum value "disabled"
+	ServerSendProxyDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateSendProxyEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeSendProxyPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateSendProxy(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SendProxy) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSendProxyEnum("send-proxy", "body", m.SendProxy); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeSendProxyV2PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeSendProxyV2PropEnum = append(serverTypeSendProxyV2PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerSendProxyV2Enabled captures enum value "enabled"
+	ServerSendProxyV2Enabled string = "enabled"
+
+	// ServerSendProxyV2Disabled captures enum value "disabled"
+	ServerSendProxyV2Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateSendProxyV2Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeSendProxyV2PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateSendProxyV2(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SendProxyV2) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSendProxyV2Enum("send-proxy-v2", "body", m.SendProxyV2); err != nil {
 		return err
 	}
 
