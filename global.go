@@ -40,8 +40,8 @@ type Global struct {
 	// CPU maps
 	CPUMaps []*CPUMap `json:"cpu_maps"`
 
-	// runtime apis
-	RuntimeApis []*RuntimeAPI `json:"runtime_apis"`
+	// runtime a p is
+	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
 
 	// daemon
 	// Enum: [enabled disabled]
@@ -86,7 +86,7 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateRuntimeApis(formats); err != nil {
+	if err := m.validateRuntimeAPIs(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -125,19 +125,19 @@ func (m *Global) validateCPUMaps(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Global) validateRuntimeApis(formats strfmt.Registry) error {
+func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.RuntimeApis) { // not required
+	if swag.IsZero(m.RuntimeAPIs) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.RuntimeApis); i++ {
-		if swag.IsZero(m.RuntimeApis[i]) { // not required
+	for i := 0; i < len(m.RuntimeAPIs); i++ {
+		if swag.IsZero(m.RuntimeAPIs[i]) { // not required
 			continue
 		}
 
-		if m.RuntimeApis[i] != nil {
-			if err := m.RuntimeApis[i].Validate(formats); err != nil {
+		if m.RuntimeAPIs[i] != nil {
+			if err := m.RuntimeAPIs[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
 				}
