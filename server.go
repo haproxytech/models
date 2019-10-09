@@ -40,6 +40,9 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
+	// allow 0rtt
+	Allow0rtt bool `json:"allow_0rtt,omitempty"`
+
 	// backup
 	// Enum: [enabled disabled]
 	Backup string `json:"backup,omitempty"`

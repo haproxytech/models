@@ -43,6 +43,9 @@ type Bind struct {
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
+	// allow 0rtt
+	Allow0rtt bool `json:"allow_0rtt,omitempty"`
+
 	// alpn
 	// Pattern: ^[^\s]+$
 	Alpn string `json:"alpn,omitempty"`
