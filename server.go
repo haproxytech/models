@@ -40,6 +40,10 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
+	// agent check
+	// Enum: [enabled disabled]
+	AgentCheck string `json:"agent-check,omitempty"`
+
 	// allow 0rtt
 	Allow0rtt bool `json:"allow_0rtt,omitempty"`
 
@@ -127,6 +131,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAgentCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateBackup(formats); err != nil {
 		res = append(res, err)
 	}
@@ -204,6 +212,49 @@ func (m *Server) validateAddress(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeAgentCheckPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeAgentCheckPropEnum = append(serverTypeAgentCheckPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerAgentCheckEnabled captures enum value "enabled"
+	ServerAgentCheckEnabled string = "enabled"
+
+	// ServerAgentCheckDisabled captures enum value "disabled"
+	ServerAgentCheckDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateAgentCheckEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeAgentCheckPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateAgentCheck(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AgentCheck) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAgentCheckEnum("agent-check", "body", m.AgentCheck); err != nil {
 		return err
 	}
 
