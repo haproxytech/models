@@ -40,9 +40,24 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
+	// agent addr
+	// Pattern: ^[^\s]+$
+	AgentAddr string `json:"agent-addr,omitempty"`
+
 	// agent check
 	// Enum: [enabled disabled]
 	AgentCheck string `json:"agent-check,omitempty"`
+
+	// agent inter
+	AgentInter *int64 `json:"agent-inter,omitempty"`
+
+	// agent port
+	// Maximum: 65535
+	// Minimum: 1
+	AgentPort *int64 `json:"agent-port,omitempty"`
+
+	// agent send
+	AgentSend string `json:"agent-send,omitempty"`
 
 	// allow 0rtt
 	Allow0rtt bool `json:"allow_0rtt,omitempty"`
@@ -131,7 +146,15 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAgentAddr(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAgentCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAgentPort(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -218,6 +241,19 @@ func (m *Server) validateAddress(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Server) validateAgentAddr(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AgentAddr) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("agent-addr", "body", string(m.AgentAddr), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var serverTypeAgentCheckPropEnum []interface{}
 
 func init() {
@@ -255,6 +291,23 @@ func (m *Server) validateAgentCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAgentCheckEnum("agent-check", "body", m.AgentCheck); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateAgentPort(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AgentPort) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("agent-port", "body", int64(*m.AgentPort), 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("agent-port", "body", int64(*m.AgentPort), 65535, false); err != nil {
 		return err
 	}
 
