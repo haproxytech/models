@@ -163,6 +163,9 @@ type ProcessInfoItem struct {
 	// cum req
 	CumReq *int64 `json:"cum_req,omitempty"`
 
+	// cum ssl conns
+	CumSslConns *int64 `json:"cum_ssl_conns,omitempty"`
+
 	// curr conns
 	CurrConns *int64 `json:"curr_conns,omitempty"`
 
