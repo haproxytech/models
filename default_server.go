@@ -40,7 +40,7 @@ type DefaultServer struct {
 
 	// port
 	// Maximum: 65535
-	// Minimum: 0
+	// Minimum: 1
 	Port *int64 `json:"port,omitempty"`
 
 	// rise
@@ -67,7 +67,7 @@ func (m *DefaultServer) validatePort(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 0, false); err != nil {
+	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
 		return err
 	}
 
