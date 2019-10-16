@@ -74,6 +74,11 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Cookie string `json:"cookie,omitempty"`
 
+	// health check port
+	// Maximum: 65535
+	// Minimum: 1
+	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
+
 	// inter
 	Inter *int64 `json:"inter,omitempty"`
 
@@ -167,6 +172,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCookie(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHealthCheckPort(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -407,6 +416,23 @@ func (m *Server) validateCookie(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("cookie", "body", string(m.Cookie), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateHealthCheckPort(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HealthCheckPort) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("health_check_port", "body", int64(*m.HealthCheckPort), 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("health_check_port", "body", int64(*m.HealthCheckPort), 65535, false); err != nil {
 		return err
 	}
 
