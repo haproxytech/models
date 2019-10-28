@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+
 	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/go-openapi/errors"
@@ -32,8 +34,18 @@ import (
 // swagger:model default_server
 type DefaultServer struct {
 
+	// check ssl
+	// Enum: [enabled disabled]
+	CheckSsl string `json:"check-ssl,omitempty"`
+
+	// downinter
+	Downinter *int64 `json:"downinter,omitempty"`
+
 	// fall
 	Fall *int64 `json:"fall,omitempty"`
+
+	// fastinter
+	Fastinter *int64 `json:"fastinter,omitempty"`
 
 	// inter
 	Inter *int64 `json:"inter,omitempty"`
@@ -51,6 +63,10 @@ type DefaultServer struct {
 func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateCheckSsl(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePort(formats); err != nil {
 		res = append(res, err)
 	}
@@ -58,6 +74,49 @@ func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var defaultServerTypeCheckSslPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultServerTypeCheckSslPropEnum = append(defaultServerTypeCheckSslPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultServerCheckSslEnabled captures enum value "enabled"
+	DefaultServerCheckSslEnabled string = "enabled"
+
+	// DefaultServerCheckSslDisabled captures enum value "disabled"
+	DefaultServerCheckSslDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultServer) validateCheckSslEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultServerTypeCheckSslPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultServer) validateCheckSsl(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckSsl) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckSslEnum("check-ssl", "body", m.CheckSsl); err != nil {
+		return err
+	}
+
 	return nil
 }
 
