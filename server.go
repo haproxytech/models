@@ -70,9 +70,19 @@ type Server struct {
 	// Enum: [enabled disabled]
 	Check string `json:"check,omitempty"`
 
+	// check ssl
+	// Enum: [enabled disabled]
+	CheckSsl string `json:"check-ssl,omitempty"`
+
 	// cookie
 	// Pattern: ^[^\s]+$
 	Cookie string `json:"cookie,omitempty"`
+
+	// downinter
+	Downinter *int64 `json:"downinter,omitempty"`
+
+	// fastinter
+	Fastinter *int64 `json:"fastinter,omitempty"`
 
 	// health check port
 	// Maximum: 65535
@@ -168,6 +178,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckSsl(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -403,6 +417,49 @@ func (m *Server) validateCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCheckEnum("check", "body", m.Check); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeCheckSslPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeCheckSslPropEnum = append(serverTypeCheckSslPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerCheckSslEnabled captures enum value "enabled"
+	ServerCheckSslEnabled string = "enabled"
+
+	// ServerCheckSslDisabled captures enum value "disabled"
+	ServerCheckSslDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateCheckSslEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeCheckSslPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateCheckSsl(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckSsl) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckSslEnum("check-ssl", "body", m.CheckSsl); err != nil {
 		return err
 	}
 
