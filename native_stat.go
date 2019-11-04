@@ -378,7 +378,7 @@ type NativeStatStats struct {
 	Throttle *int64 `json:"throttle,omitempty"`
 
 	// tracked
-	Tracked *int64 `json:"tracked,omitempty"`
+	Tracked string `json:"tracked,omitempty"`
 
 	// ttime
 	Ttime *int64 `json:"ttime,omitempty"`
