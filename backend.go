@@ -36,6 +36,10 @@ import (
 // swagger:model backend
 type Backend struct {
 
+	// abortonclose
+	// Enum: [enabled disabled]
+	Abortonclose string `json:"abortonclose,omitempty"`
+
 	// adv check
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
 	AdvCheck string `json:"adv_check,omitempty"`
@@ -127,6 +131,10 @@ type Backend struct {
 func (m *Backend) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAbortonclose(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAdvCheck(formats); err != nil {
 		res = append(res, err)
 	}
@@ -202,6 +210,49 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var backendTypeAbortonclosePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeAbortonclosePropEnum = append(backendTypeAbortonclosePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendAbortoncloseEnabled captures enum value "enabled"
+	BackendAbortoncloseEnabled string = "enabled"
+
+	// BackendAbortoncloseDisabled captures enum value "disabled"
+	BackendAbortoncloseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateAbortoncloseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeAbortonclosePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateAbortonclose(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Abortonclose) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAbortoncloseEnum("abortonclose", "body", m.Abortonclose); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -40,6 +40,10 @@ type Defaults struct {
 	// error files
 	ErrorFiles []*Errorfile `json:"error_files"`
 
+	// abortonclose
+	// Enum: [enabled disabled]
+	Abortonclose string `json:"abortonclose,omitempty"`
+
 	// adv check
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
 	AdvCheck string `json:"adv_check,omitempty"`
@@ -165,6 +169,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAbortonclose(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAdvCheck(formats); err != nil {
 		res = append(res, err)
 	}
@@ -271,6 +279,49 @@ func (m *Defaults) validateErrorFiles(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+var defaultsTypeAbortonclosePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeAbortonclosePropEnum = append(defaultsTypeAbortonclosePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsAbortoncloseEnabled captures enum value "enabled"
+	DefaultsAbortoncloseEnabled string = "enabled"
+
+	// DefaultsAbortoncloseDisabled captures enum value "disabled"
+	DefaultsAbortoncloseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateAbortoncloseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeAbortonclosePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateAbortonclose(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Abortonclose) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAbortoncloseEnum("abortonclose", "body", m.Abortonclose); err != nil {
+		return err
 	}
 
 	return nil
