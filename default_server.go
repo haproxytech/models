@@ -47,6 +47,10 @@ type DefaultServer struct {
 	// fastinter
 	Fastinter *int64 `json:"fastinter,omitempty"`
 
+	// init addr
+	// Pattern: ^[^\s]+$
+	InitAddr string `json:"init-addr,omitempty"`
+
 	// inter
 	Inter *int64 `json:"inter,omitempty"`
 
@@ -64,6 +68,10 @@ func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCheckSsl(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInitAddr(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -114,6 +122,19 @@ func (m *DefaultServer) validateCheckSsl(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCheckSslEnum("check-ssl", "body", m.CheckSsl); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DefaultServer) validateInitAddr(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.InitAddr) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("init-addr", "body", string(m.InitAddr), `^[^\s]+$`); err != nil {
 		return err
 	}
 

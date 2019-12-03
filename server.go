@@ -89,6 +89,10 @@ type Server struct {
 	// Minimum: 1
 	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
 
+	// init addr
+	// Pattern: ^[^\s]+$
+	InitAddr string `json:"init-addr,omitempty"`
+
 	// inter
 	Inter *int64 `json:"inter,omitempty"`
 
@@ -190,6 +194,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHealthCheckPort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInitAddr(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -490,6 +498,19 @@ func (m *Server) validateHealthCheckPort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("health_check_port", "body", int64(*m.HealthCheckPort), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateInitAddr(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.InitAddr) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("init-addr", "body", string(m.InitAddr), `^[^\s]+$`); err != nil {
 		return err
 	}
 
