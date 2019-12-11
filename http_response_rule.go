@@ -44,6 +44,13 @@ type HTTPResponseRule struct {
 	// Pattern: ^[^\s]+$
 	ACLKeyfmt string `json:"acl_keyfmt,omitempty"`
 
+	// capture id
+	CaptureID int64 `json:"capture_id,omitempty"`
+
+	// capture sample
+	// Pattern: ^[^\s]+$
+	CaptureSample string `json:"capture_sample,omitempty"`
+
 	// cond
 	// Enum: [if unless]
 	Cond string `json:"cond,omitempty"`
@@ -104,7 +111,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture]
 	Type string `json:"type"`
 
 	// var expr
@@ -128,6 +135,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateACLKeyfmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCaptureSample(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -217,6 +228,19 @@ func (m *HTTPResponseRule) validateACLKeyfmt(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("acl_keyfmt", "body", string(m.ACLKeyfmt), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateCaptureSample(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CaptureSample) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("capture_sample", "body", string(m.CaptureSample), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -518,7 +542,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -569,6 +593,9 @@ const (
 
 	// HTTPResponseRuleTypeDelACL captures enum value "del-acl"
 	HTTPResponseRuleTypeDelACL string = "del-acl"
+
+	// HTTPResponseRuleTypeCapture captures enum value "capture"
+	HTTPResponseRuleTypeCapture string = "capture"
 )
 
 // prop value enum
