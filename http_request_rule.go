@@ -49,7 +49,7 @@ type HTTPRequestRule struct {
 	AuthRealm string `json:"auth_realm,omitempty"`
 
 	// capture id
-	CaptureID int64 `json:"capture_id,omitempty"`
+	CaptureID *int64 `json:"capture_id,omitempty"`
 
 	// capture len
 	CaptureLen int64 `json:"capture_len,omitempty"`
