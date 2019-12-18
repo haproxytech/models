@@ -45,7 +45,7 @@ type HTTPResponseRule struct {
 	ACLKeyfmt string `json:"acl_keyfmt,omitempty"`
 
 	// capture id
-	CaptureID int64 `json:"capture_id,omitempty"`
+	CaptureID *int64 `json:"capture_id,omitempty"`
 
 	// capture sample
 	// Pattern: ^[^\s]+$
