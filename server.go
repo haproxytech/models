@@ -70,6 +70,9 @@ type Server struct {
 	// Enum: [enabled disabled]
 	Check string `json:"check,omitempty"`
 
+	// check sni
+	CheckSni string `json:"check-sni,omitempty"`
+
 	// check ssl
 	// Enum: [enabled disabled]
 	CheckSsl string `json:"check-ssl,omitempty"`
@@ -133,6 +136,9 @@ type Server struct {
 	// Enum: [enabled disabled]
 	SendProxyV2 string `json:"send-proxy-v2,omitempty"`
 
+	// sni
+	Sni string `json:"sni,omitempty"`
+
 	// ssl
 	// Enum: [enabled disabled]
 	Ssl string `json:"ssl,omitempty"`
@@ -185,6 +191,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCheckSni(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCheckSsl(formats); err != nil {
 		res = append(res, err)
 	}
@@ -230,6 +240,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSendProxyV2(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSni(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -425,6 +439,19 @@ func (m *Server) validateCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCheckEnum("check", "body", m.Check); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateCheckSni(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckSni) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("check-sni", "body", string(m.CheckSni), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -799,6 +826,19 @@ func (m *Server) validateSendProxyV2(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSendProxyV2Enum("send-proxy-v2", "body", m.SendProxyV2); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateSni(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Sni) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("sni", "body", string(m.Sni), `^[^\s]+$`); err != nil {
 		return err
 	}
 
