@@ -34,6 +34,9 @@ import (
 // swagger:model default_server
 type DefaultServer struct {
 
+	// check sni
+	CheckSni string `json:"check-sni,omitempty"`
+
 	// check ssl
 	// Enum: [enabled disabled]
 	CheckSsl string `json:"check-ssl,omitempty"`
@@ -61,11 +64,18 @@ type DefaultServer struct {
 
 	// rise
 	Rise *int64 `json:"rise,omitempty"`
+
+	// sni
+	Sni string `json:"sni,omitempty"`
 }
 
 // Validate validates this default server
 func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateCheckSni(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateCheckSsl(formats); err != nil {
 		res = append(res, err)
@@ -79,9 +89,26 @@ func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSni(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *DefaultServer) validateCheckSni(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckSni) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("check-sni", "body", string(m.CheckSni), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -152,6 +179,19 @@ func (m *DefaultServer) validatePort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DefaultServer) validateSni(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Sni) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("sni", "body", string(m.Sni), `^[^\s]+$`); err != nil {
 		return err
 	}
 
