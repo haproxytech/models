@@ -71,6 +71,7 @@ type Server struct {
 	Check string `json:"check,omitempty"`
 
 	// check sni
+	// Pattern: ^[^\s]+$
 	CheckSni string `json:"check-sni,omitempty"`
 
 	// check ssl
@@ -137,6 +138,7 @@ type Server struct {
 	SendProxyV2 string `json:"send-proxy-v2,omitempty"`
 
 	// sni
+	// Pattern: ^[^\s]+$
 	Sni string `json:"sni,omitempty"`
 
 	// ssl
