@@ -87,6 +87,10 @@ type Server struct {
 	// Minimum: 1
 	Port *int64 `json:"port,omitempty"`
 
+	// proto
+	// Pattern: ^[^\s]+$
+	Proto string `json:"proto,omitempty"`
+
 	// send proxy
 	// Enum: [enabled disabled]
 	SendProxy string `json:"send-proxy,omitempty"`
@@ -160,6 +164,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateProto(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -505,6 +513,19 @@ func (m *Server) validatePort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateProto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Proto) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("proto", "body", string(m.Proto), `^[^\s]+$`); err != nil {
 		return err
 	}
 
