@@ -35,7 +35,6 @@ import (
 type DefaultServer struct {
 
 	// check sni
-	// Pattern: ^[^\s]+$
 	CheckSni string `json:"check-sni,omitempty"`
 
 	// check ssl
@@ -67,7 +66,6 @@ type DefaultServer struct {
 	Rise *int64 `json:"rise,omitempty"`
 
 	// sni
-	// Pattern: ^[^\s]+$
 	Sni string `json:"sni,omitempty"`
 }
 
