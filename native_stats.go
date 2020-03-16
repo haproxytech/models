@@ -32,7 +32,7 @@ import (
 // NativeStats Stats Array
 //
 // HAProxy stats array
-// swagger:model NativeStats
+// swagger:model native_stats
 type NativeStats []*NativeStatsCollection
 
 // Validate validates this native stats
@@ -58,78 +58,5 @@ func (m NativeStats) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-// NativeStatsCollection Stats collection
-//
-// Stats from one runtime API
-// swagger:model NativeStatsCollection
-type NativeStatsCollection struct {
-
-	// error
-	Error string `json:"error,omitempty"`
-
-	// runtime API
-	RuntimeAPI string `json:"runtimeAPI,omitempty"`
-
-	// stats
-	Stats []*NativeStat `json:"stats"`
-}
-
-// Validate validates this native stats collection
-func (m *NativeStatsCollection) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateStats(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *NativeStatsCollection) validateStats(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Stats) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.Stats); i++ {
-		if swag.IsZero(m.Stats[i]) { // not required
-			continue
-		}
-
-		if m.Stats[i] != nil {
-			if err := m.Stats[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("stats" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *NativeStatsCollection) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *NativeStatsCollection) UnmarshalBinary(b []byte) error {
-	var res NativeStatsCollection
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
 	return nil
 }
