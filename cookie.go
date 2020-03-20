@@ -35,8 +35,8 @@ import (
 // swagger:model cookie
 type Cookie struct {
 
-	// domain
-	Domain []string `json:"domain"`
+	// domains
+	Domains []*Domain `json:"domain"`
 
 	// dynamic
 	Dynamic bool `json:"dynamic,omitempty"`
@@ -81,7 +81,7 @@ type Cookie struct {
 func (m *Cookie) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateDomain(formats); err != nil {
+	if err := m.validateDomains(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -107,16 +107,24 @@ func (m *Cookie) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Cookie) validateDomain(formats strfmt.Registry) error {
+func (m *Cookie) validateDomains(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Domain) { // not required
+	if swag.IsZero(m.Domains) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.Domain); i++ {
+	for i := 0; i < len(m.Domains); i++ {
+		if swag.IsZero(m.Domains[i]) { // not required
+			continue
+		}
 
-		if err := validate.Pattern("domain"+"."+strconv.Itoa(i), "body", string(m.Domain[i]), `^[^\s]+$`); err != nil {
-			return err
+		if m.Domains[i] != nil {
+			if err := m.Domains[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("domain" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
 		}
 
 	}
@@ -220,6 +228,60 @@ func (m *Cookie) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Cookie) UnmarshalBinary(b []byte) error {
 	var res Cookie
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// Domain domain
+// swagger:model Domain
+type Domain struct {
+
+	// value
+	// Pattern: ^[^\s]+$
+	Value string `json:"value,omitempty"`
+}
+
+// Validate validates this domain
+func (m *Domain) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Domain) validateValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Value) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("value", "body", string(m.Value), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *Domain) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *Domain) UnmarshalBinary(b []byte) error {
+	var res Domain
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
