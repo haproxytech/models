@@ -95,6 +95,10 @@ type Backend struct {
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
+	// http reuse
+	// Enum: [aggressive always never safe]
+	HTTPReuse string `json:"http_reuse,omitempty"`
+
 	// httpchk
 	Httpchk *Httpchk `json:"httpchk,omitempty"`
 
@@ -180,6 +184,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPReuse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -599,6 +607,55 @@ func (m *Backend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeHTTPReusePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["aggressive","always","never","safe"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPReusePropEnum = append(backendTypeHTTPReusePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPReuseAggressive captures enum value "aggressive"
+	BackendHTTPReuseAggressive string = "aggressive"
+
+	// BackendHTTPReuseAlways captures enum value "always"
+	BackendHTTPReuseAlways string = "always"
+
+	// BackendHTTPReuseNever captures enum value "never"
+	BackendHTTPReuseNever string = "never"
+
+	// BackendHTTPReuseSafe captures enum value "safe"
+	BackendHTTPReuseSafe string = "safe"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPReuseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPReusePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPReuse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPReuse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPReuseEnum("http_reuse", "body", m.HTTPReuse); err != nil {
 		return err
 	}
 

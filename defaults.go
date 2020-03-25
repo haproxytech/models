@@ -118,6 +118,10 @@ type Defaults struct {
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
+	// http reuse
+	// Enum: [aggressive always never safe]
+	HTTPReuse string `json:"http_reuse,omitempty"`
+
 	// httpchk
 	Httpchk *Httpchk `json:"httpchk,omitempty"`
 
@@ -230,6 +234,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPReuse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -791,6 +799,55 @@ func (m *Defaults) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeHTTPReusePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["aggressive","always","never","safe"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeHTTPReusePropEnum = append(defaultsTypeHTTPReusePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsHTTPReuseAggressive captures enum value "aggressive"
+	DefaultsHTTPReuseAggressive string = "aggressive"
+
+	// DefaultsHTTPReuseAlways captures enum value "always"
+	DefaultsHTTPReuseAlways string = "always"
+
+	// DefaultsHTTPReuseNever captures enum value "never"
+	DefaultsHTTPReuseNever string = "never"
+
+	// DefaultsHTTPReuseSafe captures enum value "safe"
+	DefaultsHTTPReuseSafe string = "safe"
+)
+
+// prop value enum
+func (m *Defaults) validateHTTPReuseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeHTTPReusePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateHTTPReuse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPReuse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPReuseEnum("http_reuse", "body", m.HTTPReuse); err != nil {
 		return err
 	}
 
