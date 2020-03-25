@@ -77,6 +77,9 @@ type Backend struct {
 	// hash type
 	HashType *BackendHashType `json:"hash_type,omitempty"`
 
+	// http check
+	HTTPCheck *HTTPCheck `json:"http-check,omitempty"`
+
 	// http use htx
 	// Enum: [enabled disabled]
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
@@ -172,6 +175,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHashType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -473,6 +480,24 @@ func (m *Backend) validateHashType(formats strfmt.Registry) error {
 		if err := m.HashType.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("hash_type")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHTTPCheck(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPCheck) { // not required
+		return nil
+	}
+
+	if m.HTTPCheck != nil {
+		if err := m.HTTPCheck.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("http-check")
 			}
 			return err
 		}

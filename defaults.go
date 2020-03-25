@@ -100,6 +100,9 @@ type Defaults struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// http check
+	HTTPCheck *HTTPCheck `json:"http-check,omitempty"`
+
 	// http use htx
 	// Enum: [enabled disabled]
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
@@ -222,6 +225,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -665,6 +672,24 @@ func (m *Defaults) validateForwardfor(formats strfmt.Registry) error {
 		if err := m.Forwardfor.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("forwardfor")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateHTTPCheck(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPCheck) { // not required
+		return nil
+	}
+
+	if m.HTTPCheck != nil {
+		if err := m.HTTPCheck.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("http-check")
 			}
 			return err
 		}
