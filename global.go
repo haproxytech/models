@@ -43,12 +43,20 @@ type Global struct {
 	// runtime apis
 	RuntimeApis []*RuntimeAPI `json:"runtime_apis"`
 
+	// chroot
+	// Pattern: ^[^\s]+$
+	Chroot string `json:"chroot,omitempty"`
+
 	// daemon
 	// Enum: [enabled disabled]
 	Daemon string `json:"daemon,omitempty"`
 
 	// external check
 	ExternalCheck bool `json:"external_check,omitempty"`
+
+	// group
+	// Pattern: ^[^\s]+$
+	Group string `json:"group,omitempty"`
 
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
@@ -71,11 +79,21 @@ type Global struct {
 	// ssl default bind options
 	SslDefaultBindOptions string `json:"ssl_default_bind_options,omitempty"`
 
+	// ssl default server ciphers
+	SslDefaultServerCiphers string `json:"ssl_default_server_ciphers,omitempty"`
+
+	// ssl default server options
+	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
+
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
 
 	// tune ssl default dh param
 	TuneSslDefaultDhParam int64 `json:"tune_ssl_default_dh_param,omitempty"`
+
+	// user
+	// Pattern: ^[^\s]+$
+	User string `json:"user,omitempty"`
 }
 
 // Validate validates this global
@@ -90,7 +108,19 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateChroot(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDaemon(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUser(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -150,6 +180,19 @@ func (m *Global) validateRuntimeApis(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateChroot(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Chroot) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("chroot", "body", string(m.Chroot), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var globalTypeDaemonPropEnum []interface{}
 
 func init() {
@@ -187,6 +230,32 @@ func (m *Global) validateDaemon(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateDaemonEnum("daemon", "body", m.Daemon); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateGroup(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Group) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("group", "body", string(m.Group), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateUser(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.User) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("user", "body", string(m.User), `^[^\s]+$`); err != nil {
 		return err
 	}
 
