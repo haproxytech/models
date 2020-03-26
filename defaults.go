@@ -51,6 +51,9 @@ type Defaults struct {
 	// balance
 	Balance *Balance `json:"balance,omitempty"`
 
+	// bind process
+	BindProcess BindProcess `json:"bind_process,omitempty"`
+
 	// check timeout
 	CheckTimeout *int64 `json:"check_timeout,omitempty"`
 
@@ -185,6 +188,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBalance(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateBindProcess(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -413,6 +420,22 @@ func (m *Defaults) validateBalance(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateBindProcess(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.BindProcess) { // not required
+		return nil
+	}
+
+	if err := m.BindProcess.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("bind_process")
+		}
+		return err
 	}
 
 	return nil

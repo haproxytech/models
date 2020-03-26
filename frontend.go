@@ -36,6 +36,9 @@ import (
 // swagger:model frontend
 type Frontend struct {
 
+	// bind process
+	BindProcess BindProcess `json:"bind_process,omitempty"`
+
 	// clflog
 	Clflog bool `json:"clflog,omitempty"`
 
@@ -112,6 +115,10 @@ type Frontend struct {
 func (m *Frontend) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateBindProcess(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateClitcpka(formats); err != nil {
 		res = append(res, err)
 	}
@@ -159,6 +166,22 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Frontend) validateBindProcess(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.BindProcess) { // not required
+		return nil
+	}
+
+	if err := m.BindProcess.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("bind_process")
+		}
+		return err
+	}
+
 	return nil
 }
 
