@@ -169,6 +169,12 @@ type Defaults struct {
 
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
+
+	// unique id format
+	UniqueIDFormat string `json:"unique_id_format,omitempty"`
+
+	// unique id header
+	UniqueIDHeader string `json:"unique_id_header,omitempty"`
 }
 
 // Validate validates this defaults
