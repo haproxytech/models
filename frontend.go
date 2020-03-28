@@ -37,7 +37,8 @@ import (
 type Frontend struct {
 
 	// bind process
-	BindProcess BindProcess `json:"bind_process,omitempty"`
+	// Pattern: ^[^\s]+$
+	BindProcess string `json:"bind_process,omitempty"`
 
 	// clflog
 	Clflog bool `json:"clflog,omitempty"`
@@ -181,10 +182,7 @@ func (m *Frontend) validateBindProcess(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := m.BindProcess.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("bind_process")
-		}
+	if err := validate.Pattern("bind_process", "body", string(m.BindProcess), `^[^\s]+$`); err != nil {
 		return err
 	}
 
