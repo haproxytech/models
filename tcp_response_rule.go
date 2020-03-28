@@ -47,9 +47,9 @@ type TCPResponseRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
-	// id
+	// index
 	// Required: true
-	ID *int64 `json:"id"`
+	Index *int64 `json:"index"`
 
 	// timeout
 	Timeout *int64 `json:"timeout,omitempty"`
@@ -72,7 +72,7 @@ func (m *TCPResponseRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateID(formats); err != nil {
+	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -172,9 +172,9 @@ func (m *TCPResponseRule) validateCond(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *TCPResponseRule) validateID(formats strfmt.Registry) error {
+func (m *TCPResponseRule) validateIndex(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

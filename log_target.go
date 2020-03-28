@@ -51,9 +51,9 @@ type LogTarget struct {
 	// global
 	Global bool `json:"global,omitempty"`
 
-	// id
+	// index
 	// Required: true
-	ID *int64 `json:"id"`
+	Index *int64 `json:"index"`
 
 	// length
 	Length int64 `json:"length,omitempty"`
@@ -86,7 +86,7 @@ func (m *LogTarget) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateID(formats); err != nil {
+	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -275,9 +275,9 @@ func (m *LogTarget) validateFormat(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *LogTarget) validateID(formats strfmt.Registry) error {
+func (m *LogTarget) validateIndex(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

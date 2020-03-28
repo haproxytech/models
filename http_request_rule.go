@@ -80,9 +80,9 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
 
-	// id
+	// index
 	// Required: true
-	ID *int64 `json:"id"`
+	Index *int64 `json:"index"`
 
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
@@ -197,7 +197,7 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateID(formats); err != nil {
+	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -401,9 +401,9 @@ func (m *HTTPRequestRule) validateHdrName(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HTTPRequestRule) validateID(formats strfmt.Registry) error {
+func (m *HTTPRequestRule) validateIndex(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

@@ -40,9 +40,9 @@ type Filter struct {
 	// Pattern: ^[^\s]+$
 	CacheName string `json:"cache_name,omitempty"`
 
-	// id
+	// index
 	// Required: true
-	ID *int64 `json:"id"`
+	Index *int64 `json:"index"`
 
 	// spoe config
 	// Pattern: ^[^\s]+$
@@ -79,7 +79,7 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateID(formats); err != nil {
+	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -118,9 +118,9 @@ func (m *Filter) validateCacheName(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Filter) validateID(formats strfmt.Registry) error {
+func (m *Filter) validateIndex(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 
