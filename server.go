@@ -133,6 +133,18 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	Proto string `json:"proto,omitempty"`
 
+	// resolve net
+	// Pattern: ^[^\s]+$
+	ResolveNet string `json:"resolve-net,omitempty"`
+
+	// resolve prefer
+	// Pattern: ^[^\s]+$
+	ResolvePrefer string `json:"resolve-prefer,omitempty"`
+
+	// resolvers
+	// Pattern: ^[^\s]+$
+	Resolvers string `json:"resolvers,omitempty"`
+
 	// send proxy
 	// Enum: [enabled disabled]
 	SendProxy string `json:"send-proxy,omitempty"`
@@ -242,6 +254,18 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateProto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResolveNet(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResolvePrefer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResolvers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -763,6 +787,45 @@ func (m *Server) validateProto(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("proto", "body", string(m.Proto), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateResolveNet(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ResolveNet) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("resolve-net", "body", string(m.ResolveNet), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateResolvePrefer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ResolvePrefer) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("resolve-prefer", "body", string(m.ResolvePrefer), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateResolvers(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Resolvers) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("resolvers", "body", string(m.Resolvers), `^[^\s]+$`); err != nil {
 		return err
 	}
 

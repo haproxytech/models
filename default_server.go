@@ -63,6 +63,18 @@ type DefaultServer struct {
 	// Minimum: 1
 	Port *int64 `json:"port,omitempty"`
 
+	// resolve net
+	// Pattern: ^[^\s]+$
+	ResolveNet string `json:"resolve-net,omitempty"`
+
+	// resolve prefer
+	// Pattern: ^[^\s]+$
+	ResolvePrefer string `json:"resolve-prefer,omitempty"`
+
+	// resolvers
+	// Pattern: ^[^\s]+$
+	Resolvers string `json:"resolvers,omitempty"`
+
 	// rise
 	Rise *int64 `json:"rise,omitempty"`
 
@@ -88,6 +100,18 @@ func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResolveNet(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResolvePrefer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResolvers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -181,6 +205,45 @@ func (m *DefaultServer) validatePort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DefaultServer) validateResolveNet(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ResolveNet) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("resolve-net", "body", string(m.ResolveNet), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DefaultServer) validateResolvePrefer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ResolvePrefer) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("resolve-prefer", "body", string(m.ResolvePrefer), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DefaultServer) validateResolvers(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Resolvers) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("resolvers", "body", string(m.Resolvers), `^[^\s]+$`); err != nil {
 		return err
 	}
 
