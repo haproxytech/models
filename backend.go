@@ -44,6 +44,10 @@ type Backend struct {
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
 	AdvCheck string `json:"adv_check,omitempty"`
 
+	// allbackups
+	// Enum: [enabled disabled]
+	Allbackups string `json:"allbackups,omitempty"`
+
 	// balance
 	Balance *Balance `json:"balance,omitempty"`
 
@@ -147,6 +151,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAdvCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAllbackups(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -331,6 +339,49 @@ func (m *Backend) validateAdvCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAdvCheckEnum("adv_check", "body", m.AdvCheck); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeAllbackupsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeAllbackupsPropEnum = append(backendTypeAllbackupsPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendAllbackupsEnabled captures enum value "enabled"
+	BackendAllbackupsEnabled string = "enabled"
+
+	// BackendAllbackupsDisabled captures enum value "disabled"
+	BackendAllbackupsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateAllbackupsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeAllbackupsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateAllbackups(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Allbackups) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAllbackupsEnum("allbackups", "body", m.Allbackups); err != nil {
 		return err
 	}
 

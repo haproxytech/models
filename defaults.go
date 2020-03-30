@@ -48,6 +48,10 @@ type Defaults struct {
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
 	AdvCheck string `json:"adv_check,omitempty"`
 
+	// allbackups
+	// Enum: [enabled disabled]
+	Allbackups string `json:"allbackups,omitempty"`
+
 	// balance
 	Balance *Balance `json:"balance,omitempty"`
 
@@ -149,6 +153,10 @@ type Defaults struct {
 	// Pattern: ^[^\s]+$
 	LogTag string `json:"log_tag,omitempty"`
 
+	// logasap
+	// Enum: [enabled disabled]
+	Logasap string `json:"logasap,omitempty"`
+
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
@@ -191,6 +199,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAdvCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAllbackups(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -271,6 +283,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogTag(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLogasap(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -408,6 +424,49 @@ func (m *Defaults) validateAdvCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAdvCheckEnum("adv_check", "body", m.AdvCheck); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeAllbackupsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeAllbackupsPropEnum = append(defaultsTypeAllbackupsPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsAllbackupsEnabled captures enum value "enabled"
+	DefaultsAllbackupsEnabled string = "enabled"
+
+	// DefaultsAllbackupsDisabled captures enum value "disabled"
+	DefaultsAllbackupsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateAllbackupsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeAllbackupsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateAllbackups(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Allbackups) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAllbackupsEnum("allbackups", "body", m.Allbackups); err != nil {
 		return err
 	}
 
@@ -974,6 +1033,49 @@ func (m *Defaults) validateLogTag(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("log_tag", "body", string(m.LogTag), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeLogasapPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeLogasapPropEnum = append(defaultsTypeLogasapPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsLogasapEnabled captures enum value "enabled"
+	DefaultsLogasapEnabled string = "enabled"
+
+	// DefaultsLogasapDisabled captures enum value "disabled"
+	DefaultsLogasapDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateLogasapEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeLogasapPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateLogasap(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Logasap) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLogasapEnum("logasap", "body", m.Logasap); err != nil {
 		return err
 	}
 
