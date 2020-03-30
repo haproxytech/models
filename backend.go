@@ -89,6 +89,7 @@ type Backend struct {
 	HTTPCheck *HTTPCheck `json:"http-check,omitempty"`
 
 	// http use htx
+	// Pattern: ^[^\s]+$
 	// Enum: [enabled disabled]
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
@@ -137,6 +138,9 @@ type Backend struct {
 
 	// server timeout
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`
+
+	// stats options
+	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 
 	// stick table
 	StickTable *BackendStickTable `json:"stick_table,omitempty"`
@@ -231,6 +235,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateRedispatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -613,6 +621,10 @@ func (m *Backend) validateHTTPUseHtx(formats strfmt.Registry) error {
 		return nil
 	}
 
+	if err := validate.Pattern("http-use-htx", "body", string(m.HTTPUseHtx), `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	// value enum
 	if err := m.validateHTTPUseHtxEnum("http-use-htx", "body", m.HTTPUseHtx); err != nil {
 		return err
@@ -856,6 +868,24 @@ func (m *Backend) validateRedispatch(formats strfmt.Registry) error {
 		if err := m.Redispatch.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("redispatch")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateStatsOptions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StatsOptions) { // not required
+		return nil
+	}
+
+	if m.StatsOptions != nil {
+		if err := m.StatsOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("stats_options")
 			}
 			return err
 		}

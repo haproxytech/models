@@ -176,6 +176,9 @@ type Defaults struct {
 	// server timeout
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`
 
+	// stats options
+	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
+
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
 
@@ -295,6 +298,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateRedispatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1135,6 +1142,24 @@ func (m *Defaults) validateRedispatch(formats strfmt.Registry) error {
 		if err := m.Redispatch.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("redispatch")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateStatsOptions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StatsOptions) { // not required
+		return nil
+	}
+
+	if m.StatsOptions != nil {
+		if err := m.StatsOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("stats_options")
 			}
 			return err
 		}

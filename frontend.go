@@ -112,6 +112,9 @@ type Frontend struct {
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
+	// stats options
+	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
+
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
 
@@ -175,6 +178,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -593,6 +600,24 @@ func (m *Frontend) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateStatsOptions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StatsOptions) { // not required
+		return nil
+	}
+
+	if m.StatsOptions != nil {
+		if err := m.StatsOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("stats_options")
+			}
+			return err
+		}
 	}
 
 	return nil
