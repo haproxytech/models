@@ -37,8 +37,15 @@ import (
 type TCPRequestRule struct {
 
 	// action
-	// Enum: [accept reject]
+	// Enum: [accept capture do-resolve expect-netscaler-cip expect-proxy reject sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 unset-var use-service]
 	Action string `json:"action,omitempty"`
+
+	// capture len
+	CaptureLen int64 `json:"capture_len,omitempty"`
+
+	// capture sample
+	// Pattern: ^[^\s]+$
+	CaptureSample string `json:"capture_sample,omitempty"`
 
 	// cond
 	// Enum: [if unless]
@@ -47,17 +54,63 @@ type TCPRequestRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// expr
+	Expr string `json:"expr,omitempty"`
+
+	// gpt value
+	GptValue string `json:"gpt_value,omitempty"`
+
 	// index
 	// Required: true
 	Index *int64 `json:"index"`
 
+	// priority type
+	// Enum: [class offset]
+	PriorityType string `json:"priority_type,omitempty"`
+
+	// resolve protocol
+	// Enum: [ipv4 ipv6]
+	ResolveProtocol string `json:"resolve_protocol,omitempty"`
+
+	// resolve resolvers
+	ResolveResolvers string `json:"resolve_resolvers,omitempty"`
+
+	// resolve var
+	ResolveVar string `json:"resolve_var,omitempty"`
+
+	// sc inc id
+	ScIncID string `json:"sc_inc_id,omitempty"`
+
+	// service name
+	ServiceName string `json:"service_name,omitempty"`
+
+	// spoe engine name
+	SpoeEngineName string `json:"spoe_engine_name,omitempty"`
+
+	// spoe group name
+	SpoeGroupName string `json:"spoe_group_name,omitempty"`
+
 	// timeout
 	Timeout *int64 `json:"timeout,omitempty"`
+
+	// track key
+	TrackKey string `json:"track_key,omitempty"`
+
+	// track table
+	TrackTable string `json:"track_table,omitempty"`
 
 	// type
 	// Required: true
 	// Enum: [connection content inspect-delay session]
 	Type string `json:"type"`
+
+	// var name
+	// Pattern: ^[^\s]+$
+	VarName string `json:"var_name,omitempty"`
+
+	// var scope
+	// Pattern: ^[^\s]+$
+	VarScope string `json:"var_scope,omitempty"`
 }
 
 // Validate validates this tcp request rule
@@ -65,6 +118,10 @@ func (m *TCPRequestRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAction(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCaptureSample(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -76,7 +133,23 @@ func (m *TCPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validatePriorityType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResolveProtocol(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVarName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVarScope(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -90,7 +163,7 @@ var tcpRequestRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","reject"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","unset-var","use-service"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -103,8 +176,65 @@ const (
 	// TCPRequestRuleActionAccept captures enum value "accept"
 	TCPRequestRuleActionAccept string = "accept"
 
+	// TCPRequestRuleActionCapture captures enum value "capture"
+	TCPRequestRuleActionCapture string = "capture"
+
+	// TCPRequestRuleActionDoResolve captures enum value "do-resolve"
+	TCPRequestRuleActionDoResolve string = "do-resolve"
+
+	// TCPRequestRuleActionExpectNetscalerCip captures enum value "expect-netscaler-cip"
+	TCPRequestRuleActionExpectNetscalerCip string = "expect-netscaler-cip"
+
+	// TCPRequestRuleActionExpectProxy captures enum value "expect-proxy"
+	TCPRequestRuleActionExpectProxy string = "expect-proxy"
+
 	// TCPRequestRuleActionReject captures enum value "reject"
 	TCPRequestRuleActionReject string = "reject"
+
+	// TCPRequestRuleActionScIncGpc0 captures enum value "sc-inc-gpc0"
+	TCPRequestRuleActionScIncGpc0 string = "sc-inc-gpc0"
+
+	// TCPRequestRuleActionScIncGpc1 captures enum value "sc-inc-gpc1"
+	TCPRequestRuleActionScIncGpc1 string = "sc-inc-gpc1"
+
+	// TCPRequestRuleActionScSetGpt0 captures enum value "sc-set-gpt0"
+	TCPRequestRuleActionScSetGpt0 string = "sc-set-gpt0"
+
+	// TCPRequestRuleActionSendSpoeGroup captures enum value "send-spoe-group"
+	TCPRequestRuleActionSendSpoeGroup string = "send-spoe-group"
+
+	// TCPRequestRuleActionSetDstPort captures enum value "set-dst-port"
+	TCPRequestRuleActionSetDstPort string = "set-dst-port"
+
+	// TCPRequestRuleActionSetDst captures enum value "set-dst"
+	TCPRequestRuleActionSetDst string = "set-dst"
+
+	// TCPRequestRuleActionSetPriority captures enum value "set-priority"
+	TCPRequestRuleActionSetPriority string = "set-priority"
+
+	// TCPRequestRuleActionSetSrc captures enum value "set-src"
+	TCPRequestRuleActionSetSrc string = "set-src"
+
+	// TCPRequestRuleActionSetVar captures enum value "set-var"
+	TCPRequestRuleActionSetVar string = "set-var"
+
+	// TCPRequestRuleActionSilentDrop captures enum value "silent-drop"
+	TCPRequestRuleActionSilentDrop string = "silent-drop"
+
+	// TCPRequestRuleActionTrackSc0 captures enum value "track-sc0"
+	TCPRequestRuleActionTrackSc0 string = "track-sc0"
+
+	// TCPRequestRuleActionTrackSc1 captures enum value "track-sc1"
+	TCPRequestRuleActionTrackSc1 string = "track-sc1"
+
+	// TCPRequestRuleActionTrackSc2 captures enum value "track-sc2"
+	TCPRequestRuleActionTrackSc2 string = "track-sc2"
+
+	// TCPRequestRuleActionUnsetVar captures enum value "unset-var"
+	TCPRequestRuleActionUnsetVar string = "unset-var"
+
+	// TCPRequestRuleActionUseService captures enum value "use-service"
+	TCPRequestRuleActionUseService string = "use-service"
 )
 
 // prop value enum
@@ -123,6 +253,19 @@ func (m *TCPRequestRule) validateAction(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateActionEnum("action", "body", m.Action); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPRequestRule) validateCaptureSample(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CaptureSample) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("capture_sample", "body", string(m.CaptureSample), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -181,6 +324,92 @@ func (m *TCPRequestRule) validateIndex(formats strfmt.Registry) error {
 	return nil
 }
 
+var tcpRequestRuleTypePriorityTypePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["class","offset"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tcpRequestRuleTypePriorityTypePropEnum = append(tcpRequestRuleTypePriorityTypePropEnum, v)
+	}
+}
+
+const (
+
+	// TCPRequestRulePriorityTypeClass captures enum value "class"
+	TCPRequestRulePriorityTypeClass string = "class"
+
+	// TCPRequestRulePriorityTypeOffset captures enum value "offset"
+	TCPRequestRulePriorityTypeOffset string = "offset"
+)
+
+// prop value enum
+func (m *TCPRequestRule) validatePriorityTypeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, tcpRequestRuleTypePriorityTypePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TCPRequestRule) validatePriorityType(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PriorityType) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validatePriorityTypeEnum("priority_type", "body", m.PriorityType); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var tcpRequestRuleTypeResolveProtocolPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["ipv4","ipv6"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tcpRequestRuleTypeResolveProtocolPropEnum = append(tcpRequestRuleTypeResolveProtocolPropEnum, v)
+	}
+}
+
+const (
+
+	// TCPRequestRuleResolveProtocolIPV4 captures enum value "ipv4"
+	TCPRequestRuleResolveProtocolIPV4 string = "ipv4"
+
+	// TCPRequestRuleResolveProtocolIPV6 captures enum value "ipv6"
+	TCPRequestRuleResolveProtocolIPV6 string = "ipv6"
+)
+
+// prop value enum
+func (m *TCPRequestRule) validateResolveProtocolEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, tcpRequestRuleTypeResolveProtocolPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TCPRequestRule) validateResolveProtocol(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ResolveProtocol) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateResolveProtocolEnum("resolve_protocol", "body", m.ResolveProtocol); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var tcpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
@@ -224,6 +453,32 @@ func (m *TCPRequestRule) validateType(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPRequestRule) validateVarName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.VarName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_name", "body", string(m.VarName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPRequestRule) validateVarScope(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.VarScope) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_scope", "body", string(m.VarScope), `^[^\s]+$`); err != nil {
 		return err
 	}
 
