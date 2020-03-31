@@ -54,7 +54,7 @@ type StatsOptions struct {
 
 	// stats show node name
 	// Pattern: ^[^\s]+$
-	StatsShowNodeName string `json:"stats_show_node_name,omitempty"`
+	StatsShowNodeName *string `json:"stats_show_node_name,omitempty"`
 
 	// stats uri prefix
 	// Pattern: ^[^\s]+$
@@ -119,7 +119,7 @@ func (m *StatsOptions) validateStatsShowNodeName(formats strfmt.Registry) error 
 		return nil
 	}
 
-	if err := validate.Pattern("stats_show_node_name", "body", string(m.StatsShowNodeName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("stats_show_node_name", "body", string(*m.StatsShowNodeName), `^[^\s]+$`); err != nil {
 		return err
 	}
 
