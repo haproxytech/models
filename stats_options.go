@@ -47,7 +47,7 @@ type StatsOptions struct {
 
 	// stats show desc
 	// Pattern: ^[^\s]+$
-	StatsShowDesc string `json:"stats_show_desc,omitempty"`
+	StatsShowDesc *string `json:"stats_show_desc,omitempty"`
 
 	// stats show legends
 	StatsShowLegends bool `json:"stats_show_legends,omitempty"`
@@ -106,7 +106,7 @@ func (m *StatsOptions) validateStatsShowDesc(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("stats_show_desc", "body", string(m.StatsShowDesc), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("stats_show_desc", "body", string(*m.StatsShowDesc), `^[^\s]+$`); err != nil {
 		return err
 	}
 
