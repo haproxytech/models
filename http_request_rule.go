@@ -89,7 +89,12 @@ type HTTPRequestRule struct {
 	LogLevel string `json:"log_level,omitempty"`
 
 	// path fmt
+	// Pattern: ^[^\s]+$
 	PathFmt string `json:"path_fmt,omitempty"`
+
+	// path match
+	// Pattern: ^[^\s]+$
+	PathMatch string `json:"path_match,omitempty"`
 
 	// query fmt
 	QueryFmt string `json:"query-fmt,omitempty"`
@@ -143,7 +148,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -202,6 +207,14 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogLevel(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePathFmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePathMatch(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -474,6 +487,32 @@ func (m *HTTPRequestRule) validateLogLevel(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validatePathFmt(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PathFmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("path_fmt", "body", string(m.PathFmt), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validatePathMatch(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PathMatch) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("path_match", "body", string(m.PathMatch), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpRequestRuleTypeRedirCodePropEnum []interface{}
 
 func init() {
@@ -675,7 +714,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -720,6 +759,9 @@ const (
 
 	// HTTPRequestRuleTypeSetPath captures enum value "set-path"
 	HTTPRequestRuleTypeSetPath string = "set-path"
+
+	// HTTPRequestRuleTypeReplacePath captures enum value "replace-path"
+	HTTPRequestRuleTypeReplacePath string = "replace-path"
 
 	// HTTPRequestRuleTypeSetQuery captures enum value "set-query"
 	HTTPRequestRuleTypeSetQuery string = "set-query"
