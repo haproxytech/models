@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // RuntimeServers HAProxy Runtime Servers Array
 //
 // HAProxy runtime servers array
+//
 // swagger:model runtime_servers
 type RuntimeServers []*RuntimeServer
 

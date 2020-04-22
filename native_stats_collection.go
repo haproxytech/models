@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // NativeStatsCollection Stats collection
 //
 // Stats from one runtime API
+//
 // swagger:model native_stats_collection
 type NativeStatsCollection struct {
 

@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // StickRules Stick Rules Array
 //
 // HAProxy backend stick rules array (corresponds to stick store-request, stick match, stick on, stick store-response)
+//
 // swagger:model stick_rules
 type StickRules []*StickRule
 

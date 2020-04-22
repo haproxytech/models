@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // NativeStats Stats Array
 //
 // HAProxy stats array
+//
 // swagger:model native_stats
 type NativeStats []*NativeStatsCollection
 

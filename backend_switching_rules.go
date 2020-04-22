@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // BackendSwitchingRules Backend Switching Rules Array
 //
 // HAProxy backend switching rules array (corresponds to use_backend directives)
+//
 // swagger:model backend_switching_rules
 type BackendSwitchingRules []*BackendSwitchingRule
 

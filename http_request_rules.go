@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // HTTPRequestRules HTTP Request Rules Array
 //
 // HAProxy HTTP request rules array (corresponds to http-request directives)
+//
 // swagger:model http_request_rules
 type HTTPRequestRules []*HTTPRequestRule
 

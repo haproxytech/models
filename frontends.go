@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // Frontends Frontends
 //
 // HAProxy frontends array
+//
 // swagger:model frontends
 type Frontends []*Frontend
 

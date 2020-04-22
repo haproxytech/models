@@ -21,14 +21,14 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // ProcessInfoItem process info item
+//
 // swagger:model process_info_item
 type ProcessInfoItem struct {
 
@@ -84,7 +84,7 @@ type ProcessInfoItem struct {
 	HardMaxConn *int64 `json:"hard_max_conn,omitempty"`
 
 	// idle pct
-	IDLEPct *int64 `json:"idle_pct,omitempty"`
+	IdlePct *int64 `json:"idle_pct,omitempty"`
 
 	// jobs
 	Jobs *int64 `json:"jobs,omitempty"`
@@ -199,7 +199,7 @@ type ProcessInfoItem struct {
 	TotalBytesOut *int64 `json:"total_bytes_out,omitempty"`
 
 	// ulimit n
-	UlimitN *int64 `json:"ulimit_n,omitempty"`
+	Ulimitn *int64 `json:"ulimit_n,omitempty"`
 
 	// unstoppable
 	Unstoppable *int64 `json:"unstoppable,omitempty"`

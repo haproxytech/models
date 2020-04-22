@@ -24,9 +24,8 @@ import (
 	"encoding/json"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -37,6 +36,7 @@ import (
 // Farms are connected to service using use-backend and default_backend directives. Sites let you
 // configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
 // endpoints.
+//
 //
 // swagger:model site
 type Site struct {
@@ -150,6 +150,7 @@ func (m *Site) UnmarshalBinary(b []byte) error {
 }
 
 // SiteFarm site farm
+//
 // swagger:model SiteFarm
 type SiteFarm struct {
 
@@ -444,6 +445,7 @@ func (m *SiteFarm) UnmarshalBinary(b []byte) error {
 }
 
 // SiteService site service
+//
 // swagger:model SiteService
 type SiteService struct {
 

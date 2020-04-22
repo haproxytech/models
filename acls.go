@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // Acls ACL Lines Array
 //
 // HAProxy ACL lines array (corresponds to acl directives)
+//
 // swagger:model acls
 type Acls []*ACL
 

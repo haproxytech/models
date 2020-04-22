@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // Transactions Transactions array
 //
 // Configuration transactions array
+//
 // swagger:model transactions
 type Transactions []*Transaction
 
