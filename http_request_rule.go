@@ -66,6 +66,7 @@ type HTTPRequestRule struct {
 	CondTest string `json:"cond_test,omitempty"`
 
 	// deny status
+	// Enum: [200 400 403 405 408 425 429 500 502 503 504]
 	DenyStatus int64 `json:"deny_status,omitempty"`
 
 	// hdr format
@@ -187,6 +188,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDenyStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -369,6 +374,40 @@ func (m *HTTPRequestRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var httpRequestRuleTypeDenyStatusPropEnum []interface{}
+
+func init() {
+	var res []int64
+	if err := json.Unmarshal([]byte(`[200,400,403,405,408,425,429,500,502,503,504]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpRequestRuleTypeDenyStatusPropEnum = append(httpRequestRuleTypeDenyStatusPropEnum, v)
+	}
+}
+
+// prop value enum
+func (m *HTTPRequestRule) validateDenyStatusEnum(path, location string, value int64) error {
+	if err := validate.Enum(path, location, value, httpRequestRuleTypeDenyStatusPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateDenyStatus(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DenyStatus) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDenyStatusEnum("deny_status", "body", m.DenyStatus); err != nil {
 		return err
 	}
 
