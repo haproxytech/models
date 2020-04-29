@@ -46,7 +46,6 @@ type StatsOptions struct {
 	StatsRefreshDelay *int64 `json:"stats_refresh_delay,omitempty"`
 
 	// stats show desc
-	// Pattern: ^[^\s]+$
 	StatsShowDesc *string `json:"stats_show_desc,omitempty"`
 
 	// stats show legends
@@ -66,10 +65,6 @@ func (m *StatsOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateStatsMaxconn(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateStatsShowDesc(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -94,19 +89,6 @@ func (m *StatsOptions) validateStatsMaxconn(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("stats_maxconn", "body", int64(m.StatsMaxconn), 1, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *StatsOptions) validateStatsShowDesc(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.StatsShowDesc) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("stats_show_desc", "body", string(*m.StatsShowDesc), `^[^\s]+$`); err != nil {
 		return err
 	}
 
