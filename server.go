@@ -153,6 +153,10 @@ type Server struct {
 	// Enum: [enabled disabled]
 	SendProxyV2 string `json:"send-proxy-v2,omitempty"`
 
+	// slowstart
+	// Pattern: ^[1-9][0-9]*(us|ms|s|m|h|d)$
+	Slowstart string `json:"slowstart,omitempty"`
+
 	// sni
 	// Pattern: ^[^\s]+$
 	Sni string `json:"sni,omitempty"`
@@ -274,6 +278,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSendProxyV2(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSlowstart(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -912,6 +920,19 @@ func (m *Server) validateSendProxyV2(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSendProxyV2Enum("send-proxy-v2", "body", m.SendProxyV2); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateSlowstart(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Slowstart) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("slowstart", "body", string(m.Slowstart), `^[1-9][0-9]*(us|ms|s|m|h|d)$`); err != nil {
 		return err
 	}
 
