@@ -35,26 +35,27 @@ import (
 type Resolver struct {
 
 	// accepted payload size
-	// Minimum: 1232
+	// Maximum: 8192
+	// Minimum: 512
 	AcceptedPayloadSize int64 `json:"accepted_payload_size,omitempty"`
 
 	// hold nx
-	HoldNx int64 `json:"hold_nx,omitempty"`
+	HoldNx *int64 `json:"hold_nx,omitempty"`
 
 	// hold obsolete
-	HoldObsolete int64 `json:"hold_obsolete,omitempty"`
+	HoldObsolete *int64 `json:"hold_obsolete,omitempty"`
 
 	// hold other
-	HoldOther int64 `json:"hold_other,omitempty"`
+	HoldOther *int64 `json:"hold_other,omitempty"`
 
 	// hold refused
-	HoldRefused int64 `json:"hold_refused,omitempty"`
+	HoldRefused *int64 `json:"hold_refused,omitempty"`
 
 	// hold timeout
-	HoldTimeout int64 `json:"hold_timeout,omitempty"`
+	HoldTimeout *int64 `json:"hold_timeout,omitempty"`
 
 	// hold valid
-	HoldValid int64 `json:"hold_valid,omitempty"`
+	HoldValid *int64 `json:"hold_valid,omitempty"`
 
 	// name
 	// Required: true
@@ -103,7 +104,11 @@ func (m *Resolver) validateAcceptedPayloadSize(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.MinimumInt("accepted_payload_size", "body", int64(m.AcceptedPayloadSize), 1232, false); err != nil {
+	if err := validate.MinimumInt("accepted_payload_size", "body", int64(m.AcceptedPayloadSize), 512, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("accepted_payload_size", "body", int64(m.AcceptedPayloadSize), 8192, false); err != nil {
 		return err
 	}
 
