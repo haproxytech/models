@@ -23,8 +23,9 @@ package models
 import (
 	"encoding/json"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -32,7 +33,6 @@ import (
 // Backend Backend
 //
 // HAProxy backend configuration
-//
 // swagger:model backend
 type Backend struct {
 
@@ -931,7 +931,6 @@ func (m *Backend) UnmarshalBinary(b []byte) error {
 }
 
 // BackendHashType backend hash type
-//
 // swagger:model BackendHashType
 type BackendHashType struct {
 
@@ -1121,7 +1120,6 @@ func (m *BackendHashType) UnmarshalBinary(b []byte) error {
 }
 
 // BackendStickTable backend stick table
-//
 // swagger:model BackendStickTable
 type BackendStickTable struct {
 

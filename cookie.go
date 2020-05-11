@@ -24,14 +24,14 @@ import (
 	"encoding/json"
 	"strconv"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // Cookie cookie
-//
 // swagger:model cookie
 type Cookie struct {
 
@@ -236,7 +236,6 @@ func (m *Cookie) UnmarshalBinary(b []byte) error {
 }
 
 // Domain domain
-//
 // swagger:model Domain
 type Domain struct {
 

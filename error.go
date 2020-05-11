@@ -23,8 +23,9 @@ package models
 import (
 	"encoding/json"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -32,7 +33,6 @@ import (
 // Error Error
 //
 // API Error
-//
 // swagger:model error
 type Error struct {
 
@@ -67,7 +67,9 @@ func (m *Error) UnmarshalJSON(data []byte) error {
 	var rcv Error
 
 	rcv.Code = stage1.Code
+
 	rcv.Message = stage1.Message
+
 	*m = rcv
 
 	// stage 2, remove properties and add to map
@@ -77,7 +79,9 @@ func (m *Error) UnmarshalJSON(data []byte) error {
 	}
 
 	delete(stage2, "code")
+
 	delete(stage2, "message")
+
 	// stage 3, add additional properties values
 	if len(stage2) > 0 {
 		result := make(map[string]string)
@@ -108,6 +112,7 @@ func (m Error) MarshalJSON() ([]byte, error) {
 	}
 
 	stage1.Code = m.Code
+
 	stage1.Message = m.Message
 
 	// make JSON object for known properties

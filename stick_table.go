@@ -24,8 +24,9 @@ import (
 	"encoding/json"
 	"strconv"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -33,7 +34,6 @@ import (
 // StickTable Stick Table
 //
 // Stick Table Information
-//
 // swagger:model stick_table
 type StickTable struct {
 
@@ -171,7 +171,6 @@ func (m *StickTable) UnmarshalBinary(b []byte) error {
 }
 
 // StickTableField stick table field
-//
 // swagger:model StickTableField
 type StickTableField struct {
 

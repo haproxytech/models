@@ -23,8 +23,9 @@ package models
 import (
 	"encoding/json"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -32,7 +33,6 @@ import (
 // HTTPResponseRule HTTP Response Rule
 //
 // HAProxy HTTP response rule configuration (corresponds to http-response directives)
-//
 // swagger:model http_response_rule
 type HTTPResponseRule struct {
 

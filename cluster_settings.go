@@ -23,8 +23,9 @@ package models
 import (
 	"encoding/json"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -32,7 +33,6 @@ import (
 // ClusterSettings Cluster Settings
 //
 // Settings related to a cluster.
-//
 // swagger:model cluster_settings
 type ClusterSettings struct {
 
@@ -200,7 +200,6 @@ func (m *ClusterSettings) UnmarshalBinary(b []byte) error {
 }
 
 // ClusterSettingsCluster Cluster controller information
-//
 // swagger:model ClusterSettingsCluster
 type ClusterSettingsCluster struct {
 

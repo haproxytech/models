@@ -23,8 +23,9 @@ package models
 import (
 	"encoding/json"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -32,7 +33,6 @@ import (
 // StickRule Stick Rule
 //
 // Define a pattern used to create an entry in a stickiness table or matching condition or associate a user to a server.
-//
 // swagger:model stick_rule
 type StickRule struct {
 

@@ -21,8 +21,9 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -32,7 +33,6 @@ import (
 // The use of Access Control Lists (ACL) provides a flexible solution to perform
 // content switching and generally to take decisions based on content extracted
 // from the request, the response or any environmental status.
-//
 //
 // swagger:model acl
 type ACL struct {

@@ -23,8 +23,9 @@ package models
 import (
 	"encoding/json"
 
+	strfmt "github.com/go-openapi/strfmt"
+
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -32,7 +33,6 @@ import (
 // BackendSwitchingRule Backend Switching Rule
 //
 // HAProxy backend switching rule configuration (corresponds to use_backend directive)
-//
 // swagger:model backend_switching_rule
 type BackendSwitchingRule struct {
 
