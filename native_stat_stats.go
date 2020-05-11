@@ -23,14 +23,14 @@ package models
 import (
 	"encoding/json"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // NativeStatStats native stat stats
+//
 // swagger:model native_stat_stats
 type NativeStatStats struct {
 

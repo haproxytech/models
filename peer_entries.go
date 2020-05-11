@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // PeerEntries Peer entries
 //
 // HAProxy peer entries array
+//
 // swagger:model peer_entries
 type PeerEntries []*PeerEntry
 

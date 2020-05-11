@@ -23,9 +23,8 @@ package models
 import (
 	"encoding/json"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -33,6 +32,7 @@ import (
 // ServerSwitchingRule Server Switching Rule
 //
 // HAProxy server switching rule configuration (corresponds to use-server directive)
+//
 // swagger:model server_switching_rule
 type ServerSwitchingRule struct {
 

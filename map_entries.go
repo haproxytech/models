@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // MapEntries Maps Entries
 //
 // Entries of one runtime map
+//
 // swagger:model map_entries
 type MapEntries []*MapEntry
 

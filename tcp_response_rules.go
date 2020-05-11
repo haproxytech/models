@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // TCPResponseRules TCP Response Rules Array
 //
 // HAProxy TCP response rules array (corresponds to tcp-response directive)
+//
 // swagger:model tcp_response_rules
 type TCPResponseRules []*TCPResponseRule
 

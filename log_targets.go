@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // LogTargets Log Target Array
 //
 // HAProxy log target array (corresponds to log directives)
+//
 // swagger:model log_targets
 type LogTargets []*LogTarget
 

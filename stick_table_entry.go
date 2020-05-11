@@ -21,14 +21,14 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // StickTableEntry Stick Table Entry
 //
 // One entry in stick table
+//
 // swagger:model stick_table_entry
 type StickTableEntry struct {
 

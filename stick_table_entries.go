@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // StickTableEntries Stick Tables Entries
 //
 // Entries of one runtime stick table
+//
 // swagger:model stick_table_entries
 type StickTableEntries []*StickTableEntry
 

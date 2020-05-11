@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // Reloads HAProxy Reloads Array
 //
 // HAProxy reloads array
+//
 // swagger:model reloads
 type Reloads []*Reload
 

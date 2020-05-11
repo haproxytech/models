@@ -21,9 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -31,6 +30,7 @@ import (
 // Info Information
 //
 // General API, OS and hardware information
+//
 // swagger:model info
 type Info struct {
 
@@ -114,6 +114,7 @@ func (m *Info) UnmarshalBinary(b []byte) error {
 }
 
 // InfoAPI info API
+//
 // swagger:model InfoAPI
 type InfoAPI struct {
 
@@ -171,6 +172,7 @@ func (m *InfoAPI) UnmarshalBinary(b []byte) error {
 }
 
 // InfoSystem info system
+//
 // swagger:model InfoSystem
 type InfoSystem struct {
 
@@ -266,6 +268,7 @@ func (m *InfoSystem) UnmarshalBinary(b []byte) error {
 }
 
 // InfoSystemCPUInfo info system CPU info
+//
 // swagger:model InfoSystemCPUInfo
 type InfoSystemCPUInfo struct {
 
@@ -300,6 +303,7 @@ func (m *InfoSystemCPUInfo) UnmarshalBinary(b []byte) error {
 }
 
 // InfoSystemMemInfo info system mem info
+//
 // swagger:model InfoSystemMemInfo
 type InfoSystemMemInfo struct {
 

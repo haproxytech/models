@@ -24,9 +24,8 @@ import (
 	"encoding/json"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -34,6 +33,7 @@ import (
 // Defaults Defaults
 //
 // HAProxy defaults configuration
+//
 // swagger:model defaults
 type Defaults struct {
 

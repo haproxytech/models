@@ -23,15 +23,15 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // Binds Binds
 //
 // HAProxy frontend binds array (corresponds to bind directives)
+//
 // swagger:model binds
 type Binds []*Bind
 

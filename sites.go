@@ -23,9 +23,8 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
@@ -35,6 +34,7 @@ import (
 // Farms are connected to service using use-backend and default_backend directives. Sites let you
 // configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
 // endpoints.
+//
 //
 // swagger:model sites
 type Sites []*Site
