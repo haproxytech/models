@@ -153,6 +153,9 @@ type Server struct {
 	// Enum: [enabled disabled]
 	SendProxyV2 string `json:"send-proxy-v2,omitempty"`
 
+	// slowstart
+	Slowstart *int64 `json:"slowstart,omitempty"`
+
 	// sni
 	// Pattern: ^[^\s]+$
 	Sni string `json:"sni,omitempty"`

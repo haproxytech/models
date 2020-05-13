@@ -78,6 +78,9 @@ type DefaultServer struct {
 	// rise
 	Rise *int64 `json:"rise,omitempty"`
 
+	// slowstart
+	Slowstart *int64 `json:"slowstart,omitempty"`
+
 	// sni
 	// Pattern: ^[^\s]+$
 	Sni string `json:"sni,omitempty"`
