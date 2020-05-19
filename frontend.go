@@ -65,6 +65,10 @@ type Frontend struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// http buffer request
+	// Enum: [enabled disabled]
+	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
+
 	// http use htx
 	// Enum: [enabled disabled]
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
@@ -150,6 +154,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPBufferRequest(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -356,6 +364,49 @@ func (m *Frontend) validateForwardfor(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var frontendTypeHTTPBufferRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeHTTPBufferRequestPropEnum = append(frontendTypeHTTPBufferRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendHTTPBufferRequestEnabled captures enum value "enabled"
+	FrontendHTTPBufferRequestEnabled string = "enabled"
+
+	// FrontendHTTPBufferRequestDisabled captures enum value "disabled"
+	FrontendHTTPBufferRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateHTTPBufferRequestEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeHTTPBufferRequestPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateHTTPBufferRequest(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPBufferRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPBufferRequestEnum("http-buffer-request", "body", m.HTTPBufferRequest); err != nil {
+		return err
 	}
 
 	return nil

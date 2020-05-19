@@ -85,6 +85,10 @@ type Backend struct {
 	// hash type
 	HashType *BackendHashType `json:"hash_type,omitempty"`
 
+	// http buffer request
+	// Enum: [enabled disabled]
+	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
+
 	// http check
 	HTTPCheck *HTTPCheck `json:"http-check,omitempty"`
 
@@ -195,6 +199,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHashType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPBufferRequest(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -563,6 +571,49 @@ func (m *Backend) validateHashType(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeHTTPBufferRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPBufferRequestPropEnum = append(backendTypeHTTPBufferRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPBufferRequestEnabled captures enum value "enabled"
+	BackendHTTPBufferRequestEnabled string = "enabled"
+
+	// BackendHTTPBufferRequestDisabled captures enum value "disabled"
+	BackendHTTPBufferRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPBufferRequestEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPBufferRequestPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPBufferRequest(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPBufferRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPBufferRequestEnum("http-buffer-request", "body", m.HTTPBufferRequest); err != nil {
+		return err
 	}
 
 	return nil
