@@ -62,6 +62,10 @@ type Server struct {
 	// allow 0rtt
 	Allow0rtt bool `json:"allow_0rtt,omitempty"`
 
+	// alpn
+	// Pattern: ^[^\s]+$
+	Alpn string `json:"alpn,omitempty"`
+
 	// backup
 	// Enum: [enabled disabled]
 	Backup string `json:"backup,omitempty"`
@@ -201,6 +205,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAgentPort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAlpn(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -390,6 +398,19 @@ func (m *Server) validateAgentPort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("agent-port", "body", int64(*m.AgentPort), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateAlpn(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Alpn) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("alpn", "body", string(m.Alpn), `^[^\s]+$`); err != nil {
 		return err
 	}
 
