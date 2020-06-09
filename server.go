@@ -22,6 +22,7 @@ package models
 
 import (
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -136,6 +137,9 @@ type Server struct {
 	// proto
 	// Pattern: ^[^\s]+$
 	Proto string `json:"proto,omitempty"`
+
+	// proxy v2 options
+	ProxyV2Options []string `json:"proxy-v2-options"`
 
 	// resolve net
 	// Pattern: ^[^\s]+$
@@ -265,6 +269,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateProto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateProxyV2Options(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -812,6 +820,43 @@ func (m *Server) validateProto(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("proto", "body", string(m.Proto), `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+var serverProxyV2OptionsItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["ssl","cert-cn","ssl-cipher","cert-sig","cert-key","authority","crc32c","unique-id"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverProxyV2OptionsItemsEnum = append(serverProxyV2OptionsItemsEnum, v)
+	}
+}
+
+func (m *Server) validateProxyV2OptionsItemsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverProxyV2OptionsItemsEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateProxyV2Options(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ProxyV2Options) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ProxyV2Options); i++ {
+
+		// value enum
+		if err := m.validateProxyV2OptionsItemsEnum("proxy-v2-options"+"."+strconv.Itoa(i), "body", m.ProxyV2Options[i]); err != nil {
+			return err
+		}
+
 	}
 
 	return nil
