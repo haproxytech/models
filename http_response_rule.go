@@ -78,6 +78,18 @@ type HTTPResponseRule struct {
 	// Enum: [emerg alert crit err warning notice info debug silent]
 	LogLevel string `json:"log_level,omitempty"`
 
+	// map file
+	// Pattern: ^[^\s]+$
+	MapFile string `json:"map_file,omitempty"`
+
+	// map keyfmt
+	// Pattern: ^[^\s]+$
+	MapKeyfmt string `json:"map_keyfmt,omitempty"`
+
+	// map valuefmt
+	// Pattern: ^[^\s]+$
+	MapValuefmt string `json:"map_valuefmt,omitempty"`
+
 	// redir code
 	// Enum: [301 302 303]
 	RedirCode int64 `json:"redir_code,omitempty"`
@@ -111,7 +123,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map]
 	Type string `json:"type"`
 
 	// var expr
@@ -163,6 +175,18 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogLevel(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMapFile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMapKeyfmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMapValuefmt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -402,6 +426,45 @@ func (m *HTTPResponseRule) validateLogLevel(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPResponseRule) validateMapFile(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MapFile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("map_file", "body", string(m.MapFile), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateMapKeyfmt(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MapKeyfmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("map_keyfmt", "body", string(m.MapKeyfmt), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateMapValuefmt(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MapValuefmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("map_valuefmt", "body", string(m.MapValuefmt), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpResponseRuleTypeRedirCodePropEnum []interface{}
 
 func init() {
@@ -542,7 +605,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -596,6 +659,12 @@ const (
 
 	// HTTPResponseRuleTypeCapture captures enum value "capture"
 	HTTPResponseRuleTypeCapture string = "capture"
+
+	// HTTPResponseRuleTypeSetMap captures enum value "set-map"
+	HTTPResponseRuleTypeSetMap string = "set-map"
+
+	// HTTPResponseRuleTypeDelMap captures enum value "del-map"
+	HTTPResponseRuleTypeDelMap string = "del-map"
 )
 
 // prop value enum
