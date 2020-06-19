@@ -48,6 +48,10 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	AuthRealm string `json:"auth_realm,omitempty"`
 
+	// cache name
+	// Pattern: ^[^\s]+$
+	CacheName string `json:"cache_name,omitempty"`
+
 	// capture id
 	CaptureID *int64 `json:"capture_id,omitempty"`
 
@@ -80,6 +84,14 @@ type HTTPRequestRule struct {
 	// hdr name
 	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
+
+	// hint format
+	// Pattern: ^[^\s]+$
+	HintFormat string `json:"hint_format,omitempty"`
+
+	// hint name
+	// Pattern: ^[^\s]+$
+	HintName string `json:"hint_name,omitempty"`
 
 	// index
 	// Required: true
@@ -161,7 +173,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -195,6 +207,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCacheName(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCaptureSample(formats); err != nil {
 		res = append(res, err)
 	}
@@ -216,6 +232,14 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHdrName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHintFormat(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHintName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -348,6 +372,19 @@ func (m *HTTPRequestRule) validateAuthRealm(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateCacheName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CacheName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("cache_name", "body", string(m.CacheName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validateCaptureSample(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.CaptureSample) { // not required
@@ -471,6 +508,32 @@ func (m *HTTPRequestRule) validateHdrName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("hdr_name", "body", string(m.HdrName), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateHintFormat(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HintFormat) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hint_format", "body", string(m.HintFormat), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateHintName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HintName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hint_name", "body", string(m.HintName), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -816,7 +879,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -900,6 +963,15 @@ const (
 
 	// HTTPRequestRuleTypeDelMap captures enum value "del-map"
 	HTTPRequestRuleTypeDelMap string = "del-map"
+
+	// HTTPRequestRuleTypeCacheUse captures enum value "cache-use"
+	HTTPRequestRuleTypeCacheUse string = "cache-use"
+
+	// HTTPRequestRuleTypeDisableL7Retry captures enum value "disable-l7-retry"
+	HTTPRequestRuleTypeDisableL7Retry string = "disable-l7-retry"
+
+	// HTTPRequestRuleTypeEarlyHint captures enum value "early-hint"
+	HTTPRequestRuleTypeEarlyHint string = "early-hint"
 )
 
 // prop value enum
