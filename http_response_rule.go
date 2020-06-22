@@ -105,6 +105,9 @@ type HTTPResponseRule struct {
 	// Pattern: ^[^\s]+$
 	RedirValue string `json:"redir_value,omitempty"`
 
+	// sc id
+	ScID int64 `json:"sc_id,omitempty"`
+
 	// spoe engine
 	// Pattern: ^[^\s]+$
 	SpoeEngine string `json:"spoe_engine,omitempty"`
@@ -123,7 +126,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1]
 	Type string `json:"type"`
 
 	// var expr
@@ -605,7 +608,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -665,6 +668,12 @@ const (
 
 	// HTTPResponseRuleTypeDelMap captures enum value "del-map"
 	HTTPResponseRuleTypeDelMap string = "del-map"
+
+	// HTTPResponseRuleTypeScIncGpc0 captures enum value "sc-inc-gpc0"
+	HTTPResponseRuleTypeScIncGpc0 string = "sc-inc-gpc0"
+
+	// HTTPResponseRuleTypeScIncGpc1 captures enum value "sc-inc-gpc1"
+	HTTPResponseRuleTypeScIncGpc1 string = "sc-inc-gpc1"
 )
 
 // prop value enum

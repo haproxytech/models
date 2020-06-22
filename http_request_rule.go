@@ -139,6 +139,9 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	RedirValue string `json:"redir_value,omitempty"`
 
+	// sc id
+	ScID int64 `json:"sc_id,omitempty"`
+
 	// spoe engine
 	// Pattern: ^[^\s]+$
 	SpoeEngine string `json:"spoe_engine,omitempty"`
@@ -173,11 +176,14 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1]
 	Type string `json:"type"`
 
 	// uri fmt
 	URIFmt string `json:"uri-fmt,omitempty"`
+
+	// uri match
+	URIMatch string `json:"uri-match,omitempty"`
 
 	// var expr
 	VarExpr string `json:"var_expr,omitempty"`
@@ -879,7 +885,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -972,6 +978,15 @@ const (
 
 	// HTTPRequestRuleTypeEarlyHint captures enum value "early-hint"
 	HTTPRequestRuleTypeEarlyHint string = "early-hint"
+
+	// HTTPRequestRuleTypeReplaceURI captures enum value "replace-uri"
+	HTTPRequestRuleTypeReplaceURI string = "replace-uri"
+
+	// HTTPRequestRuleTypeScIncGpc0 captures enum value "sc-inc-gpc0"
+	HTTPRequestRuleTypeScIncGpc0 string = "sc-inc-gpc0"
+
+	// HTTPRequestRuleTypeScIncGpc1 captures enum value "sc-inc-gpc1"
+	HTTPRequestRuleTypeScIncGpc1 string = "sc-inc-gpc1"
 )
 
 // prop value enum
