@@ -90,6 +90,15 @@ type HTTPResponseRule struct {
 	// Pattern: ^[^\s]+$
 	MapValuefmt string `json:"map_valuefmt,omitempty"`
 
+	// mark value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	MarkValue string `json:"mark_value,omitempty"`
+
+	// nice value
+	// Maximum: 1024
+	// Minimum: -1024
+	NiceValue int64 `json:"nice_value,omitempty"`
+
 	// redir code
 	// Enum: [301 302 303]
 	RedirCode int64 `json:"redir_code,omitempty"`
@@ -105,8 +114,14 @@ type HTTPResponseRule struct {
 	// Pattern: ^[^\s]+$
 	RedirValue string `json:"redir_value,omitempty"`
 
+	// sc expr
+	ScExpr string `json:"sc_expr,omitempty"`
+
 	// sc id
 	ScID int64 `json:"sc_id,omitempty"`
+
+	// sc int
+	ScInt *int64 `json:"sc_int,omitempty"`
 
 	// spoe engine
 	// Pattern: ^[^\s]+$
@@ -126,7 +141,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice]
 	Type string `json:"type"`
 
 	// var expr
@@ -190,6 +205,14 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMapValuefmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMarkValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNiceValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -468,6 +491,36 @@ func (m *HTTPResponseRule) validateMapValuefmt(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPResponseRule) validateMarkValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MarkValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("mark_value", "body", string(m.MarkValue), `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateNiceValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NiceValue) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("nice_value", "body", int64(m.NiceValue), -1024, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("nice_value", "body", int64(m.NiceValue), 1024, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpResponseRuleTypeRedirCodePropEnum []interface{}
 
 func init() {
@@ -608,7 +661,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -674,6 +727,15 @@ const (
 
 	// HTTPResponseRuleTypeScIncGpc1 captures enum value "sc-inc-gpc1"
 	HTTPResponseRuleTypeScIncGpc1 string = "sc-inc-gpc1"
+
+	// HTTPResponseRuleTypeScSetGpt0 captures enum value "sc-set-gpt0"
+	HTTPResponseRuleTypeScSetGpt0 string = "sc-set-gpt0"
+
+	// HTTPResponseRuleTypeSetMark captures enum value "set-mark"
+	HTTPResponseRuleTypeSetMark string = "set-mark"
+
+	// HTTPResponseRuleTypeSetNice captures enum value "set-nice"
+	HTTPResponseRuleTypeSetNice string = "set-nice"
 )
 
 // prop value enum

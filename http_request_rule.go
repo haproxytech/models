@@ -116,6 +116,15 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	MapValuefmt string `json:"map_valuefmt,omitempty"`
 
+	// mark value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	MarkValue string `json:"mark_value,omitempty"`
+
+	// nice value
+	// Maximum: 1024
+	// Minimum: -1024
+	NiceValue int64 `json:"nice_value,omitempty"`
+
 	// path fmt
 	// Pattern: ^[^\s]+$
 	PathFmt string `json:"path_fmt,omitempty"`
@@ -149,8 +158,14 @@ type HTTPRequestRule struct {
 	// resolvers
 	Resolvers string `json:"resolvers,omitempty"`
 
+	// sc expr
+	ScExpr string `json:"sc_expr,omitempty"`
+
 	// sc id
 	ScID int64 `json:"sc_id,omitempty"`
+
+	// sc int
+	ScInt *int64 `json:"sc_int,omitempty"`
 
 	// spoe engine
 	// Pattern: ^[^\s]+$
@@ -186,7 +201,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -276,6 +291,14 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMapValuefmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMarkValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNiceValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -672,6 +695,36 @@ func (m *HTTPRequestRule) validateMapValuefmt(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateMarkValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MarkValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("mark_value", "body", string(m.MarkValue), `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateNiceValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NiceValue) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("nice_value", "body", int64(m.NiceValue), -1024, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("nice_value", "body", int64(m.NiceValue), 1024, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validatePathFmt(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.PathFmt) { // not required
@@ -942,7 +995,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1053,6 +1106,15 @@ const (
 
 	// HTTPRequestRuleTypeSetDstPort captures enum value "set-dst-port"
 	HTTPRequestRuleTypeSetDstPort string = "set-dst-port"
+
+	// HTTPRequestRuleTypeScSetGpt0 captures enum value "sc-set-gpt0"
+	HTTPRequestRuleTypeScSetGpt0 string = "sc-set-gpt0"
+
+	// HTTPRequestRuleTypeSetMark captures enum value "set-mark"
+	HTTPRequestRuleTypeSetMark string = "set-mark"
+
+	// HTTPRequestRuleTypeSetNice captures enum value "set-nice"
+	HTTPRequestRuleTypeSetNice string = "set-nice"
 )
 
 // prop value enum
