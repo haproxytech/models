@@ -73,6 +73,9 @@ type HTTPRequestRule struct {
 	// Enum: [200 400 403 405 408 425 429 500 502 503 504]
 	DenyStatus int64 `json:"deny_status,omitempty"`
 
+	// expr
+	Expr string `json:"expr,omitempty"`
+
 	// hdr format
 	// Pattern: ^[^\s]+$
 	HdrFormat string `json:"hdr_format,omitempty"`
@@ -121,6 +124,10 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	PathMatch string `json:"path_match,omitempty"`
 
+	// protocol
+	// Enum: [ipv4 ipv6]
+	Protocol string `json:"protocol,omitempty"`
+
 	// query fmt
 	QueryFmt string `json:"query-fmt,omitempty"`
 
@@ -138,6 +145,9 @@ type HTTPRequestRule struct {
 	// redir value
 	// Pattern: ^[^\s]+$
 	RedirValue string `json:"redir_value,omitempty"`
+
+	// resolvers
+	Resolvers string `json:"resolvers,omitempty"`
 
 	// sc id
 	ScID int64 `json:"sc_id,omitempty"`
@@ -176,7 +186,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -274,6 +284,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePathMatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateProtocol(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -684,6 +698,49 @@ func (m *HTTPRequestRule) validatePathMatch(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpRequestRuleTypeProtocolPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["ipv4","ipv6"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpRequestRuleTypeProtocolPropEnum = append(httpRequestRuleTypeProtocolPropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPRequestRuleProtocolIPV4 captures enum value "ipv4"
+	HTTPRequestRuleProtocolIPV4 string = "ipv4"
+
+	// HTTPRequestRuleProtocolIPV6 captures enum value "ipv6"
+	HTTPRequestRuleProtocolIPV6 string = "ipv6"
+)
+
+// prop value enum
+func (m *HTTPRequestRule) validateProtocolEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpRequestRuleTypeProtocolPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateProtocol(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Protocol) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateProtocolEnum("protocol", "body", m.Protocol); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpRequestRuleTypeRedirCodePropEnum []interface{}
 
 func init() {
@@ -885,7 +942,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -987,6 +1044,15 @@ const (
 
 	// HTTPRequestRuleTypeScIncGpc1 captures enum value "sc-inc-gpc1"
 	HTTPRequestRuleTypeScIncGpc1 string = "sc-inc-gpc1"
+
+	// HTTPRequestRuleTypeDoResolve captures enum value "do-resolve"
+	HTTPRequestRuleTypeDoResolve string = "do-resolve"
+
+	// HTTPRequestRuleTypeSetDst captures enum value "set-dst"
+	HTTPRequestRuleTypeSetDst string = "set-dst"
+
+	// HTTPRequestRuleTypeSetDstPort captures enum value "set-dst-port"
+	HTTPRequestRuleTypeSetDstPort string = "set-dst-port"
 )
 
 // prop value enum
