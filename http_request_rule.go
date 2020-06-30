@@ -120,6 +120,10 @@ type HTTPRequestRule struct {
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
 	MarkValue string `json:"mark_value,omitempty"`
 
+	// method fmt
+	// Pattern: ^[^\s]+$
+	MethodFmt string `json:"method_fmt,omitempty"`
+
 	// nice value
 	// Maximum: 1024
 	// Minimum: -1024
@@ -201,7 +205,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -295,6 +299,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMarkValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMethodFmt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -708,6 +716,19 @@ func (m *HTTPRequestRule) validateMarkValue(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateMethodFmt(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MethodFmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("method_fmt", "body", string(m.MethodFmt), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validateNiceValue(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.NiceValue) { // not required
@@ -995,7 +1016,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1115,6 +1136,15 @@ const (
 
 	// HTTPRequestRuleTypeSetNice captures enum value "set-nice"
 	HTTPRequestRuleTypeSetNice string = "set-nice"
+
+	// HTTPRequestRuleTypeSetMethod captures enum value "set-method"
+	HTTPRequestRuleTypeSetMethod string = "set-method"
+
+	// HTTPRequestRuleTypeSetPriorityClass captures enum value "set-priority-class"
+	HTTPRequestRuleTypeSetPriorityClass string = "set-priority-class"
+
+	// HTTPRequestRuleTypeSetPriorityOffset captures enum value "set-priority-offset"
+	HTTPRequestRuleTypeSetPriorityOffset string = "set-priority-offset"
 )
 
 // prop value enum
