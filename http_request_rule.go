@@ -205,7 +205,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -1016,7 +1016,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1145,6 +1145,15 @@ const (
 
 	// HTTPRequestRuleTypeSetPriorityOffset captures enum value "set-priority-offset"
 	HTTPRequestRuleTypeSetPriorityOffset string = "set-priority-offset"
+
+	// HTTPRequestRuleTypeSetSrc captures enum value "set-src"
+	HTTPRequestRuleTypeSetSrc string = "set-src"
+
+	// HTTPRequestRuleTypeSetSrcPor captures enum value "set-src-por"
+	HTTPRequestRuleTypeSetSrcPor string = "set-src-por"
+
+	// HTTPRequestRuleTypeWaitForHandshake captures enum value "wait-for-handshake"
+	HTTPRequestRuleTypeWaitForHandshake string = "wait-for-handshake"
 )
 
 // prop value enum
