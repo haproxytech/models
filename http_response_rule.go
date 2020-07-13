@@ -139,6 +139,10 @@ type HTTPResponseRule struct {
 	// status reason
 	StatusReason string `json:"status_reason,omitempty"`
 
+	// strict mode
+	// Enum: [on off]
+	StrictMode string `json:"strict_mode,omitempty"`
+
 	// tos value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
 	TosValue string `json:"tos_value,omitempty"`
@@ -169,7 +173,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var track-sc0 track-sc1 track-sc2]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var track-sc0 track-sc1 track-sc2 strict-mode]
 	Type string `json:"type"`
 
 	// var expr
@@ -265,6 +269,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStatus(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStrictMode(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -713,6 +721,49 @@ func (m *HTTPResponseRule) validateStatus(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpResponseRuleTypeStrictModePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["on","off"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpResponseRuleTypeStrictModePropEnum = append(httpResponseRuleTypeStrictModePropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPResponseRuleStrictModeOn captures enum value "on"
+	HTTPResponseRuleStrictModeOn string = "on"
+
+	// HTTPResponseRuleStrictModeOff captures enum value "off"
+	HTTPResponseRuleStrictModeOff string = "off"
+)
+
+// prop value enum
+func (m *HTTPResponseRule) validateStrictModeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpResponseRuleTypeStrictModePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPResponseRule) validateStrictMode(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StrictMode) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateStrictModeEnum("strict_mode", "body", m.StrictMode); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPResponseRule) validateTosValue(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TosValue) { // not required
@@ -808,7 +859,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var","track-sc0","track-sc1","track-sc2"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var","track-sc0","track-sc1","track-sc2","strict-mode"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -901,6 +952,9 @@ const (
 
 	// HTTPResponseRuleTypeTrackSc2 captures enum value "track-sc2"
 	HTTPResponseRuleTypeTrackSc2 string = "track-sc2"
+
+	// HTTPResponseRuleTypeStrictMode captures enum value "strict-mode"
+	HTTPResponseRuleTypeStrictMode string = "strict-mode"
 )
 
 // prop value enum

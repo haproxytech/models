@@ -179,6 +179,10 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
+	// strict mode
+	// Enum: [on off]
+	StrictMode string `json:"strict_mode,omitempty"`
+
 	// tos value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
 	TosValue string `json:"tos_value,omitempty"`
@@ -209,7 +213,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var strict-mode]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -343,6 +347,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSpoeGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStrictMode(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -942,6 +950,49 @@ func (m *HTTPRequestRule) validateSpoeGroup(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpRequestRuleTypeStrictModePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["on","off"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpRequestRuleTypeStrictModePropEnum = append(httpRequestRuleTypeStrictModePropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPRequestRuleStrictModeOn captures enum value "on"
+	HTTPRequestRuleStrictModeOn string = "on"
+
+	// HTTPRequestRuleStrictModeOff captures enum value "off"
+	HTTPRequestRuleStrictModeOff string = "off"
+)
+
+// prop value enum
+func (m *HTTPRequestRule) validateStrictModeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpRequestRuleTypeStrictModePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateStrictMode(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StrictMode) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateStrictModeEnum("strict_mode", "body", m.StrictMode); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validateTosValue(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TosValue) { // not required
@@ -1037,7 +1088,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var","strict-mode"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1184,6 +1235,9 @@ const (
 
 	// HTTPRequestRuleTypeUnsetVar captures enum value "unset-var"
 	HTTPRequestRuleTypeUnsetVar string = "unset-var"
+
+	// HTTPRequestRuleTypeStrictMode captures enum value "strict-mode"
+	HTTPRequestRuleTypeStrictMode string = "strict-mode"
 )
 
 // prop value enum
