@@ -179,6 +179,10 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
+	// tos value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	TosValue string `json:"tos_value,omitempty"`
+
 	// track sc0 key
 	// Pattern: ^[^\s]+$
 	TrackSc0Key string `json:"track-sc0-key,omitempty"`
@@ -205,7 +209,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -339,6 +343,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSpoeGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTosValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -934,6 +942,19 @@ func (m *HTTPRequestRule) validateSpoeGroup(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateTosValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TosValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("tos_value", "body", string(m.TosValue), `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validateTrackSc0Key(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TrackSc0Key) { // not required
@@ -1016,7 +1037,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1154,6 +1175,15 @@ const (
 
 	// HTTPRequestRuleTypeWaitForHandshake captures enum value "wait-for-handshake"
 	HTTPRequestRuleTypeWaitForHandshake string = "wait-for-handshake"
+
+	// HTTPRequestRuleTypeSetTos captures enum value "set-tos"
+	HTTPRequestRuleTypeSetTos string = "set-tos"
+
+	// HTTPRequestRuleTypeSilentDrop captures enum value "silent-drop"
+	HTTPRequestRuleTypeSilentDrop string = "silent-drop"
+
+	// HTTPRequestRuleTypeUnsetVar captures enum value "unset-var"
+	HTTPRequestRuleTypeUnsetVar string = "unset-var"
 )
 
 // prop value enum

@@ -139,9 +139,13 @@ type HTTPResponseRule struct {
 	// status reason
 	StatusReason string `json:"status_reason,omitempty"`
 
+	// tos value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	TosValue string `json:"tos_value,omitempty"`
+
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var]
 	Type string `json:"type"`
 
 	// var expr
@@ -237,6 +241,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStatus(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTosValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -657,11 +665,24 @@ func (m *HTTPResponseRule) validateStatus(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPResponseRule) validateTosValue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TosValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("tos_value", "body", string(m.TosValue), `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -736,6 +757,15 @@ const (
 
 	// HTTPResponseRuleTypeSetNice captures enum value "set-nice"
 	HTTPResponseRuleTypeSetNice string = "set-nice"
+
+	// HTTPResponseRuleTypeSetTos captures enum value "set-tos"
+	HTTPResponseRuleTypeSetTos string = "set-tos"
+
+	// HTTPResponseRuleTypeSilentDrop captures enum value "silent-drop"
+	HTTPResponseRuleTypeSilentDrop string = "silent-drop"
+
+	// HTTPResponseRuleTypeUnsetVar captures enum value "unset-var"
+	HTTPResponseRuleTypeUnsetVar string = "unset-var"
 )
 
 // prop value enum
