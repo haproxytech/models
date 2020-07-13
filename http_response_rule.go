@@ -78,6 +78,13 @@ type HTTPResponseRule struct {
 	// Enum: [emerg alert crit err warning notice info debug silent]
 	LogLevel string `json:"log_level,omitempty"`
 
+	// lua action
+	// Pattern: ^[^\s]+$
+	LuaAction string `json:"lua_action,omitempty"`
+
+	// lua params
+	LuaParams string `json:"lua_params,omitempty"`
+
 	// map file
 	// Pattern: ^[^\s]+$
 	MapFile string `json:"map_file,omitempty"`
@@ -173,7 +180,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var track-sc0 track-sc1 track-sc2 strict-mode]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var track-sc0 track-sc1 track-sc2 strict-mode lua]
 	Type string `json:"type"`
 
 	// var expr
@@ -225,6 +232,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogLevel(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaAction(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -510,6 +521,19 @@ func (m *HTTPResponseRule) validateLogLevel(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateLogLevelEnum("log_level", "body", m.LogLevel); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateLuaAction(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LuaAction) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("lua_action", "body", string(m.LuaAction), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -859,7 +883,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var","track-sc0","track-sc1","track-sc2","strict-mode"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var","track-sc0","track-sc1","track-sc2","strict-mode","lua"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -955,6 +979,9 @@ const (
 
 	// HTTPResponseRuleTypeStrictMode captures enum value "strict-mode"
 	HTTPResponseRuleTypeStrictMode string = "strict-mode"
+
+	// HTTPResponseRuleTypeLua captures enum value "lua"
+	HTTPResponseRuleTypeLua string = "lua"
 )
 
 // prop value enum

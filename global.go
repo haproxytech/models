@@ -58,6 +58,9 @@ type Global struct {
 	// Pattern: ^[^\s]+$
 	Group string `json:"group,omitempty"`
 
+	// lua loads
+	LuaLoads []*LuaLoad `json:"lua_loads"`
+
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
 
@@ -117,6 +120,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaLoads(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -249,6 +256,31 @@ func (m *Global) validateGroup(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LuaLoads) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.LuaLoads); i++ {
+		if swag.IsZero(m.LuaLoads[i]) { // not required
+			continue
+		}
+
+		if m.LuaLoads[i] != nil {
+			if err := m.LuaLoads[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("lua_loads" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *Global) validateUser(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.User) { // not required
@@ -341,6 +373,62 @@ func (m *CPUMap) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *CPUMap) UnmarshalBinary(b []byte) error {
 	var res CPUMap
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// LuaLoad lua load
+//
+// swagger:model LuaLoad
+type LuaLoad struct {
+
+	// file
+	// Required: true
+	// Pattern: ^[^\s]+$
+	File *string `json:"file"`
+}
+
+// Validate validates this lua load
+func (m *LuaLoad) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *LuaLoad) validateFile(formats strfmt.Registry) error {
+
+	if err := validate.Required("file", "body", m.File); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("file", "body", string(*m.File), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *LuaLoad) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *LuaLoad) UnmarshalBinary(b []byte) error {
+	var res LuaLoad
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
