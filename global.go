@@ -79,11 +79,17 @@ type Global struct {
 	// ssl default bind ciphers
 	SslDefaultBindCiphers string `json:"ssl_default_bind_ciphers,omitempty"`
 
+	// ssl default bind ciphersuites
+	SslDefaultBindCiphersuites string `json:"ssl_default_bind_ciphersuites,omitempty"`
+
 	// ssl default bind options
 	SslDefaultBindOptions string `json:"ssl_default_bind_options,omitempty"`
 
 	// ssl default server ciphers
 	SslDefaultServerCiphers string `json:"ssl_default_server_ciphers,omitempty"`
+
+	// ssl default server ciphersuites
+	SslDefaultServerCiphersuites string `json:"ssl_default_server_ciphersuites,omitempty"`
 
 	// ssl default server options
 	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
