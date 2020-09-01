@@ -58,6 +58,9 @@ type Global struct {
 	// Pattern: ^[^\s]+$
 	Group string `json:"group,omitempty"`
 
+	// log send hostname
+	LogSendHostname *GlobalLogSendHostname `json:"log_send_hostname,omitempty"`
+
 	// lua loads
 	LuaLoads []*LuaLoad `json:"lua_loads"`
 
@@ -126,6 +129,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLogSendHostname(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -262,6 +269,24 @@ func (m *Global) validateGroup(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateLogSendHostname(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LogSendHostname) { // not required
+		return nil
+	}
+
+	if m.LogSendHostname != nil {
+		if err := m.LogSendHostname.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("log_send_hostname")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.LuaLoads) { // not required
@@ -379,6 +404,113 @@ func (m *CPUMap) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *CPUMap) UnmarshalBinary(b []byte) error {
 	var res CPUMap
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalLogSendHostname global log send hostname
+//
+// swagger:model GlobalLogSendHostname
+type GlobalLogSendHostname struct {
+
+	// enabled
+	// Required: true
+	// Enum: [enabled disabled]
+	Enabled *string `json:"enabled"`
+
+	// param
+	// Pattern: ^[^\s]+$
+	Param string `json:"param,omitempty"`
+}
+
+// Validate validates this global log send hostname
+func (m *GlobalLogSendHostname) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateEnabled(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateParam(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var globalLogSendHostnameTypeEnabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalLogSendHostnameTypeEnabledPropEnum = append(globalLogSendHostnameTypeEnabledPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalLogSendHostnameEnabledEnabled captures enum value "enabled"
+	GlobalLogSendHostnameEnabledEnabled string = "enabled"
+
+	// GlobalLogSendHostnameEnabledDisabled captures enum value "disabled"
+	GlobalLogSendHostnameEnabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalLogSendHostname) validateEnabledEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalLogSendHostnameTypeEnabledPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalLogSendHostname) validateEnabled(formats strfmt.Registry) error {
+
+	if err := validate.Required("log_send_hostname"+"."+"enabled", "body", m.Enabled); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateEnabledEnum("log_send_hostname"+"."+"enabled", "body", *m.Enabled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalLogSendHostname) validateParam(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Param) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("log_send_hostname"+"."+"param", "body", string(m.Param), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalLogSendHostname) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalLogSendHostname) UnmarshalBinary(b []byte) error {
+	var res GlobalLogSendHostname
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
