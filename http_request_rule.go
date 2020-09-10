@@ -71,7 +71,7 @@ type HTTPRequestRule struct {
 
 	// deny status
 	// Enum: [200 400 403 405 408 425 429 500 502 503 504]
-	DenyStatus int64 `json:"deny_status,omitempty"`
+	DenyStatus *int64 `json:"deny_status,omitempty"`
 
 	// expr
 	Expr string `json:"expr,omitempty"`
@@ -153,7 +153,7 @@ type HTTPRequestRule struct {
 
 	// redir code
 	// Enum: [301 302 303 307 308]
-	RedirCode int64 `json:"redir_code,omitempty"`
+	RedirCode *int64 `json:"redir_code,omitempty"`
 
 	// redir option
 	RedirOption string `json:"redir_option,omitempty"`
@@ -546,7 +546,7 @@ func (m *HTTPRequestRule) validateDenyStatus(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateDenyStatusEnum("deny_status", "body", m.DenyStatus); err != nil {
+	if err := m.validateDenyStatusEnum("deny_status", "body", *m.DenyStatus); err != nil {
 		return err
 	}
 
@@ -882,7 +882,7 @@ func (m *HTTPRequestRule) validateRedirCode(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateRedirCodeEnum("redir_code", "body", m.RedirCode); err != nil {
+	if err := m.validateRedirCodeEnum("redir_code", "body", *m.RedirCode); err != nil {
 		return err
 	}
 

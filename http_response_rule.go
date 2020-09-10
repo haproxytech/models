@@ -108,7 +108,7 @@ type HTTPResponseRule struct {
 
 	// redir code
 	// Enum: [301 302 303]
-	RedirCode int64 `json:"redir_code,omitempty"`
+	RedirCode *int64 `json:"redir_code,omitempty"`
 
 	// redir option
 	RedirOption string `json:"redir_option,omitempty"`
@@ -636,7 +636,7 @@ func (m *HTTPResponseRule) validateRedirCode(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateRedirCodeEnum("redir_code", "body", m.RedirCode); err != nil {
+	if err := m.validateRedirCodeEnum("redir_code", "body", *m.RedirCode); err != nil {
 		return err
 	}
 
