@@ -83,39 +83,136 @@ type Server struct {
 	// Enum: [enabled disabled]
 	CheckSsl string `json:"check-ssl,omitempty"`
 
+	// check alpn
+	// Pattern: ^[^\s]+$
+	CheckAlpn string `json:"check_alpn,omitempty"`
+
+	// check proto
+	// Pattern: ^[^\s]+$
+	CheckProto string `json:"check_proto,omitempty"`
+
+	// check via socks4
+	// Enum: [enabled disabled]
+	CheckViaSocks4 string `json:"check_via_socks4,omitempty"`
+
+	// ciphers
+	Ciphers string `json:"ciphers,omitempty"`
+
+	// ciphersuites
+	Ciphersuites string `json:"ciphersuites,omitempty"`
+
 	// cookie
 	// Pattern: ^[^\s]+$
 	Cookie string `json:"cookie,omitempty"`
 
+	// crl file
+	CrlFile string `json:"crl_file,omitempty"`
+
 	// downinter
 	Downinter *int64 `json:"downinter,omitempty"`
 
+	// error limit
+	ErrorLimit int64 `json:"error_limit,omitempty"`
+
+	// fall
+	Fall *int64 `json:"fall,omitempty"`
+
 	// fastinter
 	Fastinter *int64 `json:"fastinter,omitempty"`
+
+	// force sslv3
+	// Enum: [enabled disabled]
+	ForceSslv3 string `json:"force_sslv3,omitempty"`
+
+	// force tlsv10
+	// Enum: [enabled disabled]
+	ForceTlsv10 string `json:"force_tlsv10,omitempty"`
+
+	// force tlsv11
+	// Enum: [enabled disabled]
+	ForceTlsv11 string `json:"force_tlsv11,omitempty"`
+
+	// force tlsv12
+	// Enum: [enabled disabled]
+	ForceTlsv12 string `json:"force_tlsv12,omitempty"`
+
+	// force tlsv13
+	// Enum: [enabled disabled]
+	ForceTlsv13 string `json:"force_tlsv13,omitempty"`
 
 	// health check port
 	// Maximum: 65535
 	// Minimum: 1
 	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
 
+	// id
+	ID *int64 `json:"id,omitempty"`
+
 	// init addr
 	// Pattern: ^[^\s]+$
-	InitAddr string `json:"init-addr,omitempty"`
+	InitAddr *string `json:"init-addr,omitempty"`
 
 	// inter
 	Inter *int64 `json:"inter,omitempty"`
+
+	// log proto
+	// Enum: [legacy octet-count]
+	LogProto string `json:"log_proto,omitempty"`
 
 	// maintenance
 	// Enum: [enabled disabled]
 	Maintenance string `json:"maintenance,omitempty"`
 
+	// max reuse
+	MaxReuse *int64 `json:"max_reuse,omitempty"`
+
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
+
+	// maxqueue
+	Maxqueue *int64 `json:"maxqueue,omitempty"`
+
+	// minconn
+	Minconn *int64 `json:"minconn,omitempty"`
 
 	// name
 	// Required: true
 	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
+
+	// namespace
+	Namespace string `json:"namespace,omitempty"`
+
+	// no sslv3
+	// Enum: [enabled disabled]
+	NoSslv3 string `json:"no_sslv3,omitempty"`
+
+	// no tlsv10
+	// Enum: [enabled disabled]
+	NoTlsv10 string `json:"no_tlsv10,omitempty"`
+
+	// no tlsv11
+	// Enum: [enabled disabled]
+	NoTlsv11 string `json:"no_tlsv11,omitempty"`
+
+	// no tlsv12
+	// Enum: [enabled disabled]
+	NoTlsv12 string `json:"no_tlsv12,omitempty"`
+
+	// no tlsv13
+	// Enum: [enabled disabled]
+	NoTlsv13 string `json:"no_tlsv13,omitempty"`
+
+	// no verifyhost
+	// Enum: [enabled disabled]
+	NoVerifyhost string `json:"no_verifyhost,omitempty"`
+
+	// npn
+	Npn string `json:"npn,omitempty"`
+
+	// observe
+	// Enum: [layer4 layer7]
+	Observe string `json:"observe,omitempty"`
 
 	// on error
 	// Enum: [fastinter fail-check sudden-death mark-down]
@@ -129,6 +226,15 @@ type Server struct {
 	// Enum: [shutdown-backup-sessions]
 	OnMarkedUp string `json:"on-marked-up,omitempty"`
 
+	// pool low conn
+	PoolLowConn *int64 `json:"pool_low_conn,omitempty"`
+
+	// pool max conn
+	PoolMaxConn *int64 `json:"pool_max_conn,omitempty"`
+
+	// pool purge delay
+	PoolPurgeDelay *int64 `json:"pool_purge_delay,omitempty"`
+
 	// port
 	// Maximum: 65535
 	// Minimum: 1
@@ -141,17 +247,27 @@ type Server struct {
 	// proxy v2 options
 	ProxyV2Options []string `json:"proxy-v2-options"`
 
+	// redir
+	Redir string `json:"redir,omitempty"`
+
 	// resolve net
-	// Pattern: ^[^\s]+$
+	// Pattern: ^[^,\s][^\,]*[^,\s]*$
 	ResolveNet string `json:"resolve-net,omitempty"`
 
 	// resolve prefer
-	// Pattern: ^[^\s]+$
+	// Enum: [ipv4 ipv6]
 	ResolvePrefer string `json:"resolve-prefer,omitempty"`
+
+	// resolve opts
+	// Pattern: ^[^,\s][^\,]*[^,\s]*$
+	ResolveOpts string `json:"resolve_opts,omitempty"`
 
 	// resolvers
 	// Pattern: ^[^\s]+$
 	Resolvers string `json:"resolvers,omitempty"`
+
+	// rise
+	Rise *int64 `json:"rise,omitempty"`
 
 	// send proxy
 	// Enum: [enabled disabled]
@@ -161,12 +277,27 @@ type Server struct {
 	// Enum: [enabled disabled]
 	SendProxyV2 string `json:"send-proxy-v2,omitempty"`
 
+	// send proxy v2 ssl
+	// Enum: [enabled disabled]
+	SendProxyV2Ssl string `json:"send_proxy_v2_ssl,omitempty"`
+
+	// send proxy v2 ssl cn
+	// Enum: [enabled disabled]
+	SendProxyV2SslCn string `json:"send_proxy_v2_ssl_cn,omitempty"`
+
 	// slowstart
 	Slowstart *int64 `json:"slowstart,omitempty"`
 
 	// sni
 	// Pattern: ^[^\s]+$
 	Sni string `json:"sni,omitempty"`
+
+	// socks4
+	// Pattern: ^[^\s]+$
+	Socks4 string `json:"socks4,omitempty"`
+
+	// source
+	Source string `json:"source,omitempty"`
 
 	// ssl
 	// Enum: [enabled disabled]
@@ -180,13 +311,42 @@ type Server struct {
 	// Pattern: ^[^\s]+$
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
+	// ssl max ver
+	// Enum: [SSLv3 TLSv1.0 TLSv1.1 TLSv1.2 TLSv1.3]
+	SslMaxVer string `json:"ssl_max_ver,omitempty"`
+
+	// ssl min ver
+	// Enum: [SSLv3 TLSv1.0 TLSv1.1 TLSv1.2 TLSv1.3]
+	SslMinVer string `json:"ssl_min_ver,omitempty"`
+
+	// ssl reuse
+	// Enum: [enabled disabled]
+	SslReuse string `json:"ssl_reuse,omitempty"`
+
+	// stick
+	// Enum: [enabled disabled]
+	Stick string `json:"stick,omitempty"`
+
+	// tcp ut
+	TCPUt int64 `json:"tcp_ut,omitempty"`
+
+	// tfo
+	// Enum: [enabled disabled]
+	Tfo string `json:"tfo,omitempty"`
+
 	// tls tickets
 	// Enum: [enabled disabled]
 	TLSTickets string `json:"tls_tickets,omitempty"`
 
+	// track
+	Track string `json:"track,omitempty"`
+
 	// verify
 	// Enum: [none required]
 	Verify string `json:"verify,omitempty"`
+
+	// verifyhost
+	Verifyhost string `json:"verifyhost,omitempty"`
 
 	// weight
 	Weight *int64 `json:"weight,omitempty"`
@@ -232,7 +392,39 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCheckAlpn(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckProto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckViaSocks4(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCookie(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForceSslv3(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForceTlsv10(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForceTlsv11(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForceTlsv12(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForceTlsv13(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -244,11 +436,43 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateLogProto(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateMaintenance(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNoSslv3(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNoTlsv10(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNoTlsv11(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNoTlsv12(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNoTlsv13(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNoVerifyhost(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateObserve(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -284,6 +508,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateResolveOpts(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateResolvers(formats); err != nil {
 		res = append(res, err)
 	}
@@ -296,7 +524,19 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSendProxyV2Ssl(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSendProxyV2SslCn(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSni(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSocks4(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -309,6 +549,26 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslCertificate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslMaxVer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslMinVer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslReuse(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStick(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTfo(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -567,6 +827,75 @@ func (m *Server) validateCheckSsl(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Server) validateCheckAlpn(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckAlpn) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("check_alpn", "body", string(m.CheckAlpn), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateCheckProto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckProto) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("check_proto", "body", string(m.CheckProto), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeCheckViaSocks4PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeCheckViaSocks4PropEnum = append(serverTypeCheckViaSocks4PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerCheckViaSocks4Enabled captures enum value "enabled"
+	ServerCheckViaSocks4Enabled string = "enabled"
+
+	// ServerCheckViaSocks4Disabled captures enum value "disabled"
+	ServerCheckViaSocks4Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateCheckViaSocks4Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeCheckViaSocks4PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateCheckViaSocks4(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckViaSocks4) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckViaSocks4Enum("check_via_socks4", "body", m.CheckViaSocks4); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Server) validateCookie(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Cookie) { // not required
@@ -574,6 +903,221 @@ func (m *Server) validateCookie(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("cookie", "body", string(m.Cookie), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeForceSslv3PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeForceSslv3PropEnum = append(serverTypeForceSslv3PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerForceSslv3Enabled captures enum value "enabled"
+	ServerForceSslv3Enabled string = "enabled"
+
+	// ServerForceSslv3Disabled captures enum value "disabled"
+	ServerForceSslv3Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateForceSslv3Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeForceSslv3PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateForceSslv3(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ForceSslv3) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateForceSslv3Enum("force_sslv3", "body", m.ForceSslv3); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeForceTlsv10PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeForceTlsv10PropEnum = append(serverTypeForceTlsv10PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerForceTlsv10Enabled captures enum value "enabled"
+	ServerForceTlsv10Enabled string = "enabled"
+
+	// ServerForceTlsv10Disabled captures enum value "disabled"
+	ServerForceTlsv10Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateForceTlsv10Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeForceTlsv10PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateForceTlsv10(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ForceTlsv10) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateForceTlsv10Enum("force_tlsv10", "body", m.ForceTlsv10); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeForceTlsv11PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeForceTlsv11PropEnum = append(serverTypeForceTlsv11PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerForceTlsv11Enabled captures enum value "enabled"
+	ServerForceTlsv11Enabled string = "enabled"
+
+	// ServerForceTlsv11Disabled captures enum value "disabled"
+	ServerForceTlsv11Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateForceTlsv11Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeForceTlsv11PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateForceTlsv11(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ForceTlsv11) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateForceTlsv11Enum("force_tlsv11", "body", m.ForceTlsv11); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeForceTlsv12PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeForceTlsv12PropEnum = append(serverTypeForceTlsv12PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerForceTlsv12Enabled captures enum value "enabled"
+	ServerForceTlsv12Enabled string = "enabled"
+
+	// ServerForceTlsv12Disabled captures enum value "disabled"
+	ServerForceTlsv12Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateForceTlsv12Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeForceTlsv12PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateForceTlsv12(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ForceTlsv12) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateForceTlsv12Enum("force_tlsv12", "body", m.ForceTlsv12); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeForceTlsv13PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeForceTlsv13PropEnum = append(serverTypeForceTlsv13PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerForceTlsv13Enabled captures enum value "enabled"
+	ServerForceTlsv13Enabled string = "enabled"
+
+	// ServerForceTlsv13Disabled captures enum value "disabled"
+	ServerForceTlsv13Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateForceTlsv13Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeForceTlsv13PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateForceTlsv13(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ForceTlsv13) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateForceTlsv13Enum("force_tlsv13", "body", m.ForceTlsv13); err != nil {
 		return err
 	}
 
@@ -603,7 +1147,50 @@ func (m *Server) validateInitAddr(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("init-addr", "body", string(m.InitAddr), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("init-addr", "body", string(*m.InitAddr), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeLogProtoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["legacy","octet-count"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeLogProtoPropEnum = append(serverTypeLogProtoPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerLogProtoLegacy captures enum value "legacy"
+	ServerLogProtoLegacy string = "legacy"
+
+	// ServerLogProtoOctetCount captures enum value "octet-count"
+	ServerLogProtoOctetCount string = "octet-count"
+)
+
+// prop value enum
+func (m *Server) validateLogProtoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeLogProtoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateLogProto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LogProto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLogProtoEnum("log_proto", "body", m.LogProto); err != nil {
 		return err
 	}
 
@@ -660,6 +1247,307 @@ func (m *Server) validateName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeNoSslv3PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeNoSslv3PropEnum = append(serverTypeNoSslv3PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerNoSslv3Enabled captures enum value "enabled"
+	ServerNoSslv3Enabled string = "enabled"
+
+	// ServerNoSslv3Disabled captures enum value "disabled"
+	ServerNoSslv3Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateNoSslv3Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeNoSslv3PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateNoSslv3(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NoSslv3) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNoSslv3Enum("no_sslv3", "body", m.NoSslv3); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeNoTlsv10PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeNoTlsv10PropEnum = append(serverTypeNoTlsv10PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerNoTlsv10Enabled captures enum value "enabled"
+	ServerNoTlsv10Enabled string = "enabled"
+
+	// ServerNoTlsv10Disabled captures enum value "disabled"
+	ServerNoTlsv10Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateNoTlsv10Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeNoTlsv10PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateNoTlsv10(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NoTlsv10) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNoTlsv10Enum("no_tlsv10", "body", m.NoTlsv10); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeNoTlsv11PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeNoTlsv11PropEnum = append(serverTypeNoTlsv11PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerNoTlsv11Enabled captures enum value "enabled"
+	ServerNoTlsv11Enabled string = "enabled"
+
+	// ServerNoTlsv11Disabled captures enum value "disabled"
+	ServerNoTlsv11Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateNoTlsv11Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeNoTlsv11PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateNoTlsv11(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NoTlsv11) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNoTlsv11Enum("no_tlsv11", "body", m.NoTlsv11); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeNoTlsv12PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeNoTlsv12PropEnum = append(serverTypeNoTlsv12PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerNoTlsv12Enabled captures enum value "enabled"
+	ServerNoTlsv12Enabled string = "enabled"
+
+	// ServerNoTlsv12Disabled captures enum value "disabled"
+	ServerNoTlsv12Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateNoTlsv12Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeNoTlsv12PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateNoTlsv12(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NoTlsv12) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNoTlsv12Enum("no_tlsv12", "body", m.NoTlsv12); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeNoTlsv13PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeNoTlsv13PropEnum = append(serverTypeNoTlsv13PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerNoTlsv13Enabled captures enum value "enabled"
+	ServerNoTlsv13Enabled string = "enabled"
+
+	// ServerNoTlsv13Disabled captures enum value "disabled"
+	ServerNoTlsv13Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateNoTlsv13Enum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeNoTlsv13PropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateNoTlsv13(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NoTlsv13) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNoTlsv13Enum("no_tlsv13", "body", m.NoTlsv13); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeNoVerifyhostPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeNoVerifyhostPropEnum = append(serverTypeNoVerifyhostPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerNoVerifyhostEnabled captures enum value "enabled"
+	ServerNoVerifyhostEnabled string = "enabled"
+
+	// ServerNoVerifyhostDisabled captures enum value "disabled"
+	ServerNoVerifyhostDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateNoVerifyhostEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeNoVerifyhostPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateNoVerifyhost(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NoVerifyhost) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNoVerifyhostEnum("no_verifyhost", "body", m.NoVerifyhost); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeObservePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["layer4","layer7"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeObservePropEnum = append(serverTypeObservePropEnum, v)
+	}
+}
+
+const (
+
+	// ServerObserveLayer4 captures enum value "layer4"
+	ServerObserveLayer4 string = "layer4"
+
+	// ServerObserveLayer7 captures enum value "layer7"
+	ServerObserveLayer7 string = "layer7"
+)
+
+// prop value enum
+func (m *Server) validateObserveEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeObservePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateObserve(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Observe) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateObserveEnum("observe", "body", m.Observe); err != nil {
 		return err
 	}
 
@@ -868,10 +1756,39 @@ func (m *Server) validateResolveNet(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("resolve-net", "body", string(m.ResolveNet), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("resolve-net", "body", string(m.ResolveNet), `^[^,\s][^\,]*[^,\s]*$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+var serverTypeResolvePreferPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["ipv4","ipv6"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeResolvePreferPropEnum = append(serverTypeResolvePreferPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerResolvePreferIPV4 captures enum value "ipv4"
+	ServerResolvePreferIPV4 string = "ipv4"
+
+	// ServerResolvePreferIPV6 captures enum value "ipv6"
+	ServerResolvePreferIPV6 string = "ipv6"
+)
+
+// prop value enum
+func (m *Server) validateResolvePreferEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeResolvePreferPropEnum); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -881,7 +1798,21 @@ func (m *Server) validateResolvePrefer(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("resolve-prefer", "body", string(m.ResolvePrefer), `^[^\s]+$`); err != nil {
+	// value enum
+	if err := m.validateResolvePreferEnum("resolve-prefer", "body", m.ResolvePrefer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateResolveOpts(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ResolveOpts) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("resolve_opts", "body", string(m.ResolveOpts), `^[^,\s][^\,]*[^,\s]*$`); err != nil {
 		return err
 	}
 
@@ -987,6 +1918,92 @@ func (m *Server) validateSendProxyV2(formats strfmt.Registry) error {
 	return nil
 }
 
+var serverTypeSendProxyV2SslPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeSendProxyV2SslPropEnum = append(serverTypeSendProxyV2SslPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerSendProxyV2SslEnabled captures enum value "enabled"
+	ServerSendProxyV2SslEnabled string = "enabled"
+
+	// ServerSendProxyV2SslDisabled captures enum value "disabled"
+	ServerSendProxyV2SslDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateSendProxyV2SslEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeSendProxyV2SslPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateSendProxyV2Ssl(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SendProxyV2Ssl) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSendProxyV2SslEnum("send_proxy_v2_ssl", "body", m.SendProxyV2Ssl); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeSendProxyV2SslCnPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeSendProxyV2SslCnPropEnum = append(serverTypeSendProxyV2SslCnPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerSendProxyV2SslCnEnabled captures enum value "enabled"
+	ServerSendProxyV2SslCnEnabled string = "enabled"
+
+	// ServerSendProxyV2SslCnDisabled captures enum value "disabled"
+	ServerSendProxyV2SslCnDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateSendProxyV2SslCnEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeSendProxyV2SslCnPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateSendProxyV2SslCn(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SendProxyV2SslCn) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSendProxyV2SslCnEnum("send_proxy_v2_ssl_cn", "body", m.SendProxyV2SslCn); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Server) validateSni(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Sni) { // not required
@@ -994,6 +2011,19 @@ func (m *Server) validateSni(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("sni", "body", string(m.Sni), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Server) validateSocks4(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Socks4) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("socks4", "body", string(m.Socks4), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -1063,6 +2093,239 @@ func (m *Server) validateSslCertificate(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("ssl_certificate", "body", string(m.SslCertificate), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeSslMaxVerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeSslMaxVerPropEnum = append(serverTypeSslMaxVerPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerSslMaxVerSSLv3 captures enum value "SSLv3"
+	ServerSslMaxVerSSLv3 string = "SSLv3"
+
+	// ServerSslMaxVerTLSv10 captures enum value "TLSv1.0"
+	ServerSslMaxVerTLSv10 string = "TLSv1.0"
+
+	// ServerSslMaxVerTLSv11 captures enum value "TLSv1.1"
+	ServerSslMaxVerTLSv11 string = "TLSv1.1"
+
+	// ServerSslMaxVerTLSv12 captures enum value "TLSv1.2"
+	ServerSslMaxVerTLSv12 string = "TLSv1.2"
+
+	// ServerSslMaxVerTLSv13 captures enum value "TLSv1.3"
+	ServerSslMaxVerTLSv13 string = "TLSv1.3"
+)
+
+// prop value enum
+func (m *Server) validateSslMaxVerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeSslMaxVerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateSslMaxVer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslMaxVer) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslMaxVerEnum("ssl_max_ver", "body", m.SslMaxVer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeSslMinVerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeSslMinVerPropEnum = append(serverTypeSslMinVerPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerSslMinVerSSLv3 captures enum value "SSLv3"
+	ServerSslMinVerSSLv3 string = "SSLv3"
+
+	// ServerSslMinVerTLSv10 captures enum value "TLSv1.0"
+	ServerSslMinVerTLSv10 string = "TLSv1.0"
+
+	// ServerSslMinVerTLSv11 captures enum value "TLSv1.1"
+	ServerSslMinVerTLSv11 string = "TLSv1.1"
+
+	// ServerSslMinVerTLSv12 captures enum value "TLSv1.2"
+	ServerSslMinVerTLSv12 string = "TLSv1.2"
+
+	// ServerSslMinVerTLSv13 captures enum value "TLSv1.3"
+	ServerSslMinVerTLSv13 string = "TLSv1.3"
+)
+
+// prop value enum
+func (m *Server) validateSslMinVerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeSslMinVerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateSslMinVer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslMinVer) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslMinVerEnum("ssl_min_ver", "body", m.SslMinVer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeSslReusePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeSslReusePropEnum = append(serverTypeSslReusePropEnum, v)
+	}
+}
+
+const (
+
+	// ServerSslReuseEnabled captures enum value "enabled"
+	ServerSslReuseEnabled string = "enabled"
+
+	// ServerSslReuseDisabled captures enum value "disabled"
+	ServerSslReuseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateSslReuseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeSslReusePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateSslReuse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslReuse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslReuseEnum("ssl_reuse", "body", m.SslReuse); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeStickPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeStickPropEnum = append(serverTypeStickPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerStickEnabled captures enum value "enabled"
+	ServerStickEnabled string = "enabled"
+
+	// ServerStickDisabled captures enum value "disabled"
+	ServerStickDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateStickEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeStickPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateStick(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Stick) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateStickEnum("stick", "body", m.Stick); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeTfoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeTfoPropEnum = append(serverTypeTfoPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerTfoEnabled captures enum value "enabled"
+	ServerTfoEnabled string = "enabled"
+
+	// ServerTfoDisabled captures enum value "disabled"
+	ServerTfoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Server) validateTfoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeTfoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateTfo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Tfo) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTfoEnum("tfo", "body", m.Tfo); err != nil {
 		return err
 	}
 
