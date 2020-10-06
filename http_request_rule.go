@@ -178,6 +178,9 @@ type HTTPRequestRule struct {
 	// sc int
 	ScInt *int64 `json:"sc_int,omitempty"`
 
+	// service name
+	ServiceName string `json:"service_name,omitempty"`
+
 	// spoe engine
 	// Pattern: ^[^\s]+$
 	SpoeEngine string `json:"spoe_engine,omitempty"`
@@ -220,7 +223,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var strict-mode lua]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var strict-mode lua use-service]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -1112,7 +1115,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var","strict-mode","lua"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var","strict-mode","lua","use-service"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1265,6 +1268,9 @@ const (
 
 	// HTTPRequestRuleTypeLua captures enum value "lua"
 	HTTPRequestRuleTypeLua string = "lua"
+
+	// HTTPRequestRuleTypeUseService captures enum value "use-service"
+	HTTPRequestRuleTypeUseService string = "use-service"
 )
 
 // prop value enum
