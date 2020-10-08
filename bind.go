@@ -178,6 +178,11 @@ type Bind struct {
 	// Minimum: 1
 	Port *int64 `json:"port,omitempty"`
 
+	// port range end
+	// Maximum: 65535
+	// Minimum: 1
+	PortRangeEnd *int64 `json:"port-range-end,omitempty"`
+
 	// prefer client ciphers
 	PreferClientCiphers bool `json:"prefer_client_ciphers,omitempty"`
 
@@ -264,6 +269,10 @@ func (m *Bind) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePortRangeEnd(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -397,6 +406,23 @@ func (m *Bind) validatePort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Bind) validatePortRangeEnd(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PortRangeEnd) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("port-range-end", "body", int64(*m.PortRangeEnd), 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("port-range-end", "body", int64(*m.PortRangeEnd), 65535, false); err != nil {
 		return err
 	}
 
