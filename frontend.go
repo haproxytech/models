@@ -111,6 +111,12 @@ type Frontend struct {
 	// Enum: [http tcp]
 	Mode string `json:"mode,omitempty"`
 
+	// monitor fail
+	MonitorFail *MonitorFail `json:"monitor_fail,omitempty"`
+
+	// monitor uri
+	MonitorURI MonitorURI `json:"monitor_uri,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
@@ -182,6 +188,14 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMonitorFail(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMonitorURI(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -637,6 +651,40 @@ func (m *Frontend) validateMode(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateModeEnum("mode", "body", m.Mode); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateMonitorFail(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MonitorFail) { // not required
+		return nil
+	}
+
+	if m.MonitorFail != nil {
+		if err := m.MonitorFail.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("monitor_fail")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateMonitorURI(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MonitorURI) { // not required
+		return nil
+	}
+
+	if err := m.MonitorURI.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("monitor_uri")
+		}
 		return err
 	}
 

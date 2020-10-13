@@ -168,6 +168,9 @@ type Defaults struct {
 	// Enum: [tcp http]
 	Mode string `json:"mode,omitempty"`
 
+	// monitor uri
+	MonitorURI MonitorURI `json:"monitor_uri,omitempty"`
+
 	// queue timeout
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
 
@@ -302,6 +305,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMonitorURI(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1177,6 +1184,22 @@ func (m *Defaults) validateMode(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateModeEnum("mode", "body", m.Mode); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateMonitorURI(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MonitorURI) { // not required
+		return nil
+	}
+
+	if err := m.MonitorURI.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("monitor_uri")
+		}
 		return err
 	}
 
