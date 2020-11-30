@@ -148,6 +148,9 @@ type Backend struct {
 
 	// stick table
 	StickTable *BackendStickTable `json:"stick_table,omitempty"`
+
+	// tunnel timeout
+	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
 }
 
 // Validate validates this backend

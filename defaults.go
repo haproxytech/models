@@ -189,6 +189,9 @@ type Defaults struct {
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
 
+	// tunnel timeout
+	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
+
 	// unique id format
 	UniqueIDFormat string `json:"unique_id_format,omitempty"`
 
