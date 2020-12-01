@@ -98,7 +98,8 @@ type Global struct {
 	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
 
 	// ssl mode async
-	SslModeAsync bool `json:"ssl_mode_async,omitempty"`
+	// Enum: [enabled disabled]
+	SslModeAsync string `json:"ssl_mode_async,omitempty"`
 
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
@@ -140,6 +141,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLuaLoads(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslModeAsync(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -310,6 +315,49 @@ func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+var globalTypeSslModeAsyncPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeSslModeAsyncPropEnum = append(globalTypeSslModeAsyncPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalSslModeAsyncEnabled captures enum value "enabled"
+	GlobalSslModeAsyncEnabled string = "enabled"
+
+	// GlobalSslModeAsyncDisabled captures enum value "disabled"
+	GlobalSslModeAsyncDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Global) validateSslModeAsyncEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTypeSslModeAsyncPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateSslModeAsync(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslModeAsync) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslModeAsyncEnum("ssl_mode_async", "body", m.SslModeAsync); err != nil {
+		return err
 	}
 
 	return nil
