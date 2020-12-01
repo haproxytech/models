@@ -97,6 +97,9 @@ type Global struct {
 	// ssl default server options
 	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
 
+	// ssl mode async
+	SslModeAsync bool `json:"ssl_mode_async,omitempty"`
+
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
 
