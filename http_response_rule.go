@@ -59,15 +59,12 @@ type HTTPResponseRule struct {
 	CondTest string `json:"cond_test,omitempty"`
 
 	// hdr format
-	// Pattern: ^[^\s]+$
 	HdrFormat string `json:"hdr_format,omitempty"`
 
 	// hdr match
-	// Pattern: ^[^\s]+$
 	HdrMatch string `json:"hdr_match,omitempty"`
 
 	// hdr name
-	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
 
 	// index
@@ -212,18 +209,6 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHdrFormat(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHdrMatch(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHdrName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -409,45 +394,6 @@ func (m *HTTPResponseRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateHdrFormat(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrFormat) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_format", "body", string(m.HdrFormat), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateHdrMatch(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrMatch) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_match", "body", string(m.HdrMatch), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateHdrName(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrName) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_name", "body", string(m.HdrName), `^[^\s]+$`); err != nil {
 		return err
 	}
 

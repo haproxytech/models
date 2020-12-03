@@ -40,7 +40,6 @@ type Balance struct {
 	Algorithm *string `json:"algorithm"`
 
 	// hdr name
-	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
 
 	// hdr use domain only
@@ -81,10 +80,6 @@ func (m *Balance) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAlgorithm(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHdrName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -175,19 +170,6 @@ func (m *Balance) validateAlgorithm(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAlgorithmEnum("algorithm", "body", *m.Algorithm); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Balance) validateHdrName(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrName) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_name", "body", string(m.HdrName), `^[^\s]+$`); err != nil {
 		return err
 	}
 

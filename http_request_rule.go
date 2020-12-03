@@ -77,15 +77,12 @@ type HTTPRequestRule struct {
 	Expr string `json:"expr,omitempty"`
 
 	// hdr format
-	// Pattern: ^[^\s]+$
 	HdrFormat string `json:"hdr_format,omitempty"`
 
 	// hdr match
-	// Pattern: ^[^\s]+$
 	HdrMatch string `json:"hdr_match,omitempty"`
 
 	// hdr name
-	// Pattern: ^[^\s]+$
 	HdrName string `json:"hdr_name,omitempty"`
 
 	// hint format
@@ -273,18 +270,6 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDenyStatus(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHdrFormat(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHdrMatch(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHdrName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -550,45 +535,6 @@ func (m *HTTPRequestRule) validateDenyStatus(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateDenyStatusEnum("deny_status", "body", *m.DenyStatus); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPRequestRule) validateHdrFormat(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrFormat) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_format", "body", string(m.HdrFormat), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPRequestRule) validateHdrMatch(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrMatch) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_match", "body", string(m.HdrMatch), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPRequestRule) validateHdrName(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HdrName) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("hdr_name", "body", string(m.HdrName), `^[^\s]+$`); err != nil {
 		return err
 	}
 
