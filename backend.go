@@ -41,7 +41,7 @@ type Backend struct {
 	Abortonclose string `json:"abortonclose,omitempty"`
 
 	// adv check
-	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
+	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check httpchk]
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// allbackups
@@ -115,8 +115,8 @@ type Backend struct {
 	// Enum: [aggressive always never safe]
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
-	// httpchk
-	Httpchk *Httpchk `json:"httpchk,omitempty"`
+	// httpchk params
+	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
 
 	// log tag
 	// Pattern: ^[^\s]+$
@@ -126,10 +126,16 @@ type Backend struct {
 	// Enum: [http tcp]
 	Mode string `json:"mode,omitempty"`
 
+	// mysql check params
+	MysqlCheckParams *MysqlCheckParams `json:"mysql_check_params,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
+
+	// pgsql check params
+	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
 
 	// queue timeout
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
@@ -142,6 +148,9 @@ type Backend struct {
 
 	// server timeout
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`
+
+	// smtpchk params
+	SmtpchkParams *SmtpchkParams `json:"smtpchk_params,omitempty"`
 
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
@@ -229,7 +238,7 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHttpchk(formats); err != nil {
+	if err := m.validateHttpchkParams(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -241,11 +250,23 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateMysqlCheckParams(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
 
+	if err := m.validatePgsqlCheckParams(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRedispatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSmtpchkParams(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -310,7 +331,7 @@ var backendTypeAdvCheckPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["ssl-hello-chk","smtpchk","ldap-check","mysql-check","pgsql-check","tcp-check","redis-check"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["ssl-hello-chk","smtpchk","ldap-check","mysql-check","pgsql-check","tcp-check","redis-check","httpchk"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -340,6 +361,9 @@ const (
 
 	// BackendAdvCheckRedisCheck captures enum value "redis-check"
 	BackendAdvCheckRedisCheck string = "redis-check"
+
+	// BackendAdvCheckHttpchk captures enum value "httpchk"
+	BackendAdvCheckHttpchk string = "httpchk"
 )
 
 // prop value enum
@@ -825,16 +849,16 @@ func (m *Backend) validateHTTPReuse(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Backend) validateHttpchk(formats strfmt.Registry) error {
+func (m *Backend) validateHttpchkParams(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Httpchk) { // not required
+	if swag.IsZero(m.HttpchkParams) { // not required
 		return nil
 	}
 
-	if m.Httpchk != nil {
-		if err := m.Httpchk.Validate(formats); err != nil {
+	if m.HttpchkParams != nil {
+		if err := m.HttpchkParams.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("httpchk")
+				return ve.ValidateName("httpchk_params")
 			}
 			return err
 		}
@@ -899,6 +923,24 @@ func (m *Backend) validateMode(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Backend) validateMysqlCheckParams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MysqlCheckParams) { // not required
+		return nil
+	}
+
+	if m.MysqlCheckParams != nil {
+		if err := m.MysqlCheckParams.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("mysql_check_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Backend) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
@@ -907,6 +949,24 @@ func (m *Backend) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validatePgsqlCheckParams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PgsqlCheckParams) { // not required
+		return nil
+	}
+
+	if m.PgsqlCheckParams != nil {
+		if err := m.PgsqlCheckParams.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("pgsql_check_params")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -922,6 +982,24 @@ func (m *Backend) validateRedispatch(formats strfmt.Registry) error {
 		if err := m.Redispatch.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("redispatch")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateSmtpchkParams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SmtpchkParams) { // not required
+		return nil
+	}
+
+	if m.SmtpchkParams != nil {
+		if err := m.SmtpchkParams.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("smtpchk_params")
 			}
 			return err
 		}

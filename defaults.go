@@ -45,7 +45,7 @@ type Defaults struct {
 	Abortonclose string `json:"abortonclose,omitempty"`
 
 	// adv check
-	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check]
+	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check httpchk]
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// allbackups
@@ -137,8 +137,8 @@ type Defaults struct {
 	// Enum: [aggressive always never safe]
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
-	// httpchk
-	Httpchk *Httpchk `json:"httpchk,omitempty"`
+	// httpchk params
+	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
 
 	// httplog
 	Httplog bool `json:"httplog,omitempty"`
@@ -171,6 +171,12 @@ type Defaults struct {
 	// monitor uri
 	MonitorURI MonitorURI `json:"monitor_uri,omitempty"`
 
+	// mysql check params
+	MysqlCheckParams *MysqlCheckParams `json:"mysql_check_params,omitempty"`
+
+	// pgsql check params
+	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
+
 	// queue timeout
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
 
@@ -182,6 +188,9 @@ type Defaults struct {
 
 	// server timeout
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`
+
+	// smtpchk params
+	SmtpchkParams *SmtpchkParams `json:"smtpchk_params,omitempty"`
 
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
@@ -291,7 +300,7 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHttpchk(formats); err != nil {
+	if err := m.validateHttpchkParams(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -315,7 +324,19 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateMysqlCheckParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePgsqlCheckParams(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRedispatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSmtpchkParams(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -401,7 +422,7 @@ var defaultsTypeAdvCheckPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["ssl-hello-chk","smtpchk","ldap-check","mysql-check","pgsql-check","tcp-check","redis-check"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["ssl-hello-chk","smtpchk","ldap-check","mysql-check","pgsql-check","tcp-check","redis-check","httpchk"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -431,6 +452,9 @@ const (
 
 	// DefaultsAdvCheckRedisCheck captures enum value "redis-check"
 	DefaultsAdvCheckRedisCheck string = "redis-check"
+
+	// DefaultsAdvCheckHttpchk captures enum value "httpchk"
+	DefaultsAdvCheckHttpchk string = "httpchk"
 )
 
 // prop value enum
@@ -1033,16 +1057,16 @@ func (m *Defaults) validateHTTPReuse(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Defaults) validateHttpchk(formats strfmt.Registry) error {
+func (m *Defaults) validateHttpchkParams(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Httpchk) { // not required
+	if swag.IsZero(m.HttpchkParams) { // not required
 		return nil
 	}
 
-	if m.Httpchk != nil {
-		if err := m.Httpchk.Validate(formats); err != nil {
+	if m.HttpchkParams != nil {
+		if err := m.HttpchkParams.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("httpchk")
+				return ve.ValidateName("httpchk_params")
 			}
 			return err
 		}
@@ -1209,6 +1233,42 @@ func (m *Defaults) validateMonitorURI(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateMysqlCheckParams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MysqlCheckParams) { // not required
+		return nil
+	}
+
+	if m.MysqlCheckParams != nil {
+		if err := m.MysqlCheckParams.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("mysql_check_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validatePgsqlCheckParams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PgsqlCheckParams) { // not required
+		return nil
+	}
+
+	if m.PgsqlCheckParams != nil {
+		if err := m.PgsqlCheckParams.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("pgsql_check_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Defaults) validateRedispatch(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Redispatch) { // not required
@@ -1219,6 +1279,24 @@ func (m *Defaults) validateRedispatch(formats strfmt.Registry) error {
 		if err := m.Redispatch.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("redispatch")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateSmtpchkParams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SmtpchkParams) { // not required
+		return nil
+	}
+
+	if m.SmtpchkParams != nil {
+		if err := m.SmtpchkParams.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("smtpchk_params")
 			}
 			return err
 		}
