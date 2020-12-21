@@ -104,7 +104,7 @@ type HTTPResponseRule struct {
 	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// redir code
-	// Enum: [301 302 303]
+	// Enum: [301 302 303 307 308]
 	RedirCode *int64 `json:"redir_code,omitempty"`
 
 	// redir option
@@ -559,7 +559,7 @@ var httpResponseRuleTypeRedirCodePropEnum []interface{}
 
 func init() {
 	var res []int64
-	if err := json.Unmarshal([]byte(`[301,302,303]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`[301,302,303,307,308]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
