@@ -40,6 +40,9 @@ type Map struct {
 
 	// id
 	ID string `json:"id,omitempty"`
+
+	// storage name
+	StorageName string `json:"storage_name,omitempty"`
 }
 
 // Validate validates this map
