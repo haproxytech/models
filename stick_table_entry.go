@@ -68,6 +68,9 @@ type StickTableEntry struct {
 	// gpc1 rate
 	Gpc1Rate *int64 `json:"gpc1_rate,omitempty"`
 
+	// gpt0
+	Gpt0 *int64 `json:"gpt0,omitempty"`
+
 	// http err cnt
 	HTTPErrCnt *int64 `json:"http_err_cnt,omitempty"`
 

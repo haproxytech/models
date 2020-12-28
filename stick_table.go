@@ -176,7 +176,7 @@ func (m *StickTable) UnmarshalBinary(b []byte) error {
 type StickTableField struct {
 
 	// field
-	// Enum: [server_id gpc0 gpc0_rate gpc1 gpc1_rate conn_cnt conn_cur conn_rate sess_cnt sess_rate http_req_cnt http_req_rate http_err_cnt http_err_rate bytes_in_cnt bytes_in_rate bytes_out_cnt bytes_out_rate]
+	// Enum: [server_id gpc0 gpc0_rate gpc1 gpc1_rate gpt0 conn_cnt conn_cur conn_rate sess_cnt sess_rate http_req_cnt http_req_rate http_err_cnt http_err_rate bytes_in_cnt bytes_in_rate bytes_out_cnt bytes_out_rate]
 	Field string `json:"field,omitempty"`
 
 	// period
@@ -209,7 +209,7 @@ var stickTableFieldTypeFieldPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["server_id","gpc0","gpc0_rate","gpc1","gpc1_rate","conn_cnt","conn_cur","conn_rate","sess_cnt","sess_rate","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["server_id","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","conn_cnt","conn_cur","conn_rate","sess_cnt","sess_rate","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -233,6 +233,9 @@ const (
 
 	// StickTableFieldFieldGpc1Rate captures enum value "gpc1_rate"
 	StickTableFieldFieldGpc1Rate string = "gpc1_rate"
+
+	// StickTableFieldFieldGpt0 captures enum value "gpt0"
+	StickTableFieldFieldGpt0 string = "gpt0"
 
 	// StickTableFieldFieldConnCnt captures enum value "conn_cnt"
 	StickTableFieldFieldConnCnt string = "conn_cnt"
