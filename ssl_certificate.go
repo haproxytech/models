@@ -35,6 +35,9 @@ type SslCertificate struct {
 	// description
 	Description string `json:"description,omitempty"`
 
+	// file
+	File string `json:"file,omitempty"`
+
 	// storage name
 	StorageName string `json:"storage_name,omitempty"`
 }
