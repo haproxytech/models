@@ -22,6 +22,7 @@ package models
 
 import (
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -35,6 +36,9 @@ import (
 //
 // swagger:model http_request_rule
 type HTTPRequestRule struct {
+
+	// return headers
+	ReturnHeaders []*HTTPRequestRuleReturnHdrsItems0 `json:"return_hdrs"`
 
 	// acl file
 	// Pattern: ^[^\s]+$
@@ -166,6 +170,21 @@ type HTTPRequestRule struct {
 	// resolvers
 	Resolvers string `json:"resolvers,omitempty"`
 
+	// return content
+	ReturnContent string `json:"return_content,omitempty"`
+
+	// return content format
+	// Enum: [default-errorfile errorfile errorfiles file lf-file string lf-string]
+	ReturnContentFormat string `json:"return_content_format,omitempty"`
+
+	// return content type
+	ReturnContentType *string `json:"return_content_type,omitempty"`
+
+	// return status code
+	// Maximum: 599
+	// Minimum: 200
+	ReturnStatusCode *int64 `json:"return_status_code,omitempty"`
+
 	// sc expr
 	ScExpr string `json:"sc_expr,omitempty"`
 
@@ -220,7 +239,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var strict-mode lua use-service]
+	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var strict-mode lua use-service return]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -244,6 +263,10 @@ type HTTPRequestRule struct {
 // Validate validates this http request rule
 func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateReturnHeaders(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateACLFile(formats); err != nil {
 		res = append(res, err)
@@ -341,6 +364,14 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateReturnContentFormat(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReturnStatusCode(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSpoeEngine(formats); err != nil {
 		res = append(res, err)
 	}
@@ -396,6 +427,31 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateReturnHeaders(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReturnHeaders) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ReturnHeaders); i++ {
+		if swag.IsZero(m.ReturnHeaders[i]) { // not required
+			continue
+		}
+
+		if m.ReturnHeaders[i] != nil {
+			if err := m.ReturnHeaders[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("return_hdrs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -897,6 +953,81 @@ func (m *HTTPRequestRule) validateRedirValue(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpRequestRuleTypeReturnContentFormatPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["default-errorfile","errorfile","errorfiles","file","lf-file","string","lf-string"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpRequestRuleTypeReturnContentFormatPropEnum = append(httpRequestRuleTypeReturnContentFormatPropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPRequestRuleReturnContentFormatDefaultErrorfile captures enum value "default-errorfile"
+	HTTPRequestRuleReturnContentFormatDefaultErrorfile string = "default-errorfile"
+
+	// HTTPRequestRuleReturnContentFormatErrorfile captures enum value "errorfile"
+	HTTPRequestRuleReturnContentFormatErrorfile string = "errorfile"
+
+	// HTTPRequestRuleReturnContentFormatErrorfiles captures enum value "errorfiles"
+	HTTPRequestRuleReturnContentFormatErrorfiles string = "errorfiles"
+
+	// HTTPRequestRuleReturnContentFormatFile captures enum value "file"
+	HTTPRequestRuleReturnContentFormatFile string = "file"
+
+	// HTTPRequestRuleReturnContentFormatLfFile captures enum value "lf-file"
+	HTTPRequestRuleReturnContentFormatLfFile string = "lf-file"
+
+	// HTTPRequestRuleReturnContentFormatString captures enum value "string"
+	HTTPRequestRuleReturnContentFormatString string = "string"
+
+	// HTTPRequestRuleReturnContentFormatLfString captures enum value "lf-string"
+	HTTPRequestRuleReturnContentFormatLfString string = "lf-string"
+)
+
+// prop value enum
+func (m *HTTPRequestRule) validateReturnContentFormatEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpRequestRuleTypeReturnContentFormatPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateReturnContentFormat(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReturnContentFormat) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateReturnContentFormatEnum("return_content_format", "body", m.ReturnContentFormat); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateReturnStatusCode(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReturnStatusCode) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("return_status_code", "body", int64(*m.ReturnStatusCode), 200, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("return_status_code", "body", int64(*m.ReturnStatusCode), 599, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validateSpoeEngine(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.SpoeEngine) { // not required
@@ -1061,7 +1192,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var","strict-mode","lua","use-service"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var","strict-mode","lua","use-service","return"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1217,6 +1348,9 @@ const (
 
 	// HTTPRequestRuleTypeUseService captures enum value "use-service"
 	HTTPRequestRuleTypeUseService string = "use-service"
+
+	// HTTPRequestRuleTypeReturn captures enum value "return"
+	HTTPRequestRuleTypeReturn string = "return"
 )
 
 // prop value enum
@@ -1278,6 +1412,74 @@ func (m *HTTPRequestRule) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *HTTPRequestRule) UnmarshalBinary(b []byte) error {
 	var res HTTPRequestRule
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// HTTPRequestRuleReturnHdrsItems0 HTTP request rule return hdrs items0
+//
+// swagger:model HTTPRequestRuleReturnHdrsItems0
+type HTTPRequestRuleReturnHdrsItems0 struct {
+
+	// fmt
+	// Required: true
+	Fmt *string `json:"fmt"`
+
+	// name
+	// Required: true
+	Name *string `json:"name"`
+}
+
+// Validate validates this HTTP request rule return hdrs items0
+func (m *HTTPRequestRuleReturnHdrsItems0) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *HTTPRequestRuleReturnHdrsItems0) validateFmt(formats strfmt.Registry) error {
+
+	if err := validate.Required("fmt", "body", m.Fmt); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRuleReturnHdrsItems0) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *HTTPRequestRuleReturnHdrsItems0) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *HTTPRequestRuleReturnHdrsItems0) UnmarshalBinary(b []byte) error {
+	var res HTTPRequestRuleReturnHdrsItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
